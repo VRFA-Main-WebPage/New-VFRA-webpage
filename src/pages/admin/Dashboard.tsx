@@ -80,7 +80,13 @@ const AdminDashboard = () => {
               Common tasks and navigation shortcuts
             </CardDescription>
           </CardHeader>
-          <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <CardContent className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <Button variant="outline" className="h-auto py-4 flex-col gap-2" asChild>
+              <Link to="/admin/offer-letters">
+                <FileText className="h-6 w-6" />
+                <span>Offer Letters</span>
+              </Link>
+            </Button>
             <Button variant="outline" className="h-auto py-4 flex-col gap-2">
               <FileText className="h-6 w-6" />
               <span>New Case</span>
