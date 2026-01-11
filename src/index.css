@@ -4,6 +4,8 @@
 
 /* ForensiX India - Digital Forensics Business Platform Design System */
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
 @layer base {
   :root {
     /* Core brand colors - Professional dark teal/blue palette */
@@ -30,7 +32,7 @@
 
     /* Accent: Warm amber for CTAs */
     --accent: 38 92% 50%;
-    --accent-foreground: 0 0% 100%;
+    --accent-foreground: 210 40% 11%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
