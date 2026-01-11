@@ -25,6 +25,8 @@ import NotFound from "./pages/NotFound";
 // Admin Pages
 import AdminLogin from "./pages/admin/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
+import OfferLetters from "./pages/admin/OfferLetters";
+import CreateOfferLetter from "./pages/admin/CreateOfferLetter";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +58,22 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/offer-letters"
+              element={
+                <ProtectedRoute>
+                  <OfferLetters />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/offer-letters/create"
+              element={
+                <ProtectedRoute>
+                  <CreateOfferLetter />
                 </ProtectedRoute>
               }
             />

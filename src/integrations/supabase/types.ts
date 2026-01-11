@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      offer_letters: {
+        Row: {
+          content: Json
+          created_at: string
+          created_by: string | null
+          id: string
+          letter_type: Database["public"]["Enums"]["offer_letter_type"]
+          recipient_company: string | null
+          recipient_designation: string | null
+          recipient_email: string
+          recipient_name: string
+          responded_at: string | null
+          sent_at: string | null
+          status: Database["public"]["Enums"]["offer_letter_status"]
+          subject: string
+          updated_at: string
+          valid_from: string
+          valid_until: string | null
+        }
+        Insert: {
+          content?: Json
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          letter_type: Database["public"]["Enums"]["offer_letter_type"]
+          recipient_company?: string | null
+          recipient_designation?: string | null
+          recipient_email: string
+          recipient_name: string
+          responded_at?: string | null
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["offer_letter_status"]
+          subject: string
+          updated_at?: string
+          valid_from?: string
+          valid_until?: string | null
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          letter_type?: Database["public"]["Enums"]["offer_letter_type"]
+          recipient_company?: string | null
+          recipient_designation?: string | null
+          recipient_email?: string
+          recipient_name?: string
+          responded_at?: string | null
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["offer_letter_status"]
+          subject?: string
+          updated_at?: string
+          valid_from?: string
+          valid_until?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -50,6 +107,16 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      offer_letter_status:
+        | "draft"
+        | "sent"
+        | "accepted"
+        | "declined"
+        | "expired"
+      offer_letter_type:
+        | "client_proposal"
+        | "employment_offer"
+        | "partnership_contract"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -178,6 +245,12 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      offer_letter_status: ["draft", "sent", "accepted", "declined", "expired"],
+      offer_letter_type: [
+        "client_proposal",
+        "employment_offer",
+        "partnership_contract",
+      ],
     },
   },
 } as const
