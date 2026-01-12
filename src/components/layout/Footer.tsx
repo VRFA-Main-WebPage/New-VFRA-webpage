@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Shield, Mail, Phone, MapPin, Linkedin, Twitter, Github, Terminal } from "lucide-react";
 import { motion } from "framer-motion";
+import vfraLogo from "@/assets/vfra-logo.jpg";
 
 const footerLinks = {
   services: [
@@ -43,15 +44,15 @@ export function Footer() {
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-2 mb-4 group">
               <motion.div
-                whileHover={{ rotate: 180 }}
-                transition={{ duration: 0.5 }}
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
               >
-                <Shield className="h-8 w-8 text-primary drop-shadow-[0_0_10px_hsl(180_100%_50%/0.5)]" />
+                <img 
+                  src={vfraLogo} 
+                  alt="VFRA - Vigilant Forensic Research and Analytics" 
+                  className="h-12 w-auto object-contain"
+                />
               </motion.div>
-              <span className="font-display text-xl font-bold">
-                <span className="text-foreground">Forensi</span>
-                <span className="text-primary text-glow">X</span>
-              </span>
             </Link>
             <p className="text-muted-foreground text-sm mb-6 max-w-sm">
               India's trusted digital forensics and cybercrime investigation laboratory. 
@@ -162,7 +163,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-primary/10 mt-12 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-            <p className="font-mono text-xs">© {new Date().getFullYear()} ForensiX India. All rights reserved.</p>
+            <p className="font-mono text-xs">© {new Date().getFullYear()} Vigilant Forensic Research and Analytics Pvt. Ltd. All rights reserved.</p>
             <p className="font-mono text-xs">GSTIN: 09AAACF1234A1ZZ | CIN: U74999UP2020PTC123456</p>
           </div>
         </div>
