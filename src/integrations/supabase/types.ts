@@ -14,6 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      certificates: {
+        Row: {
+          additional_details: Json | null
+          certificate_number: string
+          certificate_type: string
+          course_name: string | null
+          created_at: string
+          created_by: string | null
+          expiry_date: string | null
+          id: string
+          issue_date: string
+          logo_url: string | null
+          recipient_email: string | null
+          recipient_name: string
+          signature_url: string | null
+          signing_authority_designation: string | null
+          signing_authority_name: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          additional_details?: Json | null
+          certificate_number: string
+          certificate_type?: string
+          course_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          expiry_date?: string | null
+          id?: string
+          issue_date?: string
+          logo_url?: string | null
+          recipient_email?: string | null
+          recipient_name: string
+          signature_url?: string | null
+          signing_authority_designation?: string | null
+          signing_authority_name: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          additional_details?: Json | null
+          certificate_number?: string
+          certificate_type?: string
+          course_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          expiry_date?: string | null
+          id?: string
+          issue_date?: string
+          logo_url?: string | null
+          recipient_email?: string | null
+          recipient_name?: string
+          signature_url?: string | null
+          signing_authority_designation?: string | null
+          signing_authority_name?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       offer_letters: {
         Row: {
           content: Json

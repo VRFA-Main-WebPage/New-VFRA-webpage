@@ -1,11 +1,14 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Shield, Users, FileText, Calendar, LogOut, LayoutDashboard } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Shield, Users, FileText, Calendar, LogOut, LayoutDashboard, Award, Briefcase, UserPlus, Globe } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 const AdminDashboard = () => {
   const { user, signOut, isAdmin } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   const stats = [
     { label: "Total Cases", value: "156", icon: FileText, color: "text-primary" },
@@ -13,6 +16,62 @@ const AdminDashboard = () => {
     { label: "Pending Events", value: "12", icon: Calendar, color: "text-yellow-500" },
     { label: "This Month", value: "23", icon: LayoutDashboard, color: "text-green-500" },
   ];
+
+  const quickActions = [
+    { 
+      label: "Offer Letters", 
+      icon: FileText, 
+      path: "/admin/offer-letters",
+      enabled: true 
+    },
+    { 
+      label: "Certificates", 
+      icon: Award, 
+      path: "/admin/certificates",
+      enabled: true 
+    },
+    { 
+      label: "New Case", 
+      icon: Briefcase, 
+      path: null,
+      enabled: false,
+      comingSoon: true 
+    },
+    { 
+      label: "Add Client", 
+      icon: UserPlus, 
+      path: null,
+      enabled: false,
+      comingSoon: true 
+    },
+    { 
+      label: "Schedule Event", 
+      icon: Calendar, 
+      path: null,
+      enabled: false,
+      comingSoon: true 
+    },
+    { 
+      label: "View Website", 
+      icon: Globe, 
+      path: "/",
+      enabled: true,
+      external: true 
+    },
+  ];
+
+  const handleQuickAction = (action: typeof quickActions[0]) => {
+    if (action.comingSoon) {
+      toast({
+        title: "Coming Soon",
+        description: `${action.label} feature is under development.`,
+      });
+      return;
+    }
+    if (action.path) {
+      navigate(action.path);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -80,31 +139,25 @@ const AdminDashboard = () => {
               Common tasks and navigation shortcuts
             </CardDescription>
           </CardHeader>
-          <CardContent className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <Button variant="outline" className="h-auto py-4 flex-col gap-2" asChild>
-              <Link to="/admin/offer-letters">
-                <FileText className="h-6 w-6" />
-                <span>Offer Letters</span>
-              </Link>
-            </Button>
-            <Button variant="outline" className="h-auto py-4 flex-col gap-2">
-              <FileText className="h-6 w-6" />
-              <span>New Case</span>
-            </Button>
-            <Button variant="outline" className="h-auto py-4 flex-col gap-2">
-              <Users className="h-6 w-6" />
-              <span>Add Client</span>
-            </Button>
-            <Button variant="outline" className="h-auto py-4 flex-col gap-2">
-              <Calendar className="h-6 w-6" />
-              <span>Schedule Event</span>
-            </Button>
-            <Button variant="outline" className="h-auto py-4 flex-col gap-2" asChild>
-              <Link to="/">
-                <LayoutDashboard className="h-6 w-6" />
-                <span>View Website</span>
-              </Link>
-            </Button>
+          <CardContent className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {quickActions.map((action) => (
+              <Button
+                key={action.label}
+                variant="outline"
+                className={`h-auto py-4 flex-col gap-2 relative ${
+                  action.comingSoon ? "opacity-60" : ""
+                }`}
+                onClick={() => handleQuickAction(action)}
+              >
+                {action.comingSoon && (
+                  <span className="absolute -top-2 -right-2 bg-accent text-accent-foreground text-[10px] px-1.5 py-0.5 rounded-full">
+                    Soon
+                  </span>
+                )}
+                <action.icon className="h-6 w-6" />
+                <span className="text-xs text-center">{action.label}</span>
+              </Button>
+            ))}
           </CardContent>
         </Card>
       </main>

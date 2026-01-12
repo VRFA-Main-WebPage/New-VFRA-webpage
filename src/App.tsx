@@ -27,6 +27,8 @@ import AdminLogin from "./pages/admin/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
 import OfferLetters from "./pages/admin/OfferLetters";
 import CreateOfferLetter from "./pages/admin/CreateOfferLetter";
+import Certificates from "./pages/admin/Certificates";
+import CreateCertificate from "./pages/admin/CreateCertificate";
 
 const queryClient = new QueryClient();
 
@@ -74,6 +76,22 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <CreateOfferLetter />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/certificates"
+              element={
+                <ProtectedRoute>
+                  <Certificates />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/certificates/create"
+              element={
+                <ProtectedRoute>
+                  <CreateCertificate />
                 </ProtectedRoute>
               }
             />
