@@ -13,6 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { mapErrorToUserMessage } from "@/lib/errorHandler";
 
 const formSchema = z.object({
   certificateNumber: z.string().min(3, "Certificate number is required"),
@@ -185,10 +186,10 @@ const CreateCertificate = () => {
       });
 
       navigate("/admin/certificates");
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
-        description: error.message || "Failed to create certificate.",
+        description: mapErrorToUserMessage(error, "create certificate"),
         variant: "destructive",
       });
     } finally {

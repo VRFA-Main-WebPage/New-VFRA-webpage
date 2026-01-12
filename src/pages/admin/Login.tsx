@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-
+import { mapAuthErrorToUserMessage } from "@/lib/errorHandler";
 const AdminLogin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -35,7 +35,7 @@ const AdminLogin = () => {
         if (error) {
           toast({
             title: "Sign Up Failed",
-            description: error.message,
+            description: mapAuthErrorToUserMessage(error),
             variant: "destructive",
           });
         } else {
@@ -50,7 +50,7 @@ const AdminLogin = () => {
         if (error) {
           toast({
             title: "Login Failed",
-            description: error.message,
+            description: mapAuthErrorToUserMessage(error),
             variant: "destructive",
           });
         } else {

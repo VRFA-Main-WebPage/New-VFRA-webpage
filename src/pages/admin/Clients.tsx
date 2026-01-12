@@ -33,6 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { mapErrorToUserMessage } from "@/lib/errorHandler";
 
 const AdminClients = () => {
   const { user } = useAuth();
@@ -79,8 +80,8 @@ const AdminClients = () => {
       setIsCreateDialogOpen(false);
       resetForm();
     },
-    onError: (error: any) => {
-      toast({ title: "Error creating client", description: error.message, variant: "destructive" });
+    onError: (error: unknown) => {
+      toast({ title: "Error creating client", description: mapErrorToUserMessage(error, "create client"), variant: "destructive" });
     },
   });
 
@@ -94,8 +95,8 @@ const AdminClients = () => {
       toast({ title: "Client updated successfully" });
       setIsEditDialogOpen(false);
     },
-    onError: (error: any) => {
-      toast({ title: "Error updating client", description: error.message, variant: "destructive" });
+    onError: (error: unknown) => {
+      toast({ title: "Error updating client", description: mapErrorToUserMessage(error, "update client"), variant: "destructive" });
     },
   });
 
@@ -108,8 +109,8 @@ const AdminClients = () => {
       queryClient.invalidateQueries({ queryKey: ["clients"] });
       toast({ title: "Client deleted successfully" });
     },
-    onError: (error: any) => {
-      toast({ title: "Error deleting client", description: error.message, variant: "destructive" });
+    onError: (error: unknown) => {
+      toast({ title: "Error deleting client", description: mapErrorToUserMessage(error, "delete client"), variant: "destructive" });
     },
   });
 

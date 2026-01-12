@@ -1,10 +1,20 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
+
+// Input validation schema
+const CreateOrderSchema = z.object({
+  eventId: z.string().uuid("Invalid event ID format"),
+  name: z.string().min(2, "Name must be at least 2 characters").max(100, "Name too long"),
+  email: z.string().email("Invalid email format").max(255, "Email too long"),
+  phone: z.string().regex(/^[0-9]{10}$/, "Phone must be 10 digits").optional().nullable(),
+  amount: z.number().int("Amount must be an integer").positive("Amount must be positive").max(1000000, "Amount exceeds maximum limit"),
+});
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -25,7 +35,7 @@ serve(async (req) => {
 
     if (!configData?.content) {
       return new Response(
-        JSON.stringify({ error: "Razorpay not configured. Please configure in admin panel." }),
+        JSON.stringify({ error: "Payment gateway not configured" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -34,16 +44,50 @@ serve(async (req) => {
 
     if (!keyId || !keySecret) {
       return new Response(
-        JSON.stringify({ error: "Razorpay keys not configured" }),
+        JSON.stringify({ error: "Payment gateway not configured" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const { eventId, name, email, phone, amount } = await req.json();
-
-    if (!eventId || !name || !email || !amount) {
+    // Parse and validate input
+    let body;
+    try {
+      body = await req.json();
+    } catch {
       return new Response(
-        JSON.stringify({ error: "Missing required fields" }),
+        JSON.stringify({ error: "Invalid request body" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const validationResult = CreateOrderSchema.safeParse(body);
+    if (!validationResult.success) {
+      return new Response(
+        JSON.stringify({ error: "Validation failed", details: validationResult.error.issues.map(i => i.message) }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const { eventId, name, email, phone, amount } = validationResult.data;
+
+    // Verify event exists and is available
+    const { data: event, error: eventError } = await supabase
+      .from("events")
+      .select("id, is_published, seats_available, price")
+      .eq("id", eventId)
+      .eq("is_published", true)
+      .single();
+
+    if (eventError || !event) {
+      return new Response(
+        JSON.stringify({ error: "Event not found or not available" }),
+        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (event.seats_available !== null && event.seats_available <= 0) {
+      return new Response(
+        JSON.stringify({ error: "Event is sold out" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -69,8 +113,7 @@ serve(async (req) => {
     });
 
     if (!orderResponse.ok) {
-      const errorData = await orderResponse.text();
-      console.error("Razorpay error:", errorData);
+      console.error("Razorpay error:", await orderResponse.text());
       return new Response(
         JSON.stringify({ error: "Failed to create order" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -114,9 +157,8 @@ serve(async (req) => {
     );
   } catch (error) {
     console.error("Error:", error);
-    const message = error instanceof Error ? error.message : "Unknown error";
     return new Response(
-      JSON.stringify({ error: message }),
+      JSON.stringify({ error: "An unexpected error occurred" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
