@@ -31,25 +31,22 @@ const AdminDashboard = () => {
       enabled: true 
     },
     { 
-      label: "New Case", 
+      label: "Cases", 
       icon: Briefcase, 
-      path: null,
-      enabled: false,
-      comingSoon: true 
+      path: "/admin/cases",
+      enabled: true 
     },
     { 
-      label: "Add Client", 
+      label: "Clients", 
       icon: UserPlus, 
-      path: null,
-      enabled: false,
-      comingSoon: true 
+      path: "/admin/clients",
+      enabled: true 
     },
     { 
-      label: "Schedule Event", 
+      label: "Events", 
       icon: Calendar, 
-      path: null,
-      enabled: false,
-      comingSoon: true 
+      path: "/admin/events",
+      enabled: true 
     },
     { 
       label: "View Website", 

@@ -29,6 +29,12 @@ import OfferLetters from "./pages/admin/OfferLetters";
 import CreateOfferLetter from "./pages/admin/CreateOfferLetter";
 import Certificates from "./pages/admin/Certificates";
 import CreateCertificate from "./pages/admin/CreateCertificate";
+import AdminCases from "./pages/admin/Cases";
+import CreateCase from "./pages/admin/CreateCase";
+import AdminClients from "./pages/admin/Clients";
+import AdminEvents from "./pages/admin/Events";
+import TrackCase from "./pages/TrackCase";
+import SubmitCase from "./pages/SubmitCase";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +57,8 @@ const App = () => (
               <Route path="/blog" element={<Blog />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/verify" element={<Verify />} />
+              <Route path="/track-case" element={<TrackCase />} />
+              <Route path="/submit-case" element={<SubmitCase />} />
             </Route>
 
             {/* Admin Routes */}
@@ -92,6 +100,38 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <CreateCertificate />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/cases"
+              element={
+                <ProtectedRoute>
+                  <AdminCases />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/cases/create"
+              element={
+                <ProtectedRoute>
+                  <CreateCase />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/clients"
+              element={
+                <ProtectedRoute>
+                  <AdminClients />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/events"
+              element={
+                <ProtectedRoute>
+                  <AdminEvents />
                 </ProtectedRoute>
               }
             />
