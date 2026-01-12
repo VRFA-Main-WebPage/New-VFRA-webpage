@@ -272,6 +272,39 @@ export type Database = {
         }
         Relationships: []
       }
+      milestones: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          is_active: boolean | null
+          sort_order: number | null
+          title: string
+          updated_at: string
+          year: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          is_active?: boolean | null
+          sort_order?: number | null
+          title: string
+          updated_at?: string
+          year: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          is_active?: boolean | null
+          sort_order?: number | null
+          title?: string
+          updated_at?: string
+          year?: string
+        }
+        Relationships: []
+      }
       offer_letters: {
         Row: {
           content: Json
@@ -326,6 +359,39 @@ export type Database = {
           updated_at?: string
           valid_from?: string
           valid_until?: string | null
+        }
+        Relationships: []
+      }
+      office_locations: {
+        Row: {
+          address: string
+          city: string
+          created_at: string
+          id: string
+          is_active: boolean | null
+          is_headquarters: boolean | null
+          sort_order: number | null
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          city: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          is_headquarters?: boolean | null
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          city?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          is_headquarters?: boolean | null
+          sort_order?: number | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -400,6 +466,42 @@ export type Database = {
           is_active?: boolean | null
           sort_order?: number | null
           title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      team_members: {
+        Row: {
+          created_at: string
+          credentials: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          photo_url: string | null
+          role: string
+          sort_order: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          credentials?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          photo_url?: string | null
+          role: string
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          credentials?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          photo_url?: string | null
+          role?: string
+          sort_order?: number | null
           updated_at?: string
         }
         Relationships: []

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Shield, Mail, Phone, MapPin, Linkedin, Twitter, Github, Terminal } from "lucide-react";
 import { motion } from "framer-motion";
 import vfraLogo from "@/assets/vfra-logo.png";
+import { useWebsiteContent, defaultFooterContent, defaultContactContent, FooterContent, ContactContent } from "@/hooks/useWebsiteContent";
 
 const footerLinks = {
   services: [
@@ -16,20 +17,21 @@ const footerLinks = {
     { title: "About Us", href: "/about" },
     { title: "Case Studies", href: "/case-studies" },
     { title: "Events & Training", href: "/events" },
-    { title: "Blog", href: "/blog" },
-    { title: "Careers", href: "/careers" },
     { title: "Contact", href: "/contact" },
   ],
   resources: [
     { title: "Verify Certificate", href: "/verify" },
-    { title: "FAQ", href: "/faq" },
+    { title: "Track Case", href: "/track-case" },
+    { title: "Submit Case", href: "/submit-case" },
     { title: "Privacy Policy", href: "/privacy" },
     { title: "Terms of Service", href: "/terms" },
-    { title: "Disclaimer", href: "/disclaimer" },
   ],
 };
 
 export function Footer() {
+  const { content: footerContent } = useWebsiteContent<FooterContent>("footer", defaultFooterContent);
+  const { content: contactContent } = useWebsiteContent<ContactContent>("contact", defaultContactContent);
+
   return (
     <footer className="bg-background border-t border-primary/10 relative overflow-hidden">
       {/* Grid overlay */}
@@ -59,37 +61,38 @@ export function Footer() {
               </div>
             </Link>
             <p className="text-muted-foreground text-sm mb-6 max-w-sm">
-              India's trusted digital forensics and cybercrime investigation laboratory. 
-              Providing expert solutions to law enforcement, government, and corporate clients.
+              {footerContent.tagline}
             </p>
             
             <div className="space-y-3 text-sm">
               <div className="flex items-start gap-3 group">
                 <MapPin className="h-4 w-4 mt-0.5 text-primary shrink-0" />
                 <span className="text-muted-foreground group-hover:text-foreground transition-colors">
-                  123 Cyber Tower, IT Park, Sector 62<br />
-                  Noida, Uttar Pradesh 201309
+                  {contactContent.address}<br />
+                  {contactContent.addressLine2}
                 </span>
               </div>
               <div className="flex items-center gap-3 group">
                 <Phone className="h-4 w-4 text-primary" />
-                <span className="text-muted-foreground group-hover:text-foreground transition-colors font-mono">+91 120 456 7890</span>
+                <span className="text-muted-foreground group-hover:text-foreground transition-colors font-mono">{contactContent.phone}</span>
               </div>
               <div className="flex items-center gap-3 group">
                 <Mail className="h-4 w-4 text-primary" />
-                <span className="text-muted-foreground group-hover:text-foreground transition-colors font-mono">info@forensix.in</span>
+                <span className="text-muted-foreground group-hover:text-foreground transition-colors font-mono">{contactContent.email}</span>
               </div>
             </div>
 
             <div className="flex items-center gap-4 mt-6">
               {[
-                { icon: Linkedin, href: "#" },
-                { icon: Twitter, href: "#" },
-                { icon: Github, href: "#" },
+                { icon: Linkedin, href: footerContent.linkedin },
+                { icon: Twitter, href: footerContent.twitter },
+                { icon: Github, href: footerContent.github },
               ].map((social, index) => (
                 <motion.a
                   key={index}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/20 hover:border-primary/40 hover:shadow-neon transition-all duration-300"
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.95 }}
@@ -168,7 +171,7 @@ export function Footer() {
         <div className="border-t border-primary/10 mt-12 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
             <p className="font-mono text-xs">© {new Date().getFullYear()} Vigilant Forensic Research and Analytics Pvt. Ltd. All rights reserved.</p>
-            <p className="font-mono text-xs">GSTIN: 09AAACF1234A1ZZ | CIN: U74999UP2020PTC123456</p>
+            <p className="font-mono text-xs">GSTIN: {footerContent.gstin} | CIN: {footerContent.cin}</p>
           </div>
         </div>
       </div>

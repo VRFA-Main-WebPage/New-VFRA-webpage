@@ -1,39 +1,80 @@
+import { useState, useEffect } from "react";
 import { Shield, Award, Users, CheckCircle, MapPin, Calendar, Target, Eye } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
+import { useWebsiteContent, defaultAboutContent, AboutContent } from "@/hooks/useWebsiteContent";
 
-const milestones = [
-  { year: "2009", title: "Founded", description: "Established as India's first private digital forensics lab" },
-  { year: "2012", title: "ISO Certified", description: "Received ISO 27001 certification for information security" },
-  { year: "2015", title: "NABL Accredited", description: "Became NABL accredited forensic laboratory" },
-  { year: "2018", title: "500+ Cases", description: "Crossed 500 successful investigations milestone" },
-  { year: "2021", title: "Training Academy", description: "Launched professional training academy" },
-  { year: "2024", title: "Pan-India Presence", description: "Expanded with offices across 5 major cities" },
+interface Milestone {
+  id: string;
+  year: string;
+  title: string;
+  description: string;
+  sort_order: number;
+}
+
+interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  credentials: string | null;
+  photo_url: string | null;
+  sort_order: number;
+}
+
+interface OfficeLocation {
+  id: string;
+  city: string;
+  address: string;
+  is_headquarters: boolean;
+  sort_order: number;
+}
+
+// Fallback data
+const fallbackMilestones = [
+  { id: "1", year: "2009", title: "Founded", description: "Established as India's first private digital forensics lab", sort_order: 0 },
+  { id: "2", year: "2012", title: "ISO Certified", description: "Received ISO 27001 certification for information security", sort_order: 1 },
+  { id: "3", year: "2015", title: "NABL Accredited", description: "Became NABL accredited forensic laboratory", sort_order: 2 },
+  { id: "4", year: "2018", title: "500+ Cases", description: "Crossed 500 successful investigations milestone", sort_order: 3 },
+  { id: "5", year: "2021", title: "Training Academy", description: "Launched professional training academy", sort_order: 4 },
+  { id: "6", year: "2024", title: "Pan-India Presence", description: "Expanded with offices across 5 major cities", sort_order: 5 },
 ];
 
-const teamMembers = [
-  {
-    name: "Dr. Rajesh Kumar",
-    role: "Founder & Chief Forensic Expert",
-    credentials: "Ph.D. Computer Science, EnCase Certified, CHFI",
-  },
-  {
-    name: "Priya Sharma",
-    role: "Director - Mobile Forensics",
-    credentials: "Cellebrite Certified, GIAC GCFE",
-  },
-  {
-    name: "Amit Verma",
-    role: "Head - Cybercrime Investigation",
-    credentials: "Ex-Cyber Cell, OSCP, ACE",
-  },
-  {
-    name: "Dr. Sneha Patel",
-    role: "Lead - Training & Development",
-    credentials: "Ph.D. Digital Forensics, Certified Trainer",
-  },
+const fallbackTeamMembers = [
+  { id: "1", name: "Dr. Rajesh Kumar", role: "Founder & Chief Forensic Expert", credentials: "Ph.D. Computer Science, EnCase Certified, CHFI", photo_url: null, sort_order: 0 },
+  { id: "2", name: "Priya Sharma", role: "Director - Mobile Forensics", credentials: "Cellebrite Certified, GIAC GCFE", photo_url: null, sort_order: 1 },
+  { id: "3", name: "Amit Verma", role: "Head - Cybercrime Investigation", credentials: "Ex-Cyber Cell, OSCP, ACE", photo_url: null, sort_order: 2 },
+  { id: "4", name: "Dr. Sneha Patel", role: "Lead - Training & Development", credentials: "Ph.D. Digital Forensics, Certified Trainer", photo_url: null, sort_order: 3 },
+];
+
+const fallbackLocations = [
+  { id: "1", city: "Noida", address: "123 Cyber Tower, IT Park, Sector 62", is_headquarters: true, sort_order: 0 },
+  { id: "2", city: "Mumbai", address: "456 Tech Hub, BKC, Mumbai", is_headquarters: false, sort_order: 1 },
+  { id: "3", city: "Bangalore", address: "789 Innovation Center, Whitefield", is_headquarters: false, sort_order: 2 },
+  { id: "4", city: "Chennai", address: "321 Digital Complex, OMR", is_headquarters: false, sort_order: 3 },
+  { id: "5", city: "Hyderabad", address: "654 Cyber Towers, HITEC City", is_headquarters: false, sort_order: 4 },
 ];
 
 const About = () => {
+  const [milestones, setMilestones] = useState<Milestone[]>(fallbackMilestones);
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>(fallbackTeamMembers);
+  const [locations, setLocations] = useState<OfficeLocation[]>(fallbackLocations);
+  const { content } = useWebsiteContent<AboutContent>("about", defaultAboutContent);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const [milestonesRes, teamRes, locationsRes] = await Promise.all([
+        supabase.from("milestones").select("*").eq("is_active", true).order("sort_order"),
+        supabase.from("team_members").select("*").eq("is_active", true).order("sort_order"),
+        supabase.from("office_locations").select("*").eq("is_active", true).order("sort_order"),
+      ]);
+
+      if (milestonesRes.data && milestonesRes.data.length > 0) setMilestones(milestonesRes.data);
+      if (teamRes.data && teamRes.data.length > 0) setTeamMembers(teamRes.data);
+      if (locationsRes.data && locationsRes.data.length > 0) setLocations(locationsRes.data);
+    };
+    fetchData();
+  }, []);
+
   return (
     <div className="bg-background">
       {/* Hero Section */}
@@ -44,11 +85,10 @@ const About = () => {
           <div className="max-w-3xl mx-auto text-center">
             <p className="text-sm font-medium text-primary mb-2 uppercase tracking-wider font-mono">About Us</p>
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 font-display">
-              India's Premier Digital Forensics Laboratory
+              {content.heroTitle}
             </h1>
             <p className="text-lg text-muted-foreground">
-              For over 15 years, we've been at the forefront of digital forensics and cybercrime investigation, 
-              serving law enforcement, government agencies, and enterprises across India.
+              {content.heroDescription}
             </p>
           </div>
         </div>
@@ -65,10 +105,7 @@ const About = () => {
                 </div>
                 <h3 className="text-2xl font-bold text-foreground mb-4">Our Mission</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  To provide world-class digital forensics services that help uncover the truth, 
-                  support justice, and protect organizations from cyber threats. We are committed 
-                  to maintaining the highest standards of integrity, accuracy, and confidentiality 
-                  in every investigation.
+                  {content.mission}
                 </p>
               </CardContent>
             </Card>
@@ -80,9 +117,7 @@ const About = () => {
                 </div>
                 <h3 className="text-2xl font-bold text-foreground mb-4">Our Vision</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  To be India's most trusted digital forensics partner, recognized globally for 
-                  excellence in investigation, innovation in methodology, and commitment to training 
-                  the next generation of cybersecurity professionals.
+                  {content.vision}
                 </p>
               </CardContent>
             </Card>
@@ -107,7 +142,7 @@ const About = () => {
             <div className="space-y-8">
               {milestones.map((milestone, index) => (
                 <div
-                  key={index}
+                  key={milestone.id}
                   className={`relative flex flex-col lg:flex-row items-center gap-4 lg:gap-8 ${
                     index % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"
                   }`}
@@ -145,15 +180,21 @@ const About = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {teamMembers.map((member, index) => (
-              <Card key={index} className="bg-card border-border/50 hover:shadow-lg transition-shadow">
+            {teamMembers.map((member) => (
+              <Card key={member.id} className="bg-card border-border/50 hover:shadow-lg transition-shadow">
                 <CardContent className="pt-6 text-center">
-                  <div className="w-24 h-24 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
-                    <Users className="h-10 w-10 text-muted-foreground" />
+                  <div className="w-24 h-24 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                    {member.photo_url ? (
+                      <img src={member.photo_url} alt={member.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <Users className="h-10 w-10 text-muted-foreground" />
+                    )}
                   </div>
                   <h3 className="font-semibold text-foreground">{member.name}</h3>
                   <p className="text-sm text-primary mt-1">{member.role}</p>
-                  <p className="text-xs text-muted-foreground mt-2">{member.credentials}</p>
+                  {member.credentials && (
+                    <p className="text-xs text-muted-foreground mt-2">{member.credentials}</p>
+                  )}
                 </CardContent>
               </Card>
             ))}
@@ -164,38 +205,23 @@ const About = () => {
       {/* Lab Infrastructure */}
       <section className="py-20 lg:py-28 bg-muted">
         <div className="container">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <p className="text-sm font-medium text-primary mb-2 uppercase tracking-wider">Infrastructure</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                State-of-the-Art Forensic Laboratory
-              </h2>
-              <p className="text-muted-foreground mb-8">
-                Our NABL-accredited laboratory is equipped with the latest forensic tools and 
-                technology to handle even the most complex digital investigations.
-              </p>
+          <div className="max-w-3xl">
+            <p className="text-sm font-medium text-primary mb-2 uppercase tracking-wider">Infrastructure</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+              State-of-the-Art Forensic Laboratory
+            </h2>
+            <p className="text-muted-foreground mb-8">
+              Our NABL-accredited laboratory is equipped with the latest forensic tools and 
+              technology to handle even the most complex digital investigations.
+            </p>
 
-              <div className="space-y-4">
-                {[
-                  "Cellebrite UFED for mobile device extraction",
-                  "EnCase Forensic workstations",
-                  "X-Ways Forensics suite",
-                  "Hardware write blockers and imaging systems",
-                  "Faraday cages for secure device handling",
-                  "Chain of custody compliant evidence storage",
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <CheckCircle className="h-5 w-5 text-primary shrink-0" />
-                    <span className="text-foreground">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-card rounded-xl p-8 border border-border/50">
-              <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                <p className="text-muted-foreground text-sm">Lab Image Placeholder</p>
-              </div>
+            <div className="space-y-4">
+              {content.labEquipment.map((item, index) => (
+                <div key={index} className="flex items-center gap-3">
+                  <CheckCircle className="h-5 w-5 text-primary shrink-0" />
+                  <span className="text-foreground">{item}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -212,17 +238,14 @@ const About = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { city: "Noida (HQ)", address: "123 Cyber Tower, IT Park, Sector 62" },
-              { city: "Mumbai", address: "456 Tech Hub, BKC, Mumbai" },
-              { city: "Bangalore", address: "789 Innovation Center, Whitefield" },
-              { city: "Chennai", address: "321 Digital Complex, OMR" },
-              { city: "Hyderabad", address: "654 Cyber Towers, HITEC City" },
-            ].map((location, index) => (
-              <Card key={index} className="bg-card border-border/50">
+            {locations.map((location) => (
+              <Card key={location.id} className="bg-card border-border/50">
                 <CardContent className="pt-6">
                   <MapPin className="h-6 w-6 text-primary mb-3" />
-                  <h3 className="font-semibold text-foreground">{location.city}</h3>
+                  <h3 className="font-semibold text-foreground">
+                    {location.city}
+                    {location.is_headquarters && <span className="ml-2 text-xs text-primary">(HQ)</span>}
+                  </h3>
                   <p className="text-sm text-muted-foreground mt-1">{location.address}</p>
                 </CardContent>
               </Card>

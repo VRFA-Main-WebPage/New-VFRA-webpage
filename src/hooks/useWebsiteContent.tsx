@@ -36,9 +36,45 @@ export interface CaseSectionContent {
 
 export interface ContactContent {
   phone: string;
+  phone24x7: string;
   email: string;
+  urgentEmail: string;
   address: string;
+  addressLine2: string;
+  addressLine3: string;
   workingHours: string;
+}
+
+export interface FooterContent {
+  tagline: string;
+  gstin: string;
+  cin: string;
+  linkedin: string;
+  twitter: string;
+  github: string;
+}
+
+export interface TrustContent {
+  badge: string;
+  heading: string;
+  highlightWord: string;
+  description: string;
+  certifications: string[];
+  clientTypes: Array<{ icon: string; label: string; description: string }>;
+}
+
+export interface ServicesSectionContent {
+  badge: string;
+  heading: string;
+  description: string;
+}
+
+export interface AboutContent {
+  heroTitle: string;
+  heroDescription: string;
+  mission: string;
+  vision: string;
+  labEquipment: string[];
 }
 
 // Default values for each section
@@ -85,12 +121,60 @@ export const defaultCaseSectionContent: CaseSectionContent = {
 
 export const defaultContactContent: ContactContent = {
   phone: "+91 120 456 7890",
-  email: "contact@vfra.in",
-  address: "Sector 62, Noida, UP, India",
-  workingHours: "Mon-Sat: 9AM - 6PM",
+  phone24x7: "+91 98765 43210",
+  email: "info@vfra.in",
+  urgentEmail: "urgent@vfra.in",
+  address: "123 Cyber Tower, IT Park",
+  addressLine2: "Sector 62, Noida",
+  addressLine3: "Uttar Pradesh 201309",
+  workingHours: "Monday - Friday: 9:00 AM - 6:00 PM",
 };
 
-type SectionKey = "hero" | "cta" | "case_section" | "contact";
+export const defaultFooterContent: FooterContent = {
+  tagline: "India's trusted digital forensics and cybercrime investigation laboratory. Providing expert solutions to law enforcement, government, and corporate clients.",
+  gstin: "09AAACF1234A1ZZ",
+  cin: "U74999UP2020PTC123456",
+  linkedin: "#",
+  twitter: "#",
+  github: "#",
+};
+
+export const defaultTrustContent: TrustContent = {
+  badge: "Why Choose Us",
+  heading: "Trusted by India's Leading Organizations",
+  highlightWord: "Leading Organizations",
+  description: "With over 15 years of experience in digital forensics and cybercrime investigation, we've established ourselves as India's trusted partner for sensitive investigations. Our state-of-the-art laboratory and certified experts ensure accurate, court-admissible evidence.",
+  certifications: ["ISO 27001 Certified", "NABL Accredited Lab", "EnCase Certified", "Cellebrite Certified", "ACE Certified"],
+  clientTypes: [
+    { icon: "Scale", label: "Law Enforcement", description: "Police & Cyber Cells" },
+    { icon: "Building2", label: "Government", description: "Agencies & PSUs" },
+    { icon: "Briefcase", label: "Corporate", description: "Enterprises & MNCs" },
+    { icon: "GraduationCap", label: "Legal", description: "Courts & Law Firms" },
+  ],
+};
+
+export const defaultServicesSectionContent: ServicesSectionContent = {
+  badge: "Our Expertise",
+  heading: "Comprehensive Digital Forensics Services",
+  description: "From mobile device analysis to enterprise incident response, we provide end-to-end digital investigation services backed by cutting-edge technology and certified experts.",
+};
+
+export const defaultAboutContent: AboutContent = {
+  heroTitle: "India's Premier Digital Forensics Laboratory",
+  heroDescription: "For over 15 years, we've been at the forefront of digital forensics and cybercrime investigation, serving law enforcement, government agencies, and enterprises across India.",
+  mission: "To provide world-class digital forensics services that help uncover the truth, support justice, and protect organizations from cyber threats. We are committed to maintaining the highest standards of integrity, accuracy, and confidentiality in every investigation.",
+  vision: "To be India's most trusted digital forensics partner, recognized globally for excellence in investigation, innovation in methodology, and commitment to training the next generation of cybersecurity professionals.",
+  labEquipment: [
+    "Cellebrite UFED for mobile device extraction",
+    "EnCase Forensic workstations",
+    "X-Ways Forensics suite",
+    "Hardware write blockers and imaging systems",
+    "Faraday cages for secure device handling",
+    "Chain of custody compliant evidence storage",
+  ],
+};
+
+type SectionKey = "hero" | "cta" | "case_section" | "contact" | "footer" | "trust" | "services_section" | "about";
 
 export function useWebsiteContent<T>(sectionKey: SectionKey, defaultContent: T) {
   const [content, setContent] = useState<T>(defaultContent);
