@@ -221,6 +221,56 @@ export type Database = {
         }
         Relationships: []
       }
+      event_registrations: {
+        Row: {
+          amount: number
+          created_at: string
+          email: string
+          event_id: string
+          id: string
+          name: string
+          order_id: string | null
+          payment_id: string | null
+          payment_status: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          email: string
+          event_id: string
+          id?: string
+          name: string
+          order_id?: string | null
+          payment_id?: string | null
+          payment_status?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          email?: string
+          event_id?: string
+          id?: string
+          name?: string
+          order_id?: string | null
+          payment_id?: string | null
+          payment_status?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       events: {
         Row: {
           created_at: string

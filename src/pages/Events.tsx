@@ -1,59 +1,29 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Calendar, Clock, MapPin, Users, ArrowRight, ExternalLink } from "lucide-react";
+import { Calendar, Clock, MapPin, Users, ArrowRight, ExternalLink, Loader2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { useRazorpay } from "@/hooks/useRazorpay";
 
-const upcomingEvents = [
-  {
-    id: 1,
-    title: "Mobile Forensics Masterclass",
-    type: "Workshop",
-    date: "2024-02-15",
-    time: "09:00 AM - 05:00 PM",
-    location: "Noida Lab",
-    mode: "Offline",
-    price: "₹15,000",
-    seats: "20 seats left",
-    description: "Hands-on training on Cellebrite UFED and mobile device extraction techniques.",
-  },
-  {
-    id: 2,
-    title: "Cyber Law & Digital Evidence",
-    type: "Webinar",
-    date: "2024-02-20",
-    time: "03:00 PM - 05:00 PM",
-    location: "Online",
-    mode: "Online",
-    price: "Free",
-    seats: "Unlimited",
-    description: "Understanding IT Act provisions and admissibility of digital evidence in Indian courts.",
-  },
-  {
-    id: 3,
-    title: "Advanced Incident Response",
-    type: "Certificate Course",
-    date: "2024-03-01",
-    time: "5-Day Program",
-    location: "Bangalore",
-    mode: "Offline",
-    price: "₹45,000",
-    seats: "15 seats left",
-    description: "Comprehensive training on enterprise incident response and threat hunting.",
-  },
-  {
-    id: 4,
-    title: "Ransomware Investigation Techniques",
-    type: "Workshop",
-    date: "2024-03-10",
-    time: "10:00 AM - 04:00 PM",
-    location: "Online",
-    mode: "Online",
-    price: "₹5,000",
-    seats: "50 seats left",
-    description: "Learn to investigate and trace ransomware attacks with practical case studies.",
-  },
-];
+interface Event {
+  id: string;
+  title: string;
+  event_type: string;
+  event_date: string;
+  event_time: string | null;
+  location: string | null;
+  mode: string | null;
+  price: string | null;
+  seats_available: number | null;
+  description: string | null;
+  is_published: boolean | null;
+}
 
 const pastEvents = [
   {
@@ -77,6 +47,143 @@ const pastEvents = [
 ];
 
 const Events = () => {
+  const { toast } = useToast();
+  const { openPayment, isLoading: paymentLoading } = useRazorpay();
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [registrationOpen, setRegistrationOpen] = useState(false);
+  const [registering, setRegistering] = useState(false);
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "" });
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    const { data, error } = await supabase
+      .from("events")
+      .select("*")
+      .eq("is_published", true)
+      .gte("event_date", new Date().toISOString().split("T")[0])
+      .order("event_date");
+
+    if (error) {
+      console.error("Error fetching events:", error);
+    } else {
+      setEvents(data || []);
+    }
+    setLoading(false);
+  };
+
+  const parsePrice = (priceStr: string | null): number => {
+    if (!priceStr || priceStr.toLowerCase() === "free") return 0;
+    const match = priceStr.replace(/[₹,]/g, "").match(/\d+/);
+    return match ? parseInt(match[0]) : 0;
+  };
+
+  const handleRegisterClick = (event: Event) => {
+    setSelectedEvent(event);
+    setFormData({ name: "", email: "", phone: "" });
+    setRegistrationOpen(true);
+  };
+
+  const handleRegistration = async () => {
+    if (!selectedEvent || !formData.name || !formData.email) {
+      toast({ title: "Error", description: "Please fill in all required fields", variant: "destructive" });
+      return;
+    }
+
+    const price = parsePrice(selectedEvent.price);
+    setRegistering(true);
+
+    try {
+      if (price === 0) {
+        // Free event - direct registration
+        const { error } = await supabase.from("event_registrations").insert({
+          event_id: selectedEvent.id,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone || null,
+          amount: 0,
+          payment_status: "completed",
+        });
+
+        if (error) throw error;
+
+        toast({ title: "Success!", description: "You have successfully registered for this event." });
+        setRegistrationOpen(false);
+        fetchEvents();
+      } else {
+        // Paid event - create Razorpay order
+        const response = await supabase.functions.invoke("create-razorpay-order", {
+          body: {
+            eventId: selectedEvent.id,
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            amount: price,
+          },
+        });
+
+        if (response.error) {
+          throw new Error(response.error.message || "Failed to create order");
+        }
+
+        const { orderId, registrationId, keyId, amount } = response.data;
+
+        // Open Razorpay checkout
+        openPayment({
+          key: keyId,
+          amount: amount,
+          currency: "INR",
+          name: "VFRA",
+          description: selectedEvent.title,
+          order_id: orderId,
+          prefill: {
+            name: formData.name,
+            email: formData.email,
+            contact: formData.phone,
+          },
+          theme: { color: "#D3AA5A" },
+          handler: async (paymentResponse) => {
+            // Verify payment
+            const verifyResponse = await supabase.functions.invoke("verify-razorpay-payment", {
+              body: {
+                razorpay_order_id: paymentResponse.razorpay_order_id,
+                razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                razorpay_signature: paymentResponse.razorpay_signature,
+                registrationId,
+              },
+            });
+
+            if (verifyResponse.data?.verified) {
+              toast({ title: "Payment Successful!", description: "You have successfully registered for this event." });
+              setRegistrationOpen(false);
+              fetchEvents();
+            } else {
+              toast({ title: "Payment Failed", description: "Payment verification failed. Please contact support.", variant: "destructive" });
+            }
+          },
+          modal: {
+            ondismiss: () => {
+              toast({ title: "Cancelled", description: "Payment was cancelled" });
+            },
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast({ 
+        title: "Error", 
+        description: error instanceof Error ? error.message : "Registration failed", 
+        variant: "destructive" 
+      });
+    } finally {
+      setRegistering(false);
+    }
+  };
+
   return (
     <div className="bg-background">
       {/* Hero Section */}
@@ -108,62 +215,84 @@ const Events = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {upcomingEvents.map((event) => (
-              <Card key={event.id} className="bg-card border-border/50 hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="flex items-center justify-between mb-2">
-                    <Badge variant={event.mode === "Online" ? "secondary" : "default"}>
-                      {event.type}
-                    </Badge>
-                    <Badge variant="outline">{event.mode}</Badge>
-                  </div>
-                  <CardTitle className="text-xl">{event.title}</CardTitle>
-                  <CardDescription>{event.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center gap-3 text-sm">
-                      <Calendar className="h-4 w-4 text-primary" />
-                      <span className="text-foreground">
-                        {new Date(event.date).toLocaleDateString("en-IN", {
-                          weekday: "long",
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}
-                      </span>
+          {loading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+          ) : events.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">No upcoming events at the moment. Check back soon!</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 gap-6">
+              {events.map((event) => (
+                <Card key={event.id} className="bg-card border-border/50 hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge variant={event.mode === "Online" ? "secondary" : "default"}>
+                        {event.event_type}
+                      </Badge>
+                      <Badge variant="outline">{event.mode || "Offline"}</Badge>
                     </div>
-                    <div className="flex items-center gap-3 text-sm">
-                      <Clock className="h-4 w-4 text-primary" />
-                      <span className="text-foreground">{event.time}</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm">
-                      <MapPin className="h-4 w-4 text-primary" />
-                      <span className="text-foreground">{event.location}</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm">
-                      <Users className="h-4 w-4 text-primary" />
-                      <span className="text-foreground">{event.seats}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-2xl font-bold text-foreground">{event.price}</span>
-                      {event.price !== "Free" && (
-                        <span className="text-sm text-muted-foreground ml-1">+ GST</span>
+                    <CardTitle className="text-xl">{event.title}</CardTitle>
+                    <CardDescription>{event.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3 mb-6">
+                      <div className="flex items-center gap-3 text-sm">
+                        <Calendar className="h-4 w-4 text-primary" />
+                        <span className="text-foreground">
+                          {new Date(event.event_date).toLocaleDateString("en-IN", {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
+                        </span>
+                      </div>
+                      {event.event_time && (
+                        <div className="flex items-center gap-3 text-sm">
+                          <Clock className="h-4 w-4 text-primary" />
+                          <span className="text-foreground">{event.event_time}</span>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-3 text-sm">
+                        <MapPin className="h-4 w-4 text-primary" />
+                        <span className="text-foreground">{event.location || "TBA"}</span>
+                      </div>
+                      {event.seats_available !== null && (
+                        <div className="flex items-center gap-3 text-sm">
+                          <Users className="h-4 w-4 text-primary" />
+                          <span className="text-foreground">
+                            {event.seats_available > 0 ? `${event.seats_available} seats left` : "Sold Out"}
+                          </span>
+                        </div>
                       )}
                     </div>
-                    <Button className="gap-2">
-                      Register Now
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="text-2xl font-bold text-foreground">
+                          {event.price || "Free"}
+                        </span>
+                        {event.price && event.price.toLowerCase() !== "free" && (
+                          <span className="text-sm text-muted-foreground ml-1">+ GST</span>
+                        )}
+                      </div>
+                      <Button 
+                        className="gap-2"
+                        onClick={() => handleRegisterClick(event)}
+                        disabled={event.seats_available !== null && event.seats_available <= 0}
+                      >
+                        {event.seats_available !== null && event.seats_available <= 0 ? "Sold Out" : "Register Now"}
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -271,6 +400,69 @@ const Events = () => {
           </div>
         </div>
       </section>
+
+      {/* Registration Dialog */}
+      <Dialog open={registrationOpen} onOpenChange={setRegistrationOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Register for Event</DialogTitle>
+            <DialogDescription>
+              {selectedEvent?.title}
+              {selectedEvent?.price && selectedEvent.price.toLowerCase() !== "free" && (
+                <span className="block mt-1 text-primary font-medium">
+                  Fee: {selectedEvent.price} + GST
+                </span>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="name">Full Name *</Label>
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="Enter your full name"
+              />
+            </div>
+            <div>
+              <Label htmlFor="email">Email *</Label>
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                placeholder="Enter your email"
+              />
+            </div>
+            <div>
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                placeholder="Enter your phone number"
+              />
+            </div>
+            <Button 
+              onClick={handleRegistration} 
+              className="w-full" 
+              disabled={registering || paymentLoading}
+            >
+              {registering || paymentLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Processing...
+                </>
+              ) : parsePrice(selectedEvent?.price || null) === 0 ? (
+                "Register (Free)"
+              ) : (
+                `Pay ${selectedEvent?.price} & Register`
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
