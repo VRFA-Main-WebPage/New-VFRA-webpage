@@ -249,13 +249,28 @@
     @apply bg-background/80 backdrop-blur-xl border-b border-primary/10;
   }
 
-  /* Neon text glow */
+  /* Neon text glow - uses theme variables */
   .text-glow {
+    text-shadow: 0 0 10px hsl(var(--glow-primary) / 0.7), 0 0 20px hsl(var(--glow-primary) / 0.5), 0 0 40px hsl(var(--glow-primary) / 0.3);
+  }
+
+  .text-glow-accent {
+    text-shadow: 0 0 10px hsl(var(--glow-accent) / 0.7), 0 0 20px hsl(var(--glow-accent) / 0.5), 0 0 40px hsl(var(--glow-accent) / 0.3);
+  }
+
+  /* Theme-specific gold glow (only for vigilant theme) */
+  .theme-vigilant .text-glow,
+  :root .text-glow {
     text-shadow: 0 0 10px hsl(42 56% 59% / 0.7), 0 0 20px hsl(42 56% 59% / 0.5), 0 0 40px hsl(42 56% 59% / 0.3);
   }
 
-  .text-glow-gold {
-    text-shadow: 0 0 10px hsl(43 83% 70% / 0.7), 0 0 20px hsl(43 83% 70% / 0.5), 0 0 40px hsl(43 83% 70% / 0.3);
+  /* Theme-specific cyan glow (for cyber theme) */
+  .theme-cyber .text-glow {
+    text-shadow: 0 0 10px hsl(180 100% 50% / 0.7), 0 0 20px hsl(180 100% 50% / 0.5), 0 0 40px hsl(180 100% 50% / 0.3);
+  }
+
+  .theme-cyber .text-glow-accent {
+    text-shadow: 0 0 10px hsl(270 100% 65% / 0.7), 0 0 20px hsl(270 100% 65% / 0.5), 0 0 40px hsl(270 100% 65% / 0.3);
   }
 
   /* Scan line effect */
