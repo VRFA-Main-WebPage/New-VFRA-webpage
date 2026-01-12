@@ -35,6 +35,7 @@ import AdminClients from "./pages/admin/Clients";
 import AdminEvents from "./pages/admin/Events";
 import TrackCase from "./pages/TrackCase";
 import SubmitCase from "./pages/SubmitCase";
+import ContentManagement from "./pages/admin/ContentManagement";
 
 const queryClient = new QueryClient();
 
@@ -132,6 +133,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <AdminEvents />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/content"
+              element={
+                <ProtectedRoute>
+                  <ContentManagement />
                 </ProtectedRoute>
               }
             />

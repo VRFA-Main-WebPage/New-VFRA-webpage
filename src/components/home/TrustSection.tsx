@@ -1,5 +1,14 @@
+import { useEffect, useState } from "react";
 import { CheckCircle, Building2, Scale, GraduationCap, Briefcase, Hexagon } from "lucide-react";
 import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Partner {
+  id: string;
+  name: string;
+  logo_url: string | null;
+  website_url: string | null;
+}
 
 const certifications = [
   "ISO 27001 Certified",
@@ -54,6 +63,23 @@ const cardVariants = {
 };
 
 export function TrustSection() {
+  const [partners, setPartners] = useState<Partner[]>([]);
+
+  useEffect(() => {
+    const fetchPartners = async () => {
+      const { data } = await supabase
+        .from("partners")
+        .select("*")
+        .eq("is_active", true)
+        .order("sort_order");
+
+      if (data) {
+        setPartners(data);
+      }
+    };
+    fetchPartners();
+  }, []);
+
   return (
     <section className="py-24 lg:py-32 bg-background relative overflow-hidden">
       {/* Animated background elements */}
@@ -185,19 +211,42 @@ export function TrustSection() {
             Trusted by leading organizations across India
           </p>
           <div className="flex flex-wrap items-center justify-center gap-8 lg:gap-16">
-            {[1, 2, 3, 4, 5].map((_, index) => (
-              <motion.div
-                key={index}
-                className="h-12 w-36 bg-primary/5 border border-primary/10 rounded-lg flex items-center justify-center hover:bg-primary/10 hover:border-primary/30 transition-all duration-300 cursor-pointer"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.4 + index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <span className="text-xs text-muted-foreground font-medium font-mono">PARTNER_{index + 1}</span>
-              </motion.div>
-            ))}
+            {partners.length > 0 ? (
+              partners.map((partner, index) => (
+                <motion.a
+                  key={partner.id}
+                  href={partner.website_url || "#"}
+                  target={partner.website_url ? "_blank" : undefined}
+                  rel="noopener noreferrer"
+                  className="h-12 w-36 bg-primary/5 border border-primary/10 rounded-lg flex items-center justify-center hover:bg-primary/10 hover:border-primary/30 transition-all duration-300 cursor-pointer overflow-hidden"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.4 + index * 0.1 }}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  {partner.logo_url ? (
+                    <img src={partner.logo_url} alt={partner.name} className="h-8 object-contain" />
+                  ) : (
+                    <span className="text-xs text-muted-foreground font-medium font-mono">{partner.name}</span>
+                  )}
+                </motion.a>
+              ))
+            ) : (
+              [1, 2, 3, 4, 5].map((_, index) => (
+                <motion.div
+                  key={index}
+                  className="h-12 w-36 bg-primary/5 border border-primary/10 rounded-lg flex items-center justify-center hover:bg-primary/10 hover:border-primary/30 transition-all duration-300 cursor-pointer"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.4 + index * 0.1 }}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <span className="text-xs text-muted-foreground font-medium font-mono">PARTNER_{index + 1}</span>
+                </motion.div>
+              ))
+            )}
           </div>
         </motion.div>
       </div>

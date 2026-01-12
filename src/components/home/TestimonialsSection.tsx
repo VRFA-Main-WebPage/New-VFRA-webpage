@@ -1,21 +1,34 @@
+import { useEffect, useState } from "react";
 import { Quote, Star, Terminal } from "lucide-react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
 
-const testimonials = [
+interface Testimonial {
+  id: string;
+  quote: string;
+  author: string;
+  organization: string | null;
+  rating: number;
+}
+
+const fallbackTestimonials = [
   {
+    id: "1",
     quote: "ForensiX provided exceptional forensic analysis that was crucial to our investigation. Their expert testimony was clear and compelling in court.",
     author: "Deputy Commissioner of Police",
     organization: "Cyber Crime Cell, Delhi",
     rating: 5,
   },
   {
+    id: "2",
     quote: "Their rapid incident response helped us contain a major data breach within hours. Professional, thorough, and completely confidential.",
     author: "Chief Information Security Officer",
     organization: "Leading Private Bank",
     rating: 5,
   },
   {
+    id: "3",
     quote: "The training workshops conducted for our officers were extremely practical and well-organized. Highly recommended for law enforcement training.",
     author: "Senior Superintendent of Police",
     organization: "State Cyber Cell",
@@ -47,6 +60,23 @@ const cardVariants = {
 };
 
 export function TestimonialsSection() {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(fallbackTestimonials);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      const { data, error } = await supabase
+        .from("testimonials")
+        .select("*")
+        .eq("is_active", true)
+        .order("sort_order");
+
+      if (data && data.length > 0) {
+        setTestimonials(data);
+      }
+    };
+    fetchTestimonials();
+  }, []);
+
   return (
     <section className="py-24 lg:py-32 bg-muted relative overflow-hidden">
       {/* Background effects */}
@@ -107,7 +137,7 @@ export function TestimonialsSection() {
         >
           {testimonials.map((testimonial, index) => (
             <motion.div
-              key={index}
+              key={testimonial.id}
               variants={cardVariants}
               whileHover={{ y: -10, scale: 1.02 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}

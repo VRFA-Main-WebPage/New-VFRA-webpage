@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-
+import { generateCertificatePDF, downloadCertificatePDF } from "@/lib/generateCertificatePDF";
 interface Certificate {
   id: string;
   certificate_number: string;
@@ -24,6 +24,7 @@ interface Certificate {
   signature_url: string | null;
   status: "draft" | "issued" | "revoked";
   created_at: string;
+  additional_details: unknown;
 }
 
 const statusColors: Record<string, string> = {
@@ -85,6 +86,34 @@ const Certificates = () => {
         description: error.message || "Failed to delete certificate.",
         variant: "destructive",
       });
+    }
+  };
+
+  const handleDownload = async (cert: Certificate) => {
+    try {
+      toast({ title: "Generating PDF...", description: "Please wait" });
+      
+      const additionalDetails = cert.additional_details as { notes?: string } | null;
+      
+      const doc = await generateCertificatePDF({
+        certificateNumber: cert.certificate_number,
+        recipientName: cert.recipient_name,
+        certificateType: cert.certificate_type,
+        courseName: cert.course_name || undefined,
+        issueDate: cert.issue_date,
+        expiryDate: cert.expiry_date || undefined,
+        signingAuthorityName: cert.signing_authority_name,
+        signingAuthorityDesignation: cert.signing_authority_designation || undefined,
+        logoUrl: cert.logo_url || undefined,
+        signatureUrl: cert.signature_url || undefined,
+        additionalNotes: additionalDetails?.notes,
+      });
+
+      downloadCertificatePDF(doc, `${cert.certificate_number}-${cert.recipient_name.replace(/\s+/g, "_")}.pdf`);
+      
+      toast({ title: "Success", description: "Certificate downloaded!" });
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message || "Failed to generate PDF", variant: "destructive" });
     }
   };
 
@@ -181,6 +210,14 @@ const Certificates = () => {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-2">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleDownload(cert)}
+                              title="Download PDF"
+                            >
+                              <Download className="h-4 w-4" />
+                            </Button>
                             <Button
                               variant="ghost"
                               size="icon"
