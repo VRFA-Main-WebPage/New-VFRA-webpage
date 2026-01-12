@@ -199,6 +199,13 @@ export function HeroSection() {
           initial="hidden"
           animate="visible"
         >
+          {/* Company Name */}
+          <motion.div variants={itemVariants} className="mb-4">
+            <h2 className="font-display text-xl md:text-2xl lg:text-3xl font-bold text-primary text-glow tracking-wide">
+              Vigilant Forensic Research and Analytics Pvt. Ltd.
+            </h2>
+          </motion.div>
+
           {/* Badge */}
           <motion.div variants={itemVariants}>
             <motion.div
