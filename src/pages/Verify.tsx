@@ -82,17 +82,18 @@ const Verify = () => {
   return (
     <div className="bg-background">
       {/* Hero Section */}
-      <section className="bg-gradient-hero py-20 lg:py-28">
-        <div className="container">
+      <section className="relative py-20 lg:py-28 bg-gradient-to-br from-background via-background to-primary/10 overflow-hidden">
+        <div className="absolute inset-0 grid-overlay opacity-30" />
+        <div className="container relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-6">
-              <Award className="h-8 w-8 text-accent" />
+              <Award className="h-8 w-8 text-primary" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 font-display">
               Certificate Verification
             </h1>
-            <p className="text-lg text-primary-foreground/70">
-              Verify the authenticity of certificates issued by ForensiX India for 
+            <p className="text-lg text-muted-foreground">
+              Verify the authenticity of certificates issued by VFRA for 
               training programs, workshops, and courses.
             </p>
           </div>
@@ -105,8 +106,8 @@ const Verify = () => {
           <div className="max-w-xl mx-auto">
             <Card className="bg-card border-border/50">
               <CardHeader className="text-center">
-                <CardTitle>Enter Certificate ID</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-foreground">Enter Certificate ID</CardTitle>
+                <CardDescription className="text-muted-foreground">
                   You can find the Certificate ID on the bottom of your certificate or scan the QR code.
                 </CardDescription>
               </CardHeader>
@@ -146,8 +147,8 @@ const Verify = () => {
                       </h3>
                       <p className="text-muted-foreground mb-6">
                         {isExpired 
-                          ? "This certificate was issued by ForensiX India but has expired."
-                          : "This certificate is valid and was issued by ForensiX India."
+                          ? "This certificate was issued by VFRA but has expired."
+                          : "This certificate is valid and was issued by VFRA."
                         }
                       </p>
 

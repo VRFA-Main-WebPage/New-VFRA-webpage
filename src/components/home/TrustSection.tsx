@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { CheckCircle, Building2, Scale, GraduationCap, Briefcase, Hexagon } from "lucide-react";
+import { CheckCircle, Building2, Scale, GraduationCap, Briefcase, Hexagon, LucideIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
+import { useWebsiteContent, defaultTrustContent, TrustContent } from "@/hooks/useWebsiteContent";
 
 interface Partner {
   id: string;
@@ -10,20 +11,12 @@ interface Partner {
   website_url: string | null;
 }
 
-const certifications = [
-  "ISO 27001 Certified",
-  "NABL Accredited Lab",
-  "EnCase Certified",
-  "Cellebrite Certified",
-  "ACE Certified",
-];
-
-const clientTypes = [
-  { icon: Scale, label: "Law Enforcement", description: "Police & Cyber Cells" },
-  { icon: Building2, label: "Government", description: "Agencies & PSUs" },
-  { icon: Briefcase, label: "Corporate", description: "Enterprises & MNCs" },
-  { icon: GraduationCap, label: "Legal", description: "Courts & Law Firms" },
-];
+const iconMap: Record<string, LucideIcon> = {
+  Scale,
+  Building2,
+  Briefcase,
+  GraduationCap,
+};
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -64,6 +57,7 @@ const cardVariants = {
 
 export function TrustSection() {
   const [partners, setPartners] = useState<Partner[]>([]);
+  const { content } = useWebsiteContent<TrustContent>("trust", defaultTrustContent);
 
   useEffect(() => {
     const fetchPartners = async () => {
@@ -130,16 +124,14 @@ export function TrustSection() {
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
             >
-              Why Choose Us
+              {content.badge}
             </motion.p>
             <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
-              Trusted by India's{" "}
-              <span className="text-primary">Leading Organizations</span>
+              {content.heading.replace(content.highlightWord, "").trim()}{" "}
+              <span className="text-primary">{content.highlightWord}</span>
             </h2>
             <p className="text-muted-foreground text-lg mb-10 leading-relaxed">
-              With over 15 years of experience in digital forensics and cybercrime investigation,
-              we've established ourselves as India's trusted partner for sensitive investigations.
-              Our state-of-the-art laboratory and certified experts ensure accurate, court-admissible evidence.
+              {content.description}
             </p>
 
             {/* Certifications */}
@@ -150,7 +142,7 @@ export function TrustSection() {
               whileInView="visible"
               viewport={{ once: true }}
             >
-              {certifications.map((cert, index) => (
+              {content.certifications.map((cert, index) => (
                 <motion.div
                   key={index}
                   className="flex items-center gap-4 group"
@@ -173,29 +165,32 @@ export function TrustSection() {
 
           {/* Right Content - Client Types */}
           <div className="grid grid-cols-2 gap-5">
-            {clientTypes.map((client, index) => (
-              <motion.div
-                key={index}
-                custom={index}
-                variants={cardVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-50px" }}
-                whileHover={{ y: -8, scale: 1.03 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                className="bg-card/50 rounded-2xl p-6 border border-primary/10 hover:border-primary/30 hover:shadow-neon transition-all duration-300 cursor-pointer group backdrop-blur-sm"
-              >
+            {content.clientTypes.map((client, index) => {
+              const IconComponent = iconMap[client.icon] || Scale;
+              return (
                 <motion.div
-                  className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-5 group-hover:bg-primary/20 group-hover:shadow-neon transition-all duration-300"
-                  whileHover={{ rotate: [0, -10, 10, 0] }}
-                  transition={{ duration: 0.5 }}
+                  key={index}
+                  custom={index}
+                  variants={cardVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-50px" }}
+                  whileHover={{ y: -8, scale: 1.03 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  className="bg-card/50 rounded-2xl p-6 border border-primary/10 hover:border-primary/30 hover:shadow-neon transition-all duration-300 cursor-pointer group backdrop-blur-sm"
                 >
-                  <client.icon className="h-8 w-8 text-primary" />
+                  <motion.div
+                    className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-5 group-hover:bg-primary/20 group-hover:shadow-neon transition-all duration-300"
+                    whileHover={{ rotate: [0, -10, 10, 0] }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <IconComponent className="h-8 w-8 text-primary" />
+                  </motion.div>
+                  <h3 className="font-display font-bold text-foreground text-lg mb-1 group-hover:text-primary transition-colors">{client.label}</h3>
+                  <p className="text-sm text-muted-foreground">{client.description}</p>
                 </motion.div>
-                <h3 className="font-display font-bold text-foreground text-lg mb-1 group-hover:text-primary transition-colors">{client.label}</h3>
-                <p className="text-sm text-muted-foreground">{client.description}</p>
-              </motion.div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

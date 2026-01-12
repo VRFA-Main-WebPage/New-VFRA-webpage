@@ -19,6 +19,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { useWebsiteContent, defaultServicesSectionContent, ServicesSectionContent } from "@/hooks/useWebsiteContent";
 
 interface Service {
   id: string;
@@ -96,6 +97,7 @@ const cardVariants = {
 
 export function ServicesSection() {
   const [services, setServices] = useState<Service[]>(fallbackServices);
+  const { content } = useWebsiteContent<ServicesSectionContent>("services_section", defaultServicesSectionContent);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -134,14 +136,13 @@ export function ServicesSection() {
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
           >
-            Our Expertise
+            {content.badge}
           </motion.p>
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-5">
-            Comprehensive Digital Forensics Services
+            {content.heading}
           </h2>
           <p className="text-muted-foreground text-lg">
-            From mobile device analysis to enterprise incident response, we provide end-to-end
-            digital investigation services backed by cutting-edge technology and certified experts.
+            {content.description}
           </p>
         </motion.div>
 

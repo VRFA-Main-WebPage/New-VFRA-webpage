@@ -13,10 +13,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { useWebsiteContent, defaultContactContent, ContactContent } from "@/hooks/useWebsiteContent";
 
 const Contact = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { content } = useWebsiteContent<ContactContent>("contact", defaultContactContent);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -67,8 +69,8 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-foreground">Phone</h3>
-                      <p className="text-sm text-muted-foreground mt-1">+91 120 456 7890</p>
-                      <p className="text-sm text-muted-foreground">+91 98765 43210 (24/7)</p>
+                      <p className="text-sm text-muted-foreground mt-1">{content.phone}</p>
+                      <p className="text-sm text-muted-foreground">{content.phone24x7} (24/7)</p>
                     </div>
                   </div>
                 </CardContent>
@@ -82,8 +84,8 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-foreground">Email</h3>
-                      <p className="text-sm text-muted-foreground mt-1">info@forensix.in</p>
-                      <p className="text-sm text-muted-foreground">urgent@forensix.in</p>
+                      <p className="text-sm text-muted-foreground mt-1">{content.email}</p>
+                      <p className="text-sm text-muted-foreground">{content.urgentEmail}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -98,9 +100,9 @@ const Contact = () => {
                     <div>
                       <h3 className="font-semibold text-foreground">Head Office</h3>
                       <p className="text-sm text-muted-foreground mt-1">
-                        123 Cyber Tower, IT Park<br />
-                        Sector 62, Noida<br />
-                        Uttar Pradesh 201309
+                        {content.address}<br />
+                        {content.addressLine2}<br />
+                        {content.addressLine3}
                       </p>
                     </div>
                   </div>
@@ -116,8 +118,7 @@ const Contact = () => {
                     <div>
                       <h3 className="font-semibold text-foreground">Working Hours</h3>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Monday - Friday: 9:00 AM - 6:00 PM<br />
-                        Saturday: 10:00 AM - 4:00 PM<br />
+                        {content.workingHours}<br />
                         Emergency: 24/7 Available
                       </p>
                     </div>
@@ -130,7 +131,7 @@ const Contact = () => {
             <div className="lg:col-span-2">
               <Card className="bg-card border-border/50">
                 <CardHeader>
-                  <CardTitle>Send us a Message</CardTitle>
+                  <CardTitle className="text-foreground">Send us a Message</CardTitle>
                   <CardDescription>
                     Fill out the form below and we'll get back to you within 24 hours.
                     For urgent matters, please call our emergency line.
@@ -212,13 +213,6 @@ const Contact = () => {
               </Card>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Map Section (Placeholder) */}
-      <section className="h-96 bg-muted">
-        <div className="h-full flex items-center justify-center">
-          <p className="text-muted-foreground">Map Integration Placeholder</p>
         </div>
       </section>
     </div>
