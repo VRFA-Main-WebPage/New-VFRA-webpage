@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ChevronDown, Shield, Zap } from "lucide-react";
+import { Menu, X, ChevronDown, Shield, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -253,7 +253,7 @@ export function Navbar() {
               Verify Certificate
             </Button>
           </Link>
-          <Link to="/admin">
+          <Link to="/track-case">
             <motion.div
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -262,8 +262,8 @@ export function Navbar() {
                 size="sm" 
                 className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 gap-2"
               >
-                <Zap className="h-4 w-4" />
-                Admin Portal
+                <Search className="h-4 w-4" />
+                Track Case
               </Button>
             </motion.div>
           </Link>
@@ -342,10 +342,10 @@ export function Navbar() {
                     Verify Certificate
                   </Button>
                 </Link>
-                <Link to="/admin" onClick={() => setIsOpen(false)}>
+                <Link to="/track-case" onClick={() => setIsOpen(false)}>
                   <Button className="w-full bg-primary hover:bg-primary/90 shadow-lg shadow-primary/25 gap-2">
-                    <Zap className="h-4 w-4" />
-                    Admin Portal
+                    <Search className="h-4 w-4" />
+                    Track Case
                   </Button>
                 </Link>
               </motion.div>
