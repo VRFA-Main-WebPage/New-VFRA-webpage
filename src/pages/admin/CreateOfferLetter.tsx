@@ -23,6 +23,7 @@ import {
   getTemplateFields 
 } from "@/lib/offerLetterTemplates";
 import { generateOfferLetterPDF, downloadPDF } from "@/lib/generatePDF";
+import { mapErrorToUserMessage } from "@/lib/errorHandler";
 
 type OfferLetterInsert = Database["public"]["Tables"]["offer_letters"]["Insert"];
 
@@ -135,10 +136,10 @@ const CreateOfferLetter = () => {
       });
 
       navigate("/admin/offer-letters");
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
-        description: error.message || "Failed to save offer letter.",
+        description: mapErrorToUserMessage(error, "save offer letter"),
         variant: "destructive",
       });
     } finally {

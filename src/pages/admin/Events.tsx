@@ -34,6 +34,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { mapErrorToUserMessage } from "@/lib/errorHandler";
 
 const AdminEvents = () => {
   const { user } = useAuth();
@@ -82,8 +83,8 @@ const AdminEvents = () => {
       setIsCreateDialogOpen(false);
       resetForm();
     },
-    onError: (error: any) => {
-      toast({ title: "Error creating event", description: error.message, variant: "destructive" });
+    onError: (error: unknown) => {
+      toast({ title: "Error creating event", description: mapErrorToUserMessage(error, "create event"), variant: "destructive" });
     },
   });
 
@@ -97,8 +98,8 @@ const AdminEvents = () => {
       toast({ title: "Event updated successfully" });
       setIsEditDialogOpen(false);
     },
-    onError: (error: any) => {
-      toast({ title: "Error updating event", description: error.message, variant: "destructive" });
+    onError: (error: unknown) => {
+      toast({ title: "Error updating event", description: mapErrorToUserMessage(error, "update event"), variant: "destructive" });
     },
   });
 
@@ -111,8 +112,8 @@ const AdminEvents = () => {
       queryClient.invalidateQueries({ queryKey: ["admin-events"] });
       toast({ title: "Event deleted successfully" });
     },
-    onError: (error: any) => {
-      toast({ title: "Error deleting event", description: error.message, variant: "destructive" });
+    onError: (error: unknown) => {
+      toast({ title: "Error deleting event", description: mapErrorToUserMessage(error, "delete event"), variant: "destructive" });
     },
   });
 
@@ -125,8 +126,8 @@ const AdminEvents = () => {
       queryClient.invalidateQueries({ queryKey: ["admin-events"] });
       toast({ title: "Event visibility updated" });
     },
-    onError: (error: any) => {
-      toast({ title: "Error updating event", description: error.message, variant: "destructive" });
+    onError: (error: unknown) => {
+      toast({ title: "Error updating event", description: mapErrorToUserMessage(error, "update event"), variant: "destructive" });
     },
   });
 

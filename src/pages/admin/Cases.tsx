@@ -34,6 +34,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { mapErrorToUserMessage } from "@/lib/errorHandler";
 
 type CaseStatus = "submitted" | "under_review" | "in_progress" | "on_hold" | "resolved" | "closed";
 
@@ -80,8 +81,8 @@ const AdminCases = () => {
       toast({ title: "Case updated successfully" });
       setIsEditDialogOpen(false);
     },
-    onError: (error: any) => {
-      toast({ title: "Error updating case", description: error.message, variant: "destructive" });
+    onError: (error: unknown) => {
+      toast({ title: "Error updating case", description: mapErrorToUserMessage(error, "update case"), variant: "destructive" });
     },
   });
 
@@ -94,8 +95,8 @@ const AdminCases = () => {
       queryClient.invalidateQueries({ queryKey: ["cases"] });
       toast({ title: "Case deleted successfully" });
     },
-    onError: (error: any) => {
-      toast({ title: "Error deleting case", description: error.message, variant: "destructive" });
+    onError: (error: unknown) => {
+      toast({ title: "Error deleting case", description: mapErrorToUserMessage(error, "delete case"), variant: "destructive" });
     },
   });
 

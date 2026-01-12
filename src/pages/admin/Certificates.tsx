@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { generateCertificatePDF, downloadCertificatePDF } from "@/lib/generateCertificatePDF";
+import { mapErrorToUserMessage } from "@/lib/errorHandler";
 interface Certificate {
   id: string;
   certificate_number: string;
@@ -53,10 +54,10 @@ const Certificates = () => {
 
       if (error) throw error;
       setCertificates((data || []) as Certificate[]);
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
-        description: error.message || "Failed to fetch certificates.",
+        description: mapErrorToUserMessage(error, "fetch certificates"),
         variant: "destructive",
       });
     } finally {
@@ -80,10 +81,10 @@ const Certificates = () => {
         title: "Deleted",
         description: "Certificate deleted successfully.",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
-        description: error.message || "Failed to delete certificate.",
+        description: mapErrorToUserMessage(error, "delete certificate"),
         variant: "destructive",
       });
     }
@@ -112,8 +113,8 @@ const Certificates = () => {
       downloadCertificatePDF(doc, `${cert.certificate_number}-${cert.recipient_name.replace(/\s+/g, "_")}.pdf`);
       
       toast({ title: "Success", description: "Certificate downloaded!" });
-    } catch (error: any) {
-      toast({ title: "Error", description: error.message || "Failed to generate PDF", variant: "destructive" });
+    } catch (error: unknown) {
+      toast({ title: "Error", description: mapErrorToUserMessage(error, "generate PDF"), variant: "destructive" });
     }
   };
 

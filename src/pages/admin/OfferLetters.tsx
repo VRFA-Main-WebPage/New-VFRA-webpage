@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { letterTypeLabels, OfferLetterType, OfferLetterContent } from "@/lib/offerLetterTemplates";
 import { generateOfferLetterPDF, downloadPDF } from "@/lib/generatePDF";
+import { mapErrorToUserMessage } from "@/lib/errorHandler";
 
 interface OfferLetter {
   id: string;
@@ -64,10 +65,10 @@ const OfferLetters = () => {
       }));
       
       setLetters(typedData);
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
-        description: error.message || "Failed to fetch offer letters.",
+        description: mapErrorToUserMessage(error, "fetch offer letters"),
         variant: "destructive",
       });
     } finally {
@@ -105,10 +106,10 @@ const OfferLetters = () => {
         title: "Deleted",
         description: "Offer letter deleted successfully.",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
-        description: error.message || "Failed to delete offer letter.",
+        description: mapErrorToUserMessage(error, "delete offer letter"),
         variant: "destructive",
       });
     }
