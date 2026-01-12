@@ -2,13 +2,9 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Shield, Award, Users, FileCheck, Cpu, Binary, Terminal } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { useWebsiteContent, defaultHeroContent, HeroContent } from "@/hooks/useWebsiteContent";
 
-const stats = [
-  { icon: FileCheck, value: "500+", label: "Cases Solved" },
-  { icon: Users, value: "200+", label: "Clients Served" },
-  { icon: Award, value: "15+", label: "Years Experience" },
-  { icon: Shield, value: "100%", label: "Confidential" },
-];
+const statIcons = [FileCheck, Users, Award, Shield];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -78,6 +74,8 @@ const MatrixColumn = ({ delay, left }: { delay: number; left: string }) => (
 );
 
 export function HeroSection() {
+  const { content, loading } = useWebsiteContent<HeroContent>("hero", defaultHeroContent);
+
   return (
     <section className="relative bg-gradient-hero overflow-hidden min-h-screen flex items-center scanlines">
       {/* Matrix rain background */}
@@ -202,7 +200,7 @@ export function HeroSection() {
           {/* Company Name */}
           <motion.div variants={itemVariants} className="mb-4">
             <h2 className="font-display text-xl md:text-2xl lg:text-3xl font-bold text-primary text-glow tracking-wide">
-              Vigilant Forensic Research and Analytics Pvt. Ltd.
+              {content.companyFullName}
             </h2>
           </motion.div>
 
@@ -216,7 +214,7 @@ export function HeroSection() {
               <motion.div variants={floatVariants} animate="animate">
                 <Shield className="h-4 w-4 text-primary" />
               </motion.div>
-              <span className="text-foreground/90 font-medium">India's Trusted Digital Forensics Partner</span>
+              <span className="text-foreground/90 font-medium">{content.badge}</span>
               <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
             </motion.div>
           </motion.div>
@@ -226,14 +224,14 @@ export function HeroSection() {
             className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 leading-[1.1] tracking-tight"
             variants={itemVariants}
           >
-            <span className="block">Uncover the Truth with</span>
+            <span className="block">{content.headingLine1}</span>
             <motion.span
               className="block text-primary text-glow mt-2"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
             >
-              Expert Digital Forensics
+              {content.headingLine2}
             </motion.span>
           </motion.h1>
 
@@ -242,8 +240,7 @@ export function HeroSection() {
             className="text-lg md:text-xl text-foreground/60 mb-12 max-w-3xl mx-auto leading-relaxed"
             variants={itemVariants}
           >
-            Professional cybercrime investigation, digital evidence analysis, and expert witness services
-            for law enforcement, government agencies, and corporate clients across India.
+            {content.description}
           </motion.p>
 
           {/* CTA Buttons */}
@@ -261,7 +258,7 @@ export function HeroSection() {
                   size="lg" 
                   className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2 shadow-neon px-8 py-6 text-base font-semibold group"
                 >
-                  Request Consultation
+                  {content.primaryButtonText}
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </motion.div>
@@ -277,7 +274,7 @@ export function HeroSection() {
                   variant="outline"
                   className="border-2 border-foreground/20 text-foreground bg-foreground/5 hover:bg-foreground/10 hover:border-primary/50 hover:text-primary px-8 py-6 text-base font-semibold backdrop-blur-sm transition-all duration-300"
                 >
-                  Explore Services
+                  {content.secondaryButtonText}
                 </Button>
               </motion.div>
             </Link>
@@ -285,35 +282,38 @@ export function HeroSection() {
 
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-10">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                className="text-center group relative"
-                custom={index}
-                variants={statsVariants}
-                initial="hidden"
-                animate="visible"
-                whileHover={{ y: -5 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
+            {content.stats.map((stat, index) => {
+              const IconComponent = statIcons[index % statIcons.length];
+              return (
                 <motion.div
-                  className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 mb-4 group-hover:bg-primary/20 group-hover:border-primary/40 transition-all duration-300 group-hover:shadow-neon"
-                  whileHover={{ rotate: [0, -10, 10, 0] }}
-                  transition={{ duration: 0.5 }}
+                  key={index}
+                  className="text-center group relative"
+                  custom={index}
+                  variants={statsVariants}
+                  initial="hidden"
+                  animate="visible"
+                  whileHover={{ y: -5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <stat.icon className="h-7 w-7 text-primary" />
+                  <motion.div
+                    className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 mb-4 group-hover:bg-primary/20 group-hover:border-primary/40 transition-all duration-300 group-hover:shadow-neon"
+                    whileHover={{ rotate: [0, -10, 10, 0] }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <IconComponent className="h-7 w-7 text-primary" />
+                  </motion.div>
+                  <motion.div
+                    className="text-3xl lg:text-5xl font-display font-bold text-foreground mb-1 group-hover:text-primary transition-colors"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.8 + index * 0.1 }}
+                  >
+                    {stat.value}
+                  </motion.div>
+                  <div className="text-sm text-foreground/50 font-medium">{stat.label}</div>
                 </motion.div>
-                <motion.div
-                  className="text-3xl lg:text-5xl font-display font-bold text-foreground mb-1 group-hover:text-primary transition-colors"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.8 + index * 0.1 }}
-                >
-                  {stat.value}
-                </motion.div>
-                <div className="text-sm text-foreground/50 font-medium">{stat.label}</div>
-              </motion.div>
-            ))}
+              );
+            })}
           </div>
         </motion.div>
       </div>
