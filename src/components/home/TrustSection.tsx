@@ -1,4 +1,4 @@
-import { CheckCircle, Building2, Scale, GraduationCap, Briefcase } from "lucide-react";
+import { CheckCircle, Building2, Scale, GraduationCap, Briefcase, Hexagon } from "lucide-react";
 import { motion } from "framer-motion";
 
 const certifications = [
@@ -55,9 +55,38 @@ const cardVariants = {
 
 export function TrustSection() {
   return (
-    <section className="py-24 lg:py-32 bg-muted relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+    <section className="py-24 lg:py-32 bg-background relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 grid-overlay opacity-50" />
+      
+      {/* Floating hexagons */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute top-20 right-[10%]"
+          animate={{ rotate: 360, y: [-10, 10, -10] }}
+          transition={{ rotate: { duration: 20, repeat: Infinity, ease: "linear" }, y: { duration: 5, repeat: Infinity, ease: "easeInOut" } }}
+        >
+          <Hexagon className="h-20 w-20 text-primary/5 stroke-[0.5]" />
+        </motion.div>
+        <motion.div
+          className="absolute bottom-32 left-[5%]"
+          animate={{ rotate: -360, y: [10, -10, 10] }}
+          transition={{ rotate: { duration: 25, repeat: Infinity, ease: "linear" }, y: { duration: 6, repeat: Infinity, ease: "easeInOut" } }}
+        >
+          <Hexagon className="h-16 w-16 text-accent/5 stroke-[0.5]" />
+        </motion.div>
+      </div>
+
+      {/* Glowing line */}
+      <motion.div 
+        className="absolute top-1/2 left-0 w-full h-px"
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.5, ease: "easeOut" }}
+      >
+        <div className="h-full bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+      </motion.div>
 
       <div className="container relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
@@ -69,7 +98,7 @@ export function TrustSection() {
             transition={{ duration: 0.7, ease: "easeOut" }}
           >
             <motion.p
-              className="text-sm font-semibold text-primary mb-3 uppercase tracking-widest"
+              className="text-sm font-semibold text-primary mb-3 uppercase tracking-widest text-glow"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -78,7 +107,8 @@ export function TrustSection() {
               Why Choose Us
             </motion.p>
             <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
-              Trusted by India's Leading Organizations
+              Trusted by India's{" "}
+              <span className="text-primary">Leading Organizations</span>
             </h2>
             <p className="text-muted-foreground text-lg mb-10 leading-relaxed">
               With over 15 years of experience in digital forensics and cybercrime investigation,
@@ -103,13 +133,13 @@ export function TrustSection() {
                   transition={{ type: "spring", stiffness: 400 }}
                 >
                   <motion.div
-                    className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors"
+                    className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 group-hover:border-primary/40 group-hover:shadow-neon transition-all duration-300"
                     whileHover={{ rotate: 360 }}
                     transition={{ duration: 0.5 }}
                   >
                     <CheckCircle className="h-5 w-5 text-primary" />
                   </motion.div>
-                  <span className="text-foreground font-medium text-lg">{cert}</span>
+                  <span className="text-foreground font-medium text-lg group-hover:text-primary transition-colors">{cert}</span>
                 </motion.div>
               ))}
             </motion.div>
@@ -127,16 +157,16 @@ export function TrustSection() {
                 viewport={{ once: true, margin: "-50px" }}
                 whileHover={{ y: -8, scale: 1.03 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                className="bg-card rounded-2xl p-6 border border-border/50 shadow-sm hover:shadow-xl hover:shadow-primary/5 hover:border-primary/30 transition-all duration-300 cursor-pointer group"
+                className="bg-card/50 rounded-2xl p-6 border border-primary/10 hover:border-primary/30 hover:shadow-neon transition-all duration-300 cursor-pointer group backdrop-blur-sm"
               >
                 <motion.div
-                  className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-accent/20 transition-colors duration-300"
+                  className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-5 group-hover:bg-primary/20 group-hover:shadow-neon transition-all duration-300"
                   whileHover={{ rotate: [0, -10, 10, 0] }}
                   transition={{ duration: 0.5 }}
                 >
-                  <client.icon className="h-8 w-8 text-primary group-hover:text-accent transition-colors duration-300" />
+                  <client.icon className="h-8 w-8 text-primary" />
                 </motion.div>
-                <h3 className="font-bold text-foreground text-lg mb-1">{client.label}</h3>
+                <h3 className="font-display font-bold text-foreground text-lg mb-1 group-hover:text-primary transition-colors">{client.label}</h3>
                 <p className="text-sm text-muted-foreground">{client.description}</p>
               </motion.div>
             ))}
@@ -145,7 +175,7 @@ export function TrustSection() {
 
         {/* Partners Section */}
         <motion.div
-          className="mt-20 pt-16 border-t border-border"
+          className="mt-20 pt-16 border-t border-primary/10"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -158,14 +188,14 @@ export function TrustSection() {
             {[1, 2, 3, 4, 5].map((_, index) => (
               <motion.div
                 key={index}
-                className="h-12 w-36 bg-foreground/5 rounded-lg flex items-center justify-center hover:bg-foreground/10 transition-colors cursor-pointer"
+                className="h-12 w-36 bg-primary/5 border border-primary/10 rounded-lg flex items-center justify-center hover:bg-primary/10 hover:border-primary/30 transition-all duration-300 cursor-pointer"
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.4 + index * 0.1 }}
                 whileHover={{ scale: 1.05 }}
               >
-                <span className="text-xs text-muted-foreground font-medium">Partner Logo</span>
+                <span className="text-xs text-muted-foreground font-medium font-mono">PARTNER_{index + 1}</span>
               </motion.div>
             ))}
           </div>

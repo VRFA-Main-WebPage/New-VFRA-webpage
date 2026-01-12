@@ -1,4 +1,4 @@
-import { Quote, Star } from "lucide-react";
+import { Quote, Star, Terminal } from "lucide-react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -48,9 +48,26 @@ const cardVariants = {
 
 export function TestimonialsSection() {
   return (
-    <section className="py-24 lg:py-32 bg-background relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-3xl" />
+    <section className="py-24 lg:py-32 bg-muted relative overflow-hidden">
+      {/* Background effects */}
+      <div className="absolute inset-0 grid-overlay opacity-30" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[120px]" />
+      
+      {/* Animated data streams */}
+      <div className="absolute left-10 top-0 bottom-0 w-px overflow-hidden opacity-20">
+        <motion.div
+          className="w-full h-32 bg-gradient-to-b from-transparent via-primary to-transparent"
+          animate={{ y: ["0%", "300%"] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+        />
+      </div>
+      <div className="absolute right-10 top-0 bottom-0 w-px overflow-hidden opacity-20">
+        <motion.div
+          className="w-full h-32 bg-gradient-to-b from-transparent via-accent to-transparent"
+          animate={{ y: ["100%", "-200%"] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+        />
+      </div>
 
       <div className="container relative z-10">
         {/* Section Header */}
@@ -61,17 +78,18 @@ export function TestimonialsSection() {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          <motion.p
-            className="text-sm font-semibold text-primary mb-3 uppercase tracking-widest"
+          <motion.div
+            className="inline-flex items-center gap-2 text-sm font-semibold text-primary mb-4"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
           >
-            Testimonials
-          </motion.p>
+            <Terminal className="h-4 w-4" />
+            <span className="uppercase tracking-widest font-mono">// TESTIMONIALS</span>
+          </motion.div>
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-5">
-            What Our Clients Say
+            What Our <span className="text-primary text-glow">Clients</span> Say
           </h2>
           <p className="text-muted-foreground text-lg">
             Hear from law enforcement agencies, government organizations, and corporate clients
@@ -94,7 +112,7 @@ export function TestimonialsSection() {
               whileHover={{ y: -10, scale: 1.02 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              <Card className="bg-card border-border/50 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 h-full">
+              <Card className="bg-card/50 backdrop-blur-sm border-primary/10 hover:border-primary/30 hover:shadow-neon transition-all duration-300 h-full group">
                 <CardContent className="pt-8 pb-6 px-6 flex flex-col h-full">
                   {/* Quote Icon */}
                   <motion.div
@@ -103,7 +121,7 @@ export function TestimonialsSection() {
                     viewport={{ once: true }}
                     transition={{ delay: 0.3 + index * 0.1, type: "spring", stiffness: 400 }}
                   >
-                    <Quote className="h-10 w-10 text-primary/20 mb-4" />
+                    <Quote className="h-10 w-10 text-primary/30 group-hover:text-primary/50 transition-colors mb-4" />
                   </motion.div>
 
                   {/* Rating */}
@@ -122,14 +140,14 @@ export function TestimonialsSection() {
                   </div>
 
                   {/* Quote */}
-                  <blockquote className="text-foreground mb-8 leading-relaxed flex-1 text-lg">
+                  <blockquote className="text-foreground/80 mb-8 leading-relaxed flex-1 text-lg">
                     "{testimonial.quote}"
                   </blockquote>
 
                   {/* Author */}
-                  <div className="border-t border-border pt-5">
-                    <p className="font-semibold text-foreground">{testimonial.author}</p>
-                    <p className="text-sm text-primary">{testimonial.organization}</p>
+                  <div className="border-t border-primary/10 pt-5">
+                    <p className="font-semibold text-foreground group-hover:text-primary transition-colors">{testimonial.author}</p>
+                    <p className="text-sm text-primary font-mono">{testimonial.organization}</p>
                   </div>
                 </CardContent>
               </Card>

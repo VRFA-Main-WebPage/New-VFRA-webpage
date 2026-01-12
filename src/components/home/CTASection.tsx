@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Phone, Mail, Zap } from "lucide-react";
+import { ArrowRight, Phone, Mail, Zap, Terminal, Radio } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
 export function CTASection() {
   return (
-    <section className="relative py-24 lg:py-32 bg-gradient-hero overflow-hidden">
+    <section className="relative py-24 lg:py-32 bg-gradient-hero overflow-hidden scanlines">
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
-          className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl"
+          className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[100px]"
           animate={{
             y: [0, 30, 0],
             scale: [1, 1.1, 1],
@@ -21,7 +21,7 @@ export function CTASection() {
           }}
         />
         <motion.div
-          className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/15 rounded-full blur-3xl"
+          className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-[100px]"
           animate={{
             y: [0, -30, 0],
             scale: [1.1, 1, 1.1],
@@ -35,7 +35,21 @@ export function CTASection() {
       </div>
 
       {/* Grid Pattern */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-10" />
+      <div className="absolute inset-0 grid-overlay opacity-50" />
+
+      {/* Pulse rings */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+        <motion.div
+          className="w-[400px] h-[400px] rounded-full border border-primary/20"
+          animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeOut" }}
+        />
+        <motion.div
+          className="absolute inset-0 w-[400px] h-[400px] rounded-full border border-accent/20"
+          animate={{ scale: [1, 1.8, 1], opacity: [0.3, 0, 0.3] }}
+          transition={{ duration: 5, delay: 1, repeat: Infinity, ease: "easeOut" }}
+        />
+      </div>
 
       <div className="container relative z-10">
         <motion.div
@@ -47,28 +61,33 @@ export function CTASection() {
         >
           {/* Badge */}
           <motion.div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/20 border border-accent/30 text-accent mb-8"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/30 text-accent mb-8"
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2, type: "spring", stiffness: 400 }}
           >
-            <Zap className="h-4 w-4" />
-            <span className="text-sm font-semibold">24/7 Emergency Response Available</span>
+            <motion.div
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 1, repeat: Infinity }}
+            >
+              <Radio className="h-4 w-4" />
+            </motion.div>
+            <span className="text-sm font-semibold font-mono">24/7 EMERGENCY RESPONSE</span>
           </motion.div>
 
           <motion.h2
-            className="font-display text-3xl md:text-4xl lg:text-6xl font-bold text-primary-foreground mb-6"
+            className="font-display text-3xl md:text-4xl lg:text-6xl font-bold text-foreground mb-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
           >
-            Need Urgent Assistance?
+            Need <span className="text-primary text-glow">Urgent</span> Assistance?
           </motion.h2>
 
           <motion.p
-            className="text-lg md:text-xl text-primary-foreground/70 mb-10 max-w-2xl mx-auto"
+            className="text-lg md:text-xl text-foreground/60 mb-10 max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -91,9 +110,12 @@ export function CTASection() {
                 whileTap={{ scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
-                <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground gap-2 shadow-lg shadow-accent/25 px-8 py-6 text-base font-semibold">
+                <Button 
+                  size="lg" 
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2 shadow-neon px-8 py-6 text-base font-semibold group"
+                >
                   Schedule Consultation
-                  <ArrowRight className="h-5 w-5" />
+                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </motion.div>
             </Link>
@@ -106,7 +128,7 @@ export function CTASection() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-2 border-primary-foreground/30 text-primary-foreground bg-primary-foreground/5 hover:bg-primary-foreground/15 gap-2 px-8 py-6 text-base font-semibold backdrop-blur-sm"
+                  className="border-2 border-foreground/20 text-foreground bg-foreground/5 hover:bg-foreground/10 hover:border-primary/50 hover:text-primary gap-2 px-8 py-6 text-base font-semibold backdrop-blur-sm transition-all duration-300"
                 >
                   <Phone className="h-5 w-5" />
                   Call: +91 120 456 7890
@@ -123,8 +145,9 @@ export function CTASection() {
             viewport={{ once: true }}
             transition={{ delay: 0.6 }}
           >
-            <motion.div
-              className="bg-primary-foreground/10 backdrop-blur-md rounded-2xl p-6 border border-primary-foreground/20 hover:border-accent/40 transition-colors group"
+            <motion.a
+              href="tel:+919876543210"
+              className="bg-card/30 backdrop-blur-md rounded-2xl p-6 border border-primary/20 hover:border-primary/40 hover:shadow-neon transition-all duration-300 group block"
               whileHover={{ y: -5, scale: 1.02 }}
               transition={{ type: "spring", stiffness: 400 }}
             >
@@ -132,13 +155,14 @@ export function CTASection() {
                 whileHover={{ rotate: [0, -10, 10, 0] }}
                 transition={{ duration: 0.5 }}
               >
-                <Phone className="h-8 w-8 text-accent mx-auto mb-3" />
+                <Phone className="h-8 w-8 text-primary mx-auto mb-3 group-hover:text-glow" />
               </motion.div>
-              <p className="text-sm text-primary-foreground/60 mb-1">24/7 Emergency</p>
-              <p className="font-bold text-primary-foreground text-lg">+91 98765 43210</p>
-            </motion.div>
-            <motion.div
-              className="bg-primary-foreground/10 backdrop-blur-md rounded-2xl p-6 border border-primary-foreground/20 hover:border-accent/40 transition-colors group"
+              <p className="text-sm text-foreground/50 mb-1 font-mono">// EMERGENCY</p>
+              <p className="font-bold text-foreground text-lg group-hover:text-primary transition-colors">+91 98765 43210</p>
+            </motion.a>
+            <motion.a
+              href="mailto:urgent@forensix.in"
+              className="bg-card/30 backdrop-blur-md rounded-2xl p-6 border border-primary/20 hover:border-accent/40 hover:shadow-neon-purple transition-all duration-300 group block"
               whileHover={{ y: -5, scale: 1.02 }}
               transition={{ type: "spring", stiffness: 400 }}
             >
@@ -148,9 +172,9 @@ export function CTASection() {
               >
                 <Mail className="h-8 w-8 text-accent mx-auto mb-3" />
               </motion.div>
-              <p className="text-sm text-primary-foreground/60 mb-1">Email Us</p>
-              <p className="font-bold text-primary-foreground text-lg">urgent@forensix.in</p>
-            </motion.div>
+              <p className="text-sm text-foreground/50 mb-1 font-mono">// EMAIL</p>
+              <p className="font-bold text-foreground text-lg group-hover:text-accent transition-colors">urgent@forensix.in</p>
+            </motion.a>
           </motion.div>
         </motion.div>
       </div>

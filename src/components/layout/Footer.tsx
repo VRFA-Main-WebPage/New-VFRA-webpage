@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { Shield, Mail, Phone, MapPin, Linkedin, Twitter, Facebook } from "lucide-react";
+import { Shield, Mail, Phone, MapPin, Linkedin, Twitter, Github, Terminal } from "lucide-react";
+import { motion } from "framer-motion";
 
 const footerLinks = {
   services: [
@@ -29,61 +30,85 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="bg-sidebar text-sidebar-foreground">
-      <div className="container py-12 lg:py-16">
+    <footer className="bg-background border-t border-primary/10 relative overflow-hidden">
+      {/* Grid overlay */}
+      <div className="absolute inset-0 grid-overlay opacity-20" />
+      
+      {/* Gradient accent */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+
+      <div className="container py-12 lg:py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand & Contact */}
           <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center gap-2 font-bold text-xl mb-4">
-              <Shield className="h-8 w-8 text-sidebar-primary" />
-              <span>Forensi<span className="text-sidebar-primary">X</span></span>
+            <Link to="/" className="flex items-center gap-2 mb-4 group">
+              <motion.div
+                whileHover={{ rotate: 180 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Shield className="h-8 w-8 text-primary drop-shadow-[0_0_10px_hsl(180_100%_50%/0.5)]" />
+              </motion.div>
+              <span className="font-display text-xl font-bold">
+                <span className="text-foreground">Forensi</span>
+                <span className="text-primary text-glow">X</span>
+              </span>
             </Link>
-            <p className="text-sidebar-foreground/70 text-sm mb-6 max-w-sm">
+            <p className="text-muted-foreground text-sm mb-6 max-w-sm">
               India's trusted digital forensics and cybercrime investigation laboratory. 
               Providing expert solutions to law enforcement, government, and corporate clients.
             </p>
             
             <div className="space-y-3 text-sm">
-              <div className="flex items-start gap-3">
-                <MapPin className="h-4 w-4 mt-0.5 text-sidebar-primary shrink-0" />
-                <span className="text-sidebar-foreground/70">
+              <div className="flex items-start gap-3 group">
+                <MapPin className="h-4 w-4 mt-0.5 text-primary shrink-0" />
+                <span className="text-muted-foreground group-hover:text-foreground transition-colors">
                   123 Cyber Tower, IT Park, Sector 62<br />
                   Noida, Uttar Pradesh 201309
                 </span>
               </div>
-              <div className="flex items-center gap-3">
-                <Phone className="h-4 w-4 text-sidebar-primary" />
-                <span className="text-sidebar-foreground/70">+91 120 456 7890</span>
+              <div className="flex items-center gap-3 group">
+                <Phone className="h-4 w-4 text-primary" />
+                <span className="text-muted-foreground group-hover:text-foreground transition-colors font-mono">+91 120 456 7890</span>
               </div>
-              <div className="flex items-center gap-3">
-                <Mail className="h-4 w-4 text-sidebar-primary" />
-                <span className="text-sidebar-foreground/70">info@forensix.in</span>
+              <div className="flex items-center gap-3 group">
+                <Mail className="h-4 w-4 text-primary" />
+                <span className="text-muted-foreground group-hover:text-foreground transition-colors font-mono">info@forensix.in</span>
               </div>
             </div>
 
             <div className="flex items-center gap-4 mt-6">
-              <a href="#" className="text-sidebar-foreground/70 hover:text-sidebar-primary transition-colors">
-                <Linkedin className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-sidebar-foreground/70 hover:text-sidebar-primary transition-colors">
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-sidebar-foreground/70 hover:text-sidebar-primary transition-colors">
-                <Facebook className="h-5 w-5" />
-              </a>
+              {[
+                { icon: Linkedin, href: "#" },
+                { icon: Twitter, href: "#" },
+                { icon: Github, href: "#" },
+              ].map((social, index) => (
+                <motion.a
+                  key={index}
+                  href={social.href}
+                  className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/20 hover:border-primary/40 hover:shadow-neon transition-all duration-300"
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <social.icon className="h-5 w-5" />
+                </motion.a>
+              ))}
             </div>
           </div>
 
           {/* Services */}
           <div>
-            <h4 className="font-semibold text-sm mb-4">Services</h4>
+            <h4 className="font-display font-semibold text-sm mb-4 flex items-center gap-2">
+              <Terminal className="h-4 w-4 text-primary" />
+              Services
+            </h4>
             <ul className="space-y-2">
               {footerLinks.services.map((link) => (
                 <li key={link.href}>
                   <Link
                     to={link.href}
-                    className="text-sm text-sidebar-foreground/70 hover:text-sidebar-primary transition-colors"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1 group"
                   >
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity text-primary">&gt;</span>
                     {link.title}
                   </Link>
                 </li>
@@ -93,14 +118,18 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h4 className="font-semibold text-sm mb-4">Company</h4>
+            <h4 className="font-display font-semibold text-sm mb-4 flex items-center gap-2">
+              <Terminal className="h-4 w-4 text-primary" />
+              Company
+            </h4>
             <ul className="space-y-2">
               {footerLinks.company.map((link) => (
                 <li key={link.href}>
                   <Link
                     to={link.href}
-                    className="text-sm text-sidebar-foreground/70 hover:text-sidebar-primary transition-colors"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1 group"
                   >
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity text-primary">&gt;</span>
                     {link.title}
                   </Link>
                 </li>
@@ -110,14 +139,18 @@ export function Footer() {
 
           {/* Resources */}
           <div>
-            <h4 className="font-semibold text-sm mb-4">Resources</h4>
+            <h4 className="font-display font-semibold text-sm mb-4 flex items-center gap-2">
+              <Terminal className="h-4 w-4 text-primary" />
+              Resources
+            </h4>
             <ul className="space-y-2">
               {footerLinks.resources.map((link) => (
                 <li key={link.href}>
                   <Link
                     to={link.href}
-                    className="text-sm text-sidebar-foreground/70 hover:text-sidebar-primary transition-colors"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1 group"
                   >
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity text-primary">&gt;</span>
                     {link.title}
                   </Link>
                 </li>
@@ -127,10 +160,10 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-sidebar-border mt-12 pt-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-sidebar-foreground/60">
-            <p>© {new Date().getFullYear()} ForensiX India. All rights reserved.</p>
-            <p>GSTIN: 09AAACF1234A1ZZ | CIN: U74999UP2020PTC123456</p>
+        <div className="border-t border-primary/10 mt-12 pt-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+            <p className="font-mono text-xs">© {new Date().getFullYear()} ForensiX India. All rights reserved.</p>
+            <p className="font-mono text-xs">GSTIN: 09AAACF1234A1ZZ | CIN: U74999UP2020PTC123456</p>
           </div>
         </div>
       </div>
