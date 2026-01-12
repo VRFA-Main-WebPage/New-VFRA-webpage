@@ -25,13 +25,18 @@ const certificateTypeLabels: Record<string, string> = {
   excellence: "Certificate of Excellence",
 };
 
+const COMPANY_NAME = "VFRA";
+const COMPANY_FULL_NAME = "Vigilant Forensic Research and Analytics Pvt. Ltd.";
+const COMPANY_WEBSITE = "vfra.in";
+const BRAND_COLOR = { r: 211, g: 170, b: 90 }; // Gold #D3AA5A
+
 const generateQRCode = async (text: string): Promise<string> => {
   try {
     return await QRCode.toDataURL(text, {
       width: 100,
       margin: 1,
       color: {
-        dark: "#0d9488",
+        dark: "#D3AA5A",
         light: "#ffffff",
       },
     });
@@ -57,18 +62,18 @@ export const generateCertificatePDF = async (data: CertificateData): Promise<jsP
   doc.rect(0, 0, pageWidth, pageHeight, "F");
 
   // Border decorations
-  doc.setDrawColor(13, 148, 136); // Teal color
+  doc.setDrawColor(BRAND_COLOR.r, BRAND_COLOR.g, BRAND_COLOR.b); // Gold color
   doc.setLineWidth(2);
   doc.rect(margin, margin, pageWidth - margin * 2, pageHeight - margin * 2);
 
   // Inner border
   doc.setLineWidth(0.5);
-  doc.setDrawColor(13, 148, 136, 50);
+  doc.setDrawColor(BRAND_COLOR.r, BRAND_COLOR.g, BRAND_COLOR.b, 50);
   doc.rect(margin + 5, margin + 5, pageWidth - margin * 2 - 10, pageHeight - margin * 2 - 10);
 
   // Corner decorations
   const cornerSize = 20;
-  doc.setDrawColor(13, 148, 136);
+  doc.setDrawColor(BRAND_COLOR.r, BRAND_COLOR.g, BRAND_COLOR.b);
   doc.setLineWidth(1);
   // Top left
   doc.line(margin, margin + cornerSize, margin, margin);
@@ -100,15 +105,15 @@ export const generateCertificatePDF = async (data: CertificateData): Promise<jsP
 
   // Company Name
   doc.setFontSize(14);
-  doc.setTextColor(13, 148, 136);
+  doc.setTextColor(BRAND_COLOR.r, BRAND_COLOR.g, BRAND_COLOR.b);
   doc.setFont("helvetica", "bold");
-  doc.text("ForensiX", pageWidth / 2, currentY, { align: "center" });
+  doc.text(COMPANY_NAME, pageWidth / 2, currentY, { align: "center" });
   currentY += 5;
 
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(100, 100, 100);
-  doc.text("Vigilant Forensic & Investigation Services", pageWidth / 2, currentY, { align: "center" });
+  doc.text(COMPANY_FULL_NAME, pageWidth / 2, currentY, { align: "center" });
   currentY += 15;
 
   // Certificate Title
@@ -120,7 +125,7 @@ export const generateCertificatePDF = async (data: CertificateData): Promise<jsP
   currentY += 10;
 
   // Decorative line
-  doc.setDrawColor(13, 148, 136);
+  doc.setDrawColor(BRAND_COLOR.r, BRAND_COLOR.g, BRAND_COLOR.b);
   doc.setLineWidth(1);
   doc.line(pageWidth / 2 - 40, currentY, pageWidth / 2 + 40, currentY);
   currentY += 12;
@@ -135,7 +140,7 @@ export const generateCertificatePDF = async (data: CertificateData): Promise<jsP
   // Recipient Name
   doc.setFontSize(24);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(13, 148, 136);
+  doc.setTextColor(BRAND_COLOR.r, BRAND_COLOR.g, BRAND_COLOR.b);
   doc.text(data.recipientName, pageWidth / 2, currentY, { align: "center" });
   currentY += 10;
 
@@ -212,7 +217,7 @@ export const generateCertificatePDF = async (data: CertificateData): Promise<jsP
     console.error("Failed to add QR code:", error);
     doc.setFontSize(7);
     doc.setTextColor(150, 150, 150);
-    doc.text("Verify at: forensix.in/verify", pageWidth / 2, pageHeight - margin - 8, { align: "center" });
+    doc.text(`Verify at: ${COMPANY_WEBSITE}/verify`, pageWidth / 2, pageHeight - margin - 8, { align: "center" });
   }
 
   // Signature section

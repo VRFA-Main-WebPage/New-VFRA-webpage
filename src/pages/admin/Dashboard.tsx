@@ -79,9 +79,9 @@ const AdminDashboard = () => {
             <Shield className="h-8 w-8 text-primary" />
             <div>
               <h1 className="text-xl font-bold text-foreground">
-                Forensi<span className="text-primary">X</span> Admin
+                <span className="text-primary">VFRA</span> Admin
               </h1>
-              <p className="text-sm text-muted-foreground">Dashboard</p>
+              <p className="text-sm text-muted-foreground">Vigilant Forensic Research & Analytics</p>
             </div>
           </div>
 

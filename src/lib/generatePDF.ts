@@ -1,6 +1,11 @@
 import jsPDF from "jspdf";
 import { OfferLetterType, OfferLetterContent, letterTypeLabels, getTemplateFields } from "./offerLetterTemplates";
 
+const COMPANY_NAME = "VFRA";
+const COMPANY_FULL_NAME = "Vigilant Forensic Research and Analytics Pvt. Ltd.";
+const COMPANY_EMAIL = "contact@vfraindia.com";
+const BRAND_COLOR = { r: 211, g: 170, b: 90 }; // Gold #D3AA5A
+
 export const generateOfferLetterPDF = (
   type: OfferLetterType,
   recipientName: string,
@@ -33,19 +38,19 @@ export const generateOfferLetterPDF = (
 
   // Header
   doc.setFontSize(24);
-  doc.setTextColor(15, 23, 42);
-  doc.text("Forensi", pageWidth / 2 - 15, y, { align: "center" });
-  doc.setTextColor(13, 148, 136);
-  doc.text("X", pageWidth / 2 + 15, y);
+  doc.setTextColor(BRAND_COLOR.r, BRAND_COLOR.g, BRAND_COLOR.b);
+  doc.setFont("helvetica", "bold");
+  doc.text(COMPANY_NAME, pageWidth / 2, y, { align: "center" });
   
   y += 8;
   doc.setFontSize(10);
   doc.setTextColor(100, 100, 100);
-  doc.text("Vigilant Forensic & Investigation Services", pageWidth / 2, y, { align: "center" });
+  doc.setFont("helvetica", "normal");
+  doc.text(COMPANY_FULL_NAME, pageWidth / 2, y, { align: "center" });
   
   // Divider line
   y += 8;
-  doc.setDrawColor(13, 148, 136);
+  doc.setDrawColor(BRAND_COLOR.r, BRAND_COLOR.g, BRAND_COLOR.b);
   doc.setLineWidth(0.5);
   doc.line(margin, y, pageWidth - margin, y);
   
@@ -126,7 +131,7 @@ export const generateOfferLetterPDF = (
       doc.addPage();
       y = 20;
     }
-    doc.setFillColor(240, 253, 250);
+    doc.setFillColor(254, 252, 232); // Light gold background
     doc.roundedRect(margin, y - 5, contentWidth, 15, 3, 3, "F");
     doc.setFont("helvetica", "bold");
     doc.text("Validity: ", margin + 5, y + 5);
@@ -158,12 +163,12 @@ export const generateOfferLetterPDF = (
   doc.text("Warm Regards,", margin, y);
   y += 25;
   doc.setFont("helvetica", "bold");
-  doc.text("ForensiX Team", margin, y);
+  doc.text(`${COMPANY_NAME} Team`, margin, y);
   y += 6;
   doc.setFont("helvetica", "normal");
-  doc.text("Vigilant Forensic & Investigation Services", margin, y);
+  doc.text(COMPANY_FULL_NAME, margin, y);
   y += 6;
-  doc.text("Email: contact@vigilantforensic.com", margin, y);
+  doc.text(`Email: ${COMPANY_EMAIL}`, margin, y);
   
   return doc;
 };
