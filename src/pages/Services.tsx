@@ -112,14 +112,15 @@ const Services = () => {
   return (
     <div className="bg-background">
       {/* Hero Section */}
-      <section className="bg-gradient-hero py-20 lg:py-28">
-        <div className="container">
+      <section className="relative py-20 lg:py-28 bg-gradient-to-br from-background via-background to-primary/10 overflow-hidden">
+        <div className="absolute inset-0 grid-overlay opacity-30" />
+        <div className="container relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <p className="text-sm font-medium text-accent mb-2 uppercase tracking-wider">Our Services</p>
-            <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-6">
+            <p className="text-sm font-medium text-primary mb-2 uppercase tracking-wider font-mono">Our Services</p>
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 font-display">
               Comprehensive Digital Forensics Solutions
             </h1>
-            <p className="text-lg text-primary-foreground/70">
+            <p className="text-lg text-muted-foreground">
               From mobile device analysis to enterprise incident response, we provide end-to-end 
               investigation services backed by cutting-edge technology and certified experts.
             </p>
