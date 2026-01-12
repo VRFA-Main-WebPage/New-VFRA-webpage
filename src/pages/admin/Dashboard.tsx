@@ -1,7 +1,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Shield, Users, FileText, Calendar, LogOut, LayoutDashboard, Award, Briefcase, UserPlus, Globe } from "lucide-react";
+import { Shield, Users, FileText, Calendar, LogOut, LayoutDashboard, Award, Briefcase, UserPlus, Globe, Settings } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
@@ -46,6 +46,12 @@ const AdminDashboard = () => {
       label: "Events", 
       icon: Calendar, 
       path: "/admin/events",
+      enabled: true 
+    },
+    { 
+      label: "Website Content", 
+      icon: Settings, 
+      path: "/admin/content",
       enabled: true 
     },
     { 
