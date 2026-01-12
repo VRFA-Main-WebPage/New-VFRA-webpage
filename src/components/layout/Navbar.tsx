@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import vfraLogo from "@/assets/vfra-logo.jpg";
+import vfraLogo from "@/assets/vfra-logo.svg";
 
 const services = [
   { title: "Digital Forensics", href: "/services/digital-forensics", description: "Mobile, computer, cloud & network forensics" },
@@ -67,12 +67,12 @@ export function Navbar() {
           <motion.div
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
-            className="relative"
+            className="relative bg-white/95 rounded-md px-2 py-1"
           >
             <img 
               src={vfraLogo} 
               alt="VFRA - Vigilant Forensic Research and Analytics" 
-              className="h-10 w-auto object-contain"
+              className="h-8 w-auto object-contain"
             />
           </motion.div>
         </Link>

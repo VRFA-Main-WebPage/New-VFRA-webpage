@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Shield, Mail, Phone, MapPin, Linkedin, Twitter, Github, Terminal } from "lucide-react";
 import { motion } from "framer-motion";
-import vfraLogo from "@/assets/vfra-logo.jpg";
+import vfraLogo from "@/assets/vfra-logo.svg";
 
 const footerLinks = {
   services: [
@@ -46,11 +46,12 @@ export function Footer() {
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
+                className="bg-white/95 rounded-md px-3 py-2"
               >
                 <img 
                   src={vfraLogo} 
                   alt="VFRA - Vigilant Forensic Research and Analytics" 
-                  className="h-12 w-auto object-contain"
+                  className="h-10 w-auto object-contain"
                 />
               </motion.div>
             </Link>
