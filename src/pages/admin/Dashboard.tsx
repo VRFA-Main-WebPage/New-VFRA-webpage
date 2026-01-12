@@ -1,15 +1,61 @@
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Shield, Users, FileText, Calendar, LogOut, LayoutDashboard, Award, Briefcase, UserPlus, Globe, Settings, Palette } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Shield, Users, FileText, Calendar, LogOut, LayoutDashboard, Award, Briefcase, UserPlus, Globe, Settings, Palette, CreditCard, Eye, EyeOff, Save } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { ThemeSwitcher } from "@/components/admin/ThemeSwitcher";
+import { supabase } from "@/integrations/supabase/client";
 
 const AdminDashboard = () => {
   const { user, signOut, isAdmin } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  
+  // Razorpay config state
+  const [razorpayKeyId, setRazorpayKeyId] = useState("");
+  const [razorpayKeySecret, setRazorpayKeySecret] = useState("");
+  const [showSecret, setShowSecret] = useState(false);
+  const [savingRazorpay, setSavingRazorpay] = useState(false);
+
+  useEffect(() => {
+    fetchRazorpayConfig();
+  }, []);
+
+  const fetchRazorpayConfig = async () => {
+    const { data } = await supabase
+      .from("website_content")
+      .select("content")
+      .eq("section_key", "razorpay_config")
+      .maybeSingle();
+    
+    if (data?.content) {
+      const config = data.content as { keyId?: string; keySecret?: string };
+      setRazorpayKeyId(config.keyId || "");
+      setRazorpayKeySecret(config.keySecret || "");
+    }
+  };
+
+  const saveRazorpayConfig = async () => {
+    setSavingRazorpay(true);
+    const { error } = await supabase
+      .from("website_content")
+      .upsert({
+        section_key: "razorpay_config",
+        content: { keyId: razorpayKeyId, keySecret: razorpayKeySecret },
+        updated_at: new Date().toISOString(),
+      }, { onConflict: "section_key" });
+
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Success", description: "Razorpay configuration saved!" });
+    }
+    setSavingRazorpay(false);
+  };
 
   const stats = [
     { label: "Total Cases", value: "156", icon: FileText, color: "text-primary" },
@@ -167,6 +213,59 @@ const AdminDashboard = () => {
           </CardHeader>
           <CardContent>
             <ThemeSwitcher />
+          </CardContent>
+        </Card>
+
+        {/* Razorpay Configuration */}
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <CreditCard className="h-5 w-5" />
+              Payment Gateway (Razorpay)
+            </CardTitle>
+            <CardDescription>
+              Configure Razorpay keys for event payments
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="razorpay-key">Razorpay Key ID</Label>
+                <Input 
+                  id="razorpay-key"
+                  value={razorpayKeyId}
+                  onChange={e => setRazorpayKeyId(e.target.value)}
+                  placeholder="rzp_live_xxxxxxxxxxxxx"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="razorpay-secret">Razorpay Key Secret</Label>
+                <div className="relative">
+                  <Input 
+                    id="razorpay-secret"
+                    type={showSecret ? "text" : "password"}
+                    value={razorpayKeySecret}
+                    onChange={e => setRazorpayKeySecret(e.target.value)}
+                    placeholder="••••••••••••••••"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-full px-3"
+                    onClick={() => setShowSecret(!showSecret)}
+                  >
+                    {showSecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Get your API keys from the <a href="https://dashboard.razorpay.com/app/keys" target="_blank" rel="noopener noreferrer" className="text-primary underline">Razorpay Dashboard</a>
+            </p>
+            <Button onClick={saveRazorpayConfig} disabled={savingRazorpay}>
+              <Save className="h-4 w-4 mr-2" /> Save Razorpay Configuration
+            </Button>
           </CardContent>
         </Card>
       </main>
