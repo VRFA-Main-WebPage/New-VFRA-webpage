@@ -63,7 +63,7 @@ export function Navbar() {
       
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center group">
+        <Link to="/" className="flex items-center gap-2 group">
           <motion.div
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
@@ -75,6 +75,10 @@ export function Navbar() {
               className="h-10 w-auto object-contain"
             />
           </motion.div>
+          <div className="flex lg:hidden flex-col">
+            <span className="font-display font-bold text-xs text-foreground leading-tight">Vigilant Forensic</span>
+            <span className="font-display text-[10px] text-muted-foreground leading-tight">Research & Analytics</span>
+          </div>
         </Link>
 
         {/* Desktop Navigation */}
