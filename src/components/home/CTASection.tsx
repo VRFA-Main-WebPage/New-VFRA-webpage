@@ -1,9 +1,15 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Phone, Mail, Zap, Terminal, Radio } from "lucide-react";
+import { ArrowRight, Phone, Mail, Radio } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { useWebsiteContent, defaultCTAContent, CTAContent } from "@/hooks/useWebsiteContent";
 
 export function CTASection() {
+  const { content } = useWebsiteContent<CTAContent>("cta", defaultCTAContent);
+
+  // Split heading to highlight the special word
+  const headingParts = content.heading.split(content.highlightWord);
+
   return (
     <section className="relative py-24 lg:py-32 bg-gradient-hero overflow-hidden scanlines">
       {/* Animated Background */}
@@ -73,7 +79,7 @@ export function CTASection() {
             >
               <Radio className="h-4 w-4" />
             </motion.div>
-            <span className="text-sm font-semibold font-mono">24/7 EMERGENCY RESPONSE</span>
+            <span className="text-sm font-semibold font-mono">{content.badge}</span>
           </motion.div>
 
           <motion.h2
@@ -83,7 +89,9 @@ export function CTASection() {
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
           >
-            Need <span className="text-primary text-glow">Urgent</span> Assistance?
+            {headingParts[0]}
+            <span className="text-primary text-glow">{content.highlightWord}</span>
+            {headingParts[1]}
           </motion.h2>
 
           <motion.p
@@ -93,8 +101,7 @@ export function CTASection() {
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
           >
-            Our expert team is available for emergency incident response and urgent consultations.
-            Contact us now to discuss your case confidentially.
+            {content.description}
           </motion.p>
 
           <motion.div
@@ -114,12 +121,12 @@ export function CTASection() {
                   size="lg" 
                   className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2 shadow-neon px-8 py-6 text-base font-semibold group"
                 >
-                  Schedule Consultation
+                  {content.primaryButtonText}
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </motion.div>
             </Link>
-            <a href="tel:+911204567890">
+            <a href={`tel:${content.phoneNumber.replace(/\s/g, '')}`}>
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.98 }}
@@ -131,7 +138,7 @@ export function CTASection() {
                   className="border-2 border-foreground/20 text-foreground bg-foreground/5 hover:bg-foreground/10 hover:border-primary/50 hover:text-primary gap-2 px-8 py-6 text-base font-semibold backdrop-blur-sm transition-all duration-300"
                 >
                   <Phone className="h-5 w-5" />
-                  Call: +91 120 456 7890
+                  Call: {content.phoneNumber}
                 </Button>
               </motion.div>
             </a>
@@ -146,7 +153,7 @@ export function CTASection() {
             transition={{ delay: 0.6 }}
           >
             <motion.a
-              href="tel:+919876543210"
+              href={`tel:${content.emergencyPhone.replace(/\s/g, '')}`}
               className="bg-card/30 backdrop-blur-md rounded-2xl p-6 border border-primary/20 hover:border-primary/40 hover:shadow-neon transition-all duration-300 group block"
               whileHover={{ y: -5, scale: 1.02 }}
               transition={{ type: "spring", stiffness: 400 }}
@@ -158,10 +165,10 @@ export function CTASection() {
                 <Phone className="h-8 w-8 text-primary mx-auto mb-3 group-hover:text-glow" />
               </motion.div>
               <p className="text-sm text-foreground/50 mb-1 font-mono">// EMERGENCY</p>
-              <p className="font-bold text-foreground text-lg group-hover:text-primary transition-colors">+91 98765 43210</p>
+              <p className="font-bold text-foreground text-lg group-hover:text-primary transition-colors">{content.emergencyPhone}</p>
             </motion.a>
             <motion.a
-              href="mailto:urgent@forensix.in"
+              href={`mailto:${content.emergencyEmail}`}
               className="bg-card/30 backdrop-blur-md rounded-2xl p-6 border border-primary/20 hover:border-accent/40 hover:shadow-neon-purple transition-all duration-300 group block"
               whileHover={{ y: -5, scale: 1.02 }}
               transition={{ type: "spring", stiffness: 400 }}
@@ -173,7 +180,7 @@ export function CTASection() {
                 <Mail className="h-8 w-8 text-accent mx-auto mb-3" />
               </motion.div>
               <p className="text-sm text-foreground/50 mb-1 font-mono">// EMAIL</p>
-              <p className="font-bold text-foreground text-lg group-hover:text-accent transition-colors">urgent@forensix.in</p>
+              <p className="font-bold text-foreground text-lg group-hover:text-accent transition-colors">{content.emergencyEmail}</p>
             </motion.a>
           </motion.div>
         </motion.div>

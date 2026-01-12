@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Edit2, Save, X, Image, Plus, Trash2, GripVertical } from "lucide-react";
+import { ArrowLeft, Edit2, Save, X, Image, Plus, Trash2, GripVertical, Home, Phone, Briefcase, FileText, Users, Handshake, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,6 +14,16 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
+import { 
+  saveWebsiteContent, 
+  defaultHeroContent, 
+  defaultCTAContent, 
+  defaultCaseSectionContent,
+  HeroContent,
+  CTAContent,
+  CaseSectionContent
+} from "@/hooks/useWebsiteContent";
+import { Json } from "@/integrations/supabase/types";
 
 interface Service {
   id: string;
@@ -75,11 +85,18 @@ export default function ContentManagement() {
   const { toast } = useToast();
   const { user } = useAuth();
   
+  // Data states
   const [services, setServices] = useState<Service[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [partners, setPartners] = useState<Partner[]>([]);
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Page content states
+  const [heroContent, setHeroContent] = useState<HeroContent>(defaultHeroContent);
+  const [ctaContent, setCTAContent] = useState<CTAContent>(defaultCTAContent);
+  const [caseSectionContent, setCaseSectionContent] = useState<CaseSectionContent>(defaultCaseSectionContent);
+  const [savingContent, setSavingContent] = useState(false);
   
   // Dialog states
   const [serviceDialogOpen, setServiceDialogOpen] = useState(false);
@@ -114,17 +131,31 @@ export default function ContentManagement() {
   const fetchAllData = async () => {
     setLoading(true);
     try {
-      const [servicesRes, testimonialsRes, partnersRes, caseStudiesRes] = await Promise.all([
+      const [servicesRes, testimonialsRes, partnersRes, caseStudiesRes, contentRes] = await Promise.all([
         supabase.from("services").select("*").order("sort_order"),
         supabase.from("testimonials").select("*").order("sort_order"),
         supabase.from("partners").select("*").order("sort_order"),
         supabase.from("case_studies").select("*").order("sort_order"),
+        supabase.from("website_content").select("*"),
       ]);
 
       if (servicesRes.data) setServices(servicesRes.data);
       if (testimonialsRes.data) setTestimonials(testimonialsRes.data);
       if (partnersRes.data) setPartners(partnersRes.data);
       if (caseStudiesRes.data) setCaseStudies(caseStudiesRes.data);
+      
+      // Load page content
+      if (contentRes.data) {
+        contentRes.data.forEach((item) => {
+          if (item.section_key === "hero" && item.content) {
+            setHeroContent({ ...defaultHeroContent, ...(item.content as unknown as HeroContent) });
+          } else if (item.section_key === "cta" && item.content) {
+            setCTAContent({ ...defaultCTAContent, ...(item.content as unknown as CTAContent) });
+          } else if (item.section_key === "case_section" && item.content) {
+            setCaseSectionContent({ ...defaultCaseSectionContent, ...(item.content as unknown as CaseSectionContent) });
+          }
+        });
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -160,6 +191,40 @@ export default function ContentManagement() {
     if (url) {
       setForm((prev: any) => ({ ...prev, [field]: url }));
     }
+  };
+
+  // Save page content
+  const handleSaveHero = async () => {
+    setSavingContent(true);
+    const result = await saveWebsiteContent("hero", heroContent);
+    if (result.success) {
+      toast({ title: "Success", description: "Hero section saved!" });
+    } else {
+      toast({ title: "Error", description: result.error, variant: "destructive" });
+    }
+    setSavingContent(false);
+  };
+
+  const handleSaveCTA = async () => {
+    setSavingContent(true);
+    const result = await saveWebsiteContent("cta", ctaContent);
+    if (result.success) {
+      toast({ title: "Success", description: "CTA section saved!" });
+    } else {
+      toast({ title: "Error", description: result.error, variant: "destructive" });
+    }
+    setSavingContent(false);
+  };
+
+  const handleSaveCaseSection = async () => {
+    setSavingContent(true);
+    const result = await saveWebsiteContent("case_section", caseSectionContent);
+    if (result.success) {
+      toast({ title: "Success", description: "Case section saved!" });
+    } else {
+      toast({ title: "Error", description: result.error, variant: "destructive" });
+    }
+    setSavingContent(false);
   };
 
   // Service CRUD
@@ -309,11 +374,11 @@ export default function ContentManagement() {
     setServiceForm({
       title: service.title,
       description: service.description,
-      icon: service.icon,
+      icon: service.icon || "Shield",
       image_url: service.image_url || "",
-      features: service.features.join("\n"),
+      features: (service.features || []).join("\n"),
       href: service.href || "",
-      is_active: service.is_active,
+      is_active: service.is_active ?? true,
     });
     setServiceDialogOpen(true);
   };
@@ -324,8 +389,8 @@ export default function ContentManagement() {
       quote: t.quote,
       author: t.author,
       organization: t.organization || "",
-      rating: t.rating,
-      is_active: t.is_active,
+      rating: t.rating ?? 5,
+      is_active: t.is_active ?? true,
     });
     setTestimonialDialogOpen(true);
   };
@@ -336,7 +401,7 @@ export default function ContentManagement() {
       name: p.name,
       logo_url: p.logo_url || "",
       website_url: p.website_url || "",
-      is_active: p.is_active,
+      is_active: p.is_active ?? true,
     });
     setPartnerDialogOpen(true);
   };
@@ -350,12 +415,26 @@ export default function ContentManagement() {
       description: c.description,
       outcome: c.outcome || "",
       impact: c.impact || "",
-      services: c.services.join(", "),
+      services: (c.services || []).join(", "),
       image_url: c.image_url || "",
-      is_active: c.is_active,
-      is_featured: c.is_featured,
+      is_active: c.is_active ?? true,
+      is_featured: c.is_featured ?? false,
     });
     setCaseStudyDialogOpen(true);
+  };
+
+  // Update hero stat
+  const updateHeroStat = (index: number, field: "value" | "label", value: string) => {
+    const newStats = [...heroContent.stats];
+    newStats[index] = { ...newStats[index], [field]: value };
+    setHeroContent({ ...heroContent, stats: newStats });
+  };
+
+  // Update case section step
+  const updateCaseStep = (index: number, field: "title" | "description", value: string) => {
+    const newSteps = [...caseSectionContent.steps];
+    newSteps[index] = { ...newSteps[index], [field]: value };
+    setCaseSectionContent({ ...caseSectionContent, steps: newSteps });
   };
 
   return (
@@ -368,16 +447,284 @@ export default function ContentManagement() {
         <Card>
           <CardHeader>
             <CardTitle>Website Content Management</CardTitle>
-            <CardDescription>Manage all website content including services, testimonials, partners, and case studies</CardDescription>
+            <CardDescription>Manage all website content including page sections, services, testimonials, and more</CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="services">
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="services">Services ({services.length})</TabsTrigger>
-                <TabsTrigger value="testimonials">Testimonials ({testimonials.length})</TabsTrigger>
-                <TabsTrigger value="partners">Partners ({partners.length})</TabsTrigger>
-                <TabsTrigger value="casestudies">Case Studies ({caseStudies.length})</TabsTrigger>
+            <Tabs defaultValue="hero">
+              <TabsList className="grid w-full grid-cols-7 mb-4">
+                <TabsTrigger value="hero" className="flex items-center gap-1 text-xs">
+                  <Home className="h-3 w-3" />
+                  Hero
+                </TabsTrigger>
+                <TabsTrigger value="cta" className="flex items-center gap-1 text-xs">
+                  <Phone className="h-3 w-3" />
+                  CTA
+                </TabsTrigger>
+                <TabsTrigger value="case" className="flex items-center gap-1 text-xs">
+                  <FileText className="h-3 w-3" />
+                  Case
+                </TabsTrigger>
+                <TabsTrigger value="services" className="flex items-center gap-1 text-xs">
+                  <Briefcase className="h-3 w-3" />
+                  Services
+                </TabsTrigger>
+                <TabsTrigger value="testimonials" className="flex items-center gap-1 text-xs">
+                  <Users className="h-3 w-3" />
+                  Reviews
+                </TabsTrigger>
+                <TabsTrigger value="partners" className="flex items-center gap-1 text-xs">
+                  <Handshake className="h-3 w-3" />
+                  Partners
+                </TabsTrigger>
+                <TabsTrigger value="casestudies" className="flex items-center gap-1 text-xs">
+                  <BookOpen className="h-3 w-3" />
+                  Studies
+                </TabsTrigger>
               </TabsList>
+
+              {/* Hero Section Tab */}
+              <TabsContent value="hero" className="mt-6">
+                <div className="space-y-6">
+                  <h3 className="text-lg font-semibold">Hero Section Content</h3>
+                  
+                  <div className="grid gap-4">
+                    <div>
+                      <Label>Company Full Name</Label>
+                      <Input 
+                        value={heroContent.companyFullName} 
+                        onChange={e => setHeroContent({...heroContent, companyFullName: e.target.value})} 
+                      />
+                    </div>
+                    <div>
+                      <Label>Badge Text</Label>
+                      <Input 
+                        value={heroContent.badge} 
+                        onChange={e => setHeroContent({...heroContent, badge: e.target.value})} 
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label>Heading Line 1</Label>
+                        <Input 
+                          value={heroContent.headingLine1} 
+                          onChange={e => setHeroContent({...heroContent, headingLine1: e.target.value})} 
+                        />
+                      </div>
+                      <div>
+                        <Label>Heading Line 2 (Highlighted)</Label>
+                        <Input 
+                          value={heroContent.headingLine2} 
+                          onChange={e => setHeroContent({...heroContent, headingLine2: e.target.value})} 
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label>Description</Label>
+                      <Textarea 
+                        value={heroContent.description} 
+                        onChange={e => setHeroContent({...heroContent, description: e.target.value})} 
+                        rows={3}
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label>Primary Button Text</Label>
+                        <Input 
+                          value={heroContent.primaryButtonText} 
+                          onChange={e => setHeroContent({...heroContent, primaryButtonText: e.target.value})} 
+                        />
+                      </div>
+                      <div>
+                        <Label>Secondary Button Text</Label>
+                        <Input 
+                          value={heroContent.secondaryButtonText} 
+                          onChange={e => setHeroContent({...heroContent, secondaryButtonText: e.target.value})} 
+                        />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <Label className="mb-2 block">Statistics</Label>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {heroContent.stats.map((stat, index) => (
+                          <div key={index} className="space-y-2 p-3 border rounded-lg">
+                            <Input 
+                              value={stat.value} 
+                              onChange={e => updateHeroStat(index, "value", e.target.value)}
+                              placeholder="Value (e.g., 500+)"
+                            />
+                            <Input 
+                              value={stat.label} 
+                              onChange={e => updateHeroStat(index, "label", e.target.value)}
+                              placeholder="Label"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <Button onClick={handleSaveHero} disabled={savingContent} className="w-full">
+                    <Save className="h-4 w-4 mr-2" /> Save Hero Section
+                  </Button>
+                </div>
+              </TabsContent>
+
+              {/* CTA Section Tab */}
+              <TabsContent value="cta" className="mt-6">
+                <div className="space-y-6">
+                  <h3 className="text-lg font-semibold">Call-to-Action Section Content</h3>
+                  
+                  <div className="grid gap-4">
+                    <div>
+                      <Label>Badge Text</Label>
+                      <Input 
+                        value={ctaContent.badge} 
+                        onChange={e => setCTAContent({...ctaContent, badge: e.target.value})} 
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label>Heading</Label>
+                        <Input 
+                          value={ctaContent.heading} 
+                          onChange={e => setCTAContent({...ctaContent, heading: e.target.value})} 
+                        />
+                      </div>
+                      <div>
+                        <Label>Highlight Word</Label>
+                        <Input 
+                          value={ctaContent.highlightWord} 
+                          onChange={e => setCTAContent({...ctaContent, highlightWord: e.target.value})} 
+                          placeholder="Word to highlight from heading"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label>Description</Label>
+                      <Textarea 
+                        value={ctaContent.description} 
+                        onChange={e => setCTAContent({...ctaContent, description: e.target.value})} 
+                        rows={3}
+                      />
+                    </div>
+                    <div>
+                      <Label>Primary Button Text</Label>
+                      <Input 
+                        value={ctaContent.primaryButtonText} 
+                        onChange={e => setCTAContent({...ctaContent, primaryButtonText: e.target.value})} 
+                      />
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <Label>Phone Number</Label>
+                        <Input 
+                          value={ctaContent.phoneNumber} 
+                          onChange={e => setCTAContent({...ctaContent, phoneNumber: e.target.value})} 
+                        />
+                      </div>
+                      <div>
+                        <Label>Emergency Phone</Label>
+                        <Input 
+                          value={ctaContent.emergencyPhone} 
+                          onChange={e => setCTAContent({...ctaContent, emergencyPhone: e.target.value})} 
+                        />
+                      </div>
+                      <div>
+                        <Label>Emergency Email</Label>
+                        <Input 
+                          value={ctaContent.emergencyEmail} 
+                          onChange={e => setCTAContent({...ctaContent, emergencyEmail: e.target.value})} 
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <Button onClick={handleSaveCTA} disabled={savingContent} className="w-full">
+                    <Save className="h-4 w-4 mr-2" /> Save CTA Section
+                  </Button>
+                </div>
+              </TabsContent>
+
+              {/* Case Section Tab */}
+              <TabsContent value="case" className="mt-6">
+                <div className="space-y-6">
+                  <h3 className="text-lg font-semibold">Case Submission Section Content</h3>
+                  
+                  <div className="grid gap-4">
+                    <div>
+                      <Label>Badge Text</Label>
+                      <Input 
+                        value={caseSectionContent.badge} 
+                        onChange={e => setCaseSectionContent({...caseSectionContent, badge: e.target.value})} 
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label>Heading</Label>
+                        <Input 
+                          value={caseSectionContent.heading} 
+                          onChange={e => setCaseSectionContent({...caseSectionContent, heading: e.target.value})} 
+                        />
+                      </div>
+                      <div>
+                        <Label>Highlight Word</Label>
+                        <Input 
+                          value={caseSectionContent.highlightWord} 
+                          onChange={e => setCaseSectionContent({...caseSectionContent, highlightWord: e.target.value})} 
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label>Description</Label>
+                      <Textarea 
+                        value={caseSectionContent.description} 
+                        onChange={e => setCaseSectionContent({...caseSectionContent, description: e.target.value})} 
+                        rows={2}
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label className="mb-2 block">Process Steps</Label>
+                      <div className="space-y-4">
+                        {caseSectionContent.steps.map((step, index) => (
+                          <div key={index} className="p-4 border rounded-lg space-y-2">
+                            <div className="flex items-center gap-2">
+                              <span className="text-primary font-bold">Step {index + 1}</span>
+                            </div>
+                            <Input 
+                              value={step.title} 
+                              onChange={e => updateCaseStep(index, "title", e.target.value)}
+                              placeholder="Step Title"
+                            />
+                            <Input 
+                              value={step.description} 
+                              onChange={e => updateCaseStep(index, "description", e.target.value)}
+                              placeholder="Step Description"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label>Trust Badges (comma-separated)</Label>
+                      <Input 
+                        value={caseSectionContent.trustBadges.join(", ")} 
+                        onChange={e => setCaseSectionContent({
+                          ...caseSectionContent, 
+                          trustBadges: e.target.value.split(",").map(s => s.trim()).filter(s => s)
+                        })} 
+                        placeholder="Confidential & Secure, 24-Hour Response, ..."
+                      />
+                    </div>
+                  </div>
+
+                  <Button onClick={handleSaveCaseSection} disabled={savingContent} className="w-full">
+                    <Save className="h-4 w-4 mr-2" /> Save Case Section
+                  </Button>
+                </div>
+              </TabsContent>
 
               {/* Services Tab */}
               <TabsContent value="services" className="mt-6">
