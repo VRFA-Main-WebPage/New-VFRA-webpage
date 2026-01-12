@@ -92,7 +92,10 @@ const AdminDashboard = () => {
                 {isAdmin ? "Administrator" : "User"}
               </p>
             </div>
-            <Button variant="outline" size="sm" onClick={signOut}>
+            <Button variant="outline" size="sm" onClick={async () => {
+              await signOut();
+              navigate("/admin");
+            }}>
               <LogOut className="h-4 w-4 mr-2" />
               Logout
             </Button>
