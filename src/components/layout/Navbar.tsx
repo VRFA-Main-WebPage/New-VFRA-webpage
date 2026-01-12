@@ -67,12 +67,12 @@ export function Navbar() {
           <motion.div
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
-            className="relative bg-white/95 rounded-md px-2 py-1"
+            className="relative"
           >
             <img 
               src={vfraLogo} 
               alt="VFRA - Vigilant Forensic Research and Analytics" 
-              className="h-8 w-auto object-contain"
+              className="h-10 w-auto object-contain [filter:invert(1)_hue-rotate(180deg)_brightness(1.2)_contrast(0.9)]"
             />
           </motion.div>
         </Link>
