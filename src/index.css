@@ -7,7 +7,8 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap');
 
 @layer base {
-  :root {
+  /* Default: Vigilant Gold Theme */
+  :root, .theme-vigilant {
     /* Vigilant Gold color palette */
     --background: 30 8% 7%;
     --foreground: 40 10% 95%;
@@ -61,11 +62,9 @@
     --info: 42 56% 59%;
     --info-foreground: 30 8% 7%;
 
-    /* Gold glow colors */
-    --neon-gold: 42 56% 59%;
-    --neon-bronze: 40 37% 50%;
-    --neon-cream: 43 83% 70%;
-    --neon-brown: 33 40% 28%;
+    /* Glow colors */
+    --glow-primary: 42 56% 59%;
+    --glow-accent: 43 83% 70%;
 
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(42 56% 59%), hsl(40 37% 50%));
@@ -79,11 +78,73 @@
     --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.5), 0 4px 6px -4px hsl(0 0% 0% / 0.4);
     --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.5), 0 8px 10px -6px hsl(0 0% 0% / 0.4);
     --shadow-neon: 0 0 20px hsl(42 56% 59% / 0.3), 0 0 40px hsl(42 56% 59% / 0.1);
-    --shadow-neon-gold: 0 0 20px hsl(43 83% 70% / 0.3), 0 0 40px hsl(43 83% 70% / 0.1);
   }
 
-  .dark {
-    /* Dark mode is the default for this theme */
+  /* Cyber Theme (Cyan/Purple) */
+  .theme-cyber {
+    /* Dark tech color palette */
+    --background: 220 20% 4%;
+    --foreground: 180 100% 95%;
+
+    --card: 220 25% 8%;
+    --card-foreground: 180 100% 95%;
+
+    --popover: 220 25% 6%;
+    --popover-foreground: 180 100% 95%;
+
+    /* Primary: Cyan neon */
+    --primary: 180 100% 50%;
+    --primary-foreground: 220 20% 4%;
+
+    /* Secondary: Dark slate */
+    --secondary: 220 20% 15%;
+    --secondary-foreground: 180 100% 95%;
+
+    /* Muted: Dark grey */
+    --muted: 220 15% 12%;
+    --muted-foreground: 220 10% 55%;
+
+    /* Accent: Electric purple */
+    --accent: 270 100% 65%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 20% 18%;
+    --input: 220 20% 18%;
+    --ring: 180 100% 50%;
+
+    /* Sidebar */
+    --sidebar-background: 220 25% 5%;
+    --sidebar-foreground: 180 100% 90%;
+    --sidebar-primary: 180 100% 50%;
+    --sidebar-primary-foreground: 220 20% 4%;
+    --sidebar-accent: 220 25% 12%;
+    --sidebar-accent-foreground: 180 100% 90%;
+    --sidebar-border: 220 25% 15%;
+    --sidebar-ring: 180 100% 50%;
+
+    /* Extended palette */
+    --success: 142 80% 50%;
+    --success-foreground: 0 0% 100%;
+    --warning: 45 100% 50%;
+    --warning-foreground: 220 20% 4%;
+    --info: 200 100% 55%;
+    --info-foreground: 220 20% 4%;
+
+    /* Glow colors */
+    --glow-primary: 180 100% 50%;
+    --glow-accent: 270 100% 65%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(180 100% 50%), hsl(200 100% 40%));
+    --gradient-accent: linear-gradient(135deg, hsl(270 100% 65%), hsl(300 100% 60%));
+    --gradient-hero: linear-gradient(180deg, hsl(220 25% 3%) 0%, hsl(220 30% 8%) 50%, hsl(220 25% 5%) 100%);
+    --gradient-neon: linear-gradient(90deg, hsl(180 100% 50%) 0%, hsl(270 100% 65%) 50%, hsl(180 100% 50%) 100%);
+
+    /* Shadows */
+    --shadow-neon: 0 0 20px hsl(180 100% 50% / 0.3), 0 0 40px hsl(180 100% 50% / 0.1);
   }
 }
 
