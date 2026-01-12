@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Edit2, Save, X, Image, Plus, Trash2, GripVertical, Home, Phone, Briefcase, FileText, Users, Handshake, BookOpen } from "lucide-react";
+import { ArrowLeft, Edit2, Save, X, Image, Plus, Trash2, GripVertical, Home, Phone, Briefcase, FileText, Users, Handshake, BookOpen, Shield, MapPin, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,6 +24,12 @@ import {
   CaseSectionContent
 } from "@/hooks/useWebsiteContent";
 import { Json } from "@/integrations/supabase/types";
+
+// Import new CMS components
+import TrustSectionCMS from "@/components/admin/cms/TrustSectionCMS";
+import FooterCMS from "@/components/admin/cms/FooterCMS";
+import AboutCMS from "@/components/admin/cms/AboutCMS";
+import ServicesSectionCMS from "@/components/admin/cms/ServicesSectionCMS";
 
 interface Service {
   id: string;
@@ -79,6 +85,9 @@ const iconOptions = [
 const categoryOptions = [
   "Corporate", "Banking", "Government", "Legal", "Healthcare", "Technology"
 ];
+
+const MAX_PARTNER_LOGO_SIZE = 500 * 1024; // 500KB
+const MAX_PARTNER_LOGO_DIMENSION = 400; // 400px
 
 export default function ContentManagement() {
   const navigate = useNavigate();
@@ -191,6 +200,46 @@ export default function ContentManagement() {
     if (url) {
       setForm((prev: any) => ({ ...prev, [field]: url }));
     }
+  };
+
+  // Partner logo upload with size restrictions
+  const handlePartnerLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Check file size
+    if (file.size > MAX_PARTNER_LOGO_SIZE) {
+      toast({ 
+        title: "File too large", 
+        description: `Maximum file size is 500KB. Your file is ${(file.size / 1024).toFixed(0)}KB.`, 
+        variant: "destructive" 
+      });
+      return;
+    }
+
+    // Check dimensions
+    const img = new window.Image();
+    const objectUrl = URL.createObjectURL(file);
+    
+    img.onload = async () => {
+      URL.revokeObjectURL(objectUrl);
+      
+      if (img.width > MAX_PARTNER_LOGO_DIMENSION || img.height > MAX_PARTNER_LOGO_DIMENSION) {
+        toast({ 
+          title: "Image too large", 
+          description: `Maximum dimensions are ${MAX_PARTNER_LOGO_DIMENSION}x${MAX_PARTNER_LOGO_DIMENSION}px. Your image is ${img.width}x${img.height}px.`, 
+          variant: "destructive" 
+        });
+        return;
+      }
+
+      // Upload
+      const url = await uploadImage(file, "partners");
+      if (url) {
+        setPartnerForm(prev => ({ ...prev, logo_url: url }));
+      }
+    };
+    img.src = objectUrl;
   };
 
   // Save page content
@@ -451,7 +500,7 @@ export default function ContentManagement() {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="hero">
-              <TabsList className="grid w-full grid-cols-7 mb-4">
+              <TabsList className="grid w-full grid-cols-6 lg:grid-cols-12 mb-4 h-auto">
                 <TabsTrigger value="hero" className="flex items-center gap-1 text-xs">
                   <Home className="h-3 w-3" />
                   Hero
@@ -464,9 +513,17 @@ export default function ContentManagement() {
                   <FileText className="h-3 w-3" />
                   Case
                 </TabsTrigger>
+                <TabsTrigger value="servicessection" className="flex items-center gap-1 text-xs">
+                  <Briefcase className="h-3 w-3" />
+                  Svc Head
+                </TabsTrigger>
                 <TabsTrigger value="services" className="flex items-center gap-1 text-xs">
                   <Briefcase className="h-3 w-3" />
                   Services
+                </TabsTrigger>
+                <TabsTrigger value="trust" className="flex items-center gap-1 text-xs">
+                  <Shield className="h-3 w-3" />
+                  Trust
                 </TabsTrigger>
                 <TabsTrigger value="testimonials" className="flex items-center gap-1 text-xs">
                   <Users className="h-3 w-3" />
@@ -479,6 +536,14 @@ export default function ContentManagement() {
                 <TabsTrigger value="casestudies" className="flex items-center gap-1 text-xs">
                   <BookOpen className="h-3 w-3" />
                   Studies
+                </TabsTrigger>
+                <TabsTrigger value="about" className="flex items-center gap-1 text-xs">
+                  <Info className="h-3 w-3" />
+                  About
+                </TabsTrigger>
+                <TabsTrigger value="footer" className="flex items-center gap-1 text-xs">
+                  <MapPin className="h-3 w-3" />
+                  Footer
                 </TabsTrigger>
               </TabsList>
 
@@ -726,6 +791,11 @@ export default function ContentManagement() {
                 </div>
               </TabsContent>
 
+              {/* Services Section Heading Tab */}
+              <TabsContent value="servicessection" className="mt-6">
+                <ServicesSectionCMS />
+              </TabsContent>
+
               {/* Services Tab */}
               <TabsContent value="services" className="mt-6">
                 <div className="flex justify-between items-center mb-4">
@@ -818,6 +888,11 @@ export default function ContentManagement() {
                 )}
               </TabsContent>
 
+              {/* Trust Section Tab */}
+              <TabsContent value="trust" className="mt-6">
+                <TrustSectionCMS />
+              </TabsContent>
+
               {/* Testimonials Tab */}
               <TabsContent value="testimonials" className="mt-6">
                 <div className="flex justify-between items-center mb-4">
@@ -892,7 +967,10 @@ export default function ContentManagement() {
               {/* Partners Tab */}
               <TabsContent value="partners" className="mt-6">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold">Manage Partners</h3>
+                  <div>
+                    <h3 className="text-lg font-semibold">Manage Partners</h3>
+                    <p className="text-xs text-muted-foreground">Logos: Max 500KB, 400x400px</p>
+                  </div>
                   <Dialog open={partnerDialogOpen} onOpenChange={setPartnerDialogOpen}>
                     <DialogTrigger asChild>
                       <Button onClick={() => { setPartnerForm({ name: "", logo_url: "", website_url: "", is_active: true }); setEditingPartner(null); }}>
@@ -909,8 +987,8 @@ export default function ContentManagement() {
                           <Input value={partnerForm.name} onChange={e => setPartnerForm({...partnerForm, name: e.target.value})} />
                         </div>
                         <div>
-                          <Label>Logo</Label>
-                          <Input type="file" accept="image/*" onChange={e => handleImageUpload(e, setPartnerForm, "logo_url", "partners")} />
+                          <Label>Logo (Max 500KB, 400x400px)</Label>
+                          <Input type="file" accept="image/*" onChange={handlePartnerLogoUpload} />
                           {partnerForm.logo_url && <img src={partnerForm.logo_url} className="mt-2 h-16 object-contain" />}
                         </div>
                         <div>
@@ -1051,6 +1129,16 @@ export default function ContentManagement() {
                     ))}
                   </div>
                 )}
+              </TabsContent>
+
+              {/* About Tab */}
+              <TabsContent value="about" className="mt-6">
+                <AboutCMS />
+              </TabsContent>
+
+              {/* Footer Tab */}
+              <TabsContent value="footer" className="mt-6">
+                <FooterCMS />
               </TabsContent>
             </Tabs>
           </CardContent>
