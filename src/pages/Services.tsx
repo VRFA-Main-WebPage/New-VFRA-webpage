@@ -154,13 +154,6 @@ const Services = () => {
                       </div>
                     ))}
                   </div>
-
-                  <Link to={service.href}>
-                    <Button className="gap-2">
-                      Learn More
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </Link>
                 </div>
 
                 <div className={`${index % 2 === 1 ? "lg:order-1" : ""}`}>
