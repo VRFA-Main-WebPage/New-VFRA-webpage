@@ -1,4 +1,5 @@
 import jsPDF from "jspdf";
+import QRCode from "qrcode";
 
 interface CertificateData {
   certificateNumber: string;
@@ -12,6 +13,7 @@ interface CertificateData {
   logoUrl?: string;
   signatureUrl?: string;
   additionalNotes?: string;
+  verificationUrl?: string;
 }
 
 const certificateTypeLabels: Record<string, string> = {
@@ -21,6 +23,22 @@ const certificateTypeLabels: Record<string, string> = {
   training: "Training Certificate",
   internship: "Internship Certificate",
   excellence: "Certificate of Excellence",
+};
+
+const generateQRCode = async (text: string): Promise<string> => {
+  try {
+    return await QRCode.toDataURL(text, {
+      width: 100,
+      margin: 1,
+      color: {
+        dark: "#0d9488",
+        light: "#ffffff",
+      },
+    });
+  } catch (error) {
+    console.error("Failed to generate QR code:", error);
+    throw error;
+  }
 };
 
 export const generateCertificatePDF = async (data: CertificateData): Promise<jsPDF> => {
@@ -178,6 +196,25 @@ export const generateCertificatePDF = async (data: CertificateData): Promise<jsP
   // Certificate number
   doc.text(`Certificate No: ${data.certificateNumber}`, margin + 30, dateY + (data.expiryDate ? 10 : 5));
 
+  // QR Code for verification
+  const verificationUrl = data.verificationUrl || `${window.location.origin}/verify?id=${data.certificateNumber}`;
+  try {
+    const qrCodeDataUrl = await generateQRCode(verificationUrl);
+    const qrSize = 25;
+    const qrX = pageWidth / 2 - qrSize / 2;
+    const qrY = pageHeight - margin - 35;
+    doc.addImage(qrCodeDataUrl, "PNG", qrX, qrY, qrSize, qrSize);
+    
+    doc.setFontSize(7);
+    doc.setTextColor(100, 100, 100);
+    doc.text("Scan to verify", pageWidth / 2, pageHeight - margin - 5, { align: "center" });
+  } catch (error) {
+    console.error("Failed to add QR code:", error);
+    doc.setFontSize(7);
+    doc.setTextColor(150, 150, 150);
+    doc.text("Verify at: forensix.in/verify", pageWidth / 2, pageHeight - margin - 8, { align: "center" });
+  }
+
   // Signature section
   const signatureY = pageHeight - margin - 40;
   const signatureX = pageWidth - margin - 70;
@@ -209,11 +246,6 @@ export const generateCertificatePDF = async (data: CertificateData): Promise<jsP
     doc.setTextColor(100, 100, 100);
     doc.text(data.signingAuthorityDesignation, signatureX + 25, signatureY + 22, { align: "center" });
   }
-
-  // Verification QR area placeholder
-  doc.setFontSize(7);
-  doc.setTextColor(150, 150, 150);
-  doc.text("Scan to verify", pageWidth / 2, pageHeight - margin - 8, { align: "center" });
 
   return doc;
 };
