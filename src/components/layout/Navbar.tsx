@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import vfraLogo from "@/assets/vfra-logo.svg";
+import vfraLogo from "@/assets/vfra-logo.png";
 
 const services = [
   { title: "Digital Forensics", href: "/services/digital-forensics", description: "Mobile, computer, cloud & network forensics" },
@@ -63,7 +63,7 @@ export function Navbar() {
       
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 group">
+        <Link to="/" className="flex items-center gap-3 group">
           <motion.div
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
@@ -72,9 +72,13 @@ export function Navbar() {
             <img 
               src={vfraLogo} 
               alt="VFRA - Vigilant Forensic Research and Analytics" 
-              className="h-10 w-auto object-contain [filter:invert(1)_hue-rotate(180deg)_brightness(1.2)_contrast(0.9)]"
+              className="h-10 w-auto object-contain"
             />
           </motion.div>
+          <div className="hidden sm:flex flex-col">
+            <span className="font-display font-bold text-sm text-foreground leading-tight">Vigilant Forensic</span>
+            <span className="font-display text-xs text-muted-foreground leading-tight">Research and Analytics Pvt. Ltd.</span>
+          </div>
         </Link>
 
         {/* Desktop Navigation */}

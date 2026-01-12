@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Shield, Mail, Phone, MapPin, Linkedin, Twitter, Github, Terminal } from "lucide-react";
 import { motion } from "framer-motion";
-import vfraLogo from "@/assets/vfra-logo.svg";
+import vfraLogo from "@/assets/vfra-logo.png";
 
 const footerLinks = {
   services: [
@@ -42,7 +42,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand & Contact */}
           <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center gap-2 mb-4 group">
+            <Link to="/" className="flex items-center gap-3 mb-4 group">
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
@@ -50,9 +50,13 @@ export function Footer() {
                 <img 
                   src={vfraLogo} 
                   alt="VFRA - Vigilant Forensic Research and Analytics" 
-                  className="h-12 w-auto object-contain [filter:invert(1)_hue-rotate(180deg)_brightness(1.2)_contrast(0.9)]"
+                  className="h-14 w-auto object-contain"
                 />
               </motion.div>
+              <div className="flex flex-col">
+                <span className="font-display font-bold text-base text-foreground leading-tight">Vigilant Forensic</span>
+                <span className="font-display text-sm text-muted-foreground leading-tight">Research and Analytics Pvt. Ltd.</span>
+              </div>
             </Link>
             <p className="text-muted-foreground text-sm mb-6 max-w-sm">
               India's trusted digital forensics and cybercrime investigation laboratory. 
