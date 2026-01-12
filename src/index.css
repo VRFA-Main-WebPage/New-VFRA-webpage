@@ -2,84 +2,84 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ForensiX India - Dark Tech Cybersecurity Theme */
+/* VFRA - Vigilant Forensic Dark Gold Theme */
 
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap');
 
 @layer base {
   :root {
-    /* Dark tech color palette */
-    --background: 220 20% 4%;
-    --foreground: 180 100% 95%;
+    /* Vigilant Gold color palette */
+    --background: 30 8% 7%;
+    --foreground: 40 10% 95%;
 
-    --card: 220 25% 8%;
-    --card-foreground: 180 100% 95%;
+    --card: 30 15% 10%;
+    --card-foreground: 40 10% 95%;
 
-    --popover: 220 25% 6%;
-    --popover-foreground: 180 100% 95%;
+    --popover: 30 15% 8%;
+    --popover-foreground: 40 10% 95%;
 
-    /* Primary: Cyan neon */
-    --primary: 180 100% 50%;
-    --primary-foreground: 220 20% 4%;
+    /* Primary: Gold */
+    --primary: 42 56% 59%;
+    --primary-foreground: 30 8% 7%;
 
-    /* Secondary: Dark slate */
-    --secondary: 220 20% 15%;
-    --secondary-foreground: 180 100% 95%;
+    /* Secondary: Dark brown */
+    --secondary: 32 42% 21%;
+    --secondary-foreground: 40 10% 95%;
 
-    /* Muted: Dark grey */
-    --muted: 220 15% 12%;
-    --muted-foreground: 220 10% 55%;
+    /* Muted: Industrial grey */
+    --muted: 43 4% 25%;
+    --muted-foreground: 40 2% 55%;
 
-    /* Accent: Electric purple */
-    --accent: 270 100% 65%;
-    --accent-foreground: 0 0% 100%;
+    /* Accent: Light gold */
+    --accent: 43 83% 70%;
+    --accent-foreground: 30 8% 7%;
 
     --destructive: 0 85% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 20% 18%;
-    --input: 220 20% 18%;
-    --ring: 180 100% 50%;
+    --border: 33 20% 18%;
+    --input: 33 20% 18%;
+    --ring: 42 56% 59%;
 
     --radius: 0.5rem;
 
     /* Sidebar */
-    --sidebar-background: 220 25% 5%;
-    --sidebar-foreground: 180 100% 90%;
-    --sidebar-primary: 180 100% 50%;
-    --sidebar-primary-foreground: 220 20% 4%;
-    --sidebar-accent: 220 25% 12%;
-    --sidebar-accent-foreground: 180 100% 90%;
-    --sidebar-border: 220 25% 15%;
-    --sidebar-ring: 180 100% 50%;
+    --sidebar-background: 30 12% 6%;
+    --sidebar-foreground: 42 56% 85%;
+    --sidebar-primary: 42 56% 59%;
+    --sidebar-primary-foreground: 30 8% 7%;
+    --sidebar-accent: 33 25% 15%;
+    --sidebar-accent-foreground: 42 56% 85%;
+    --sidebar-border: 33 20% 15%;
+    --sidebar-ring: 42 56% 59%;
 
     /* Extended palette */
     --success: 142 80% 50%;
     --success-foreground: 0 0% 100%;
-    --warning: 45 100% 50%;
-    --warning-foreground: 220 20% 4%;
-    --info: 200 100% 55%;
-    --info-foreground: 220 20% 4%;
+    --warning: 43 83% 70%;
+    --warning-foreground: 30 8% 7%;
+    --info: 42 56% 59%;
+    --info-foreground: 30 8% 7%;
 
-    /* Neon glow colors */
-    --neon-cyan: 180 100% 50%;
-    --neon-purple: 270 100% 65%;
-    --neon-green: 140 100% 50%;
-    --neon-pink: 330 100% 60%;
+    /* Gold glow colors */
+    --neon-gold: 42 56% 59%;
+    --neon-bronze: 40 37% 50%;
+    --neon-cream: 43 83% 70%;
+    --neon-brown: 33 40% 28%;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(180 100% 50%), hsl(200 100% 40%));
-    --gradient-accent: linear-gradient(135deg, hsl(270 100% 65%), hsl(300 100% 60%));
-    --gradient-hero: linear-gradient(180deg, hsl(220 25% 3%) 0%, hsl(220 30% 8%) 50%, hsl(220 25% 5%) 100%);
-    --gradient-neon: linear-gradient(90deg, hsl(180 100% 50%) 0%, hsl(270 100% 65%) 50%, hsl(180 100% 50%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(42 56% 59%), hsl(40 37% 50%));
+    --gradient-accent: linear-gradient(135deg, hsl(43 83% 70%), hsl(42 56% 59%));
+    --gradient-hero: linear-gradient(180deg, hsl(30 12% 5%) 0%, hsl(30 15% 10%) 50%, hsl(30 12% 6%) 100%);
+    --gradient-neon: linear-gradient(90deg, hsl(42 56% 59%) 0%, hsl(43 83% 70%) 50%, hsl(42 56% 59%) 100%);
 
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.3);
     --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.4), 0 2px 4px -2px hsl(0 0% 0% / 0.3);
     --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.5), 0 4px 6px -4px hsl(0 0% 0% / 0.4);
     --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.5), 0 8px 10px -6px hsl(0 0% 0% / 0.4);
-    --shadow-neon: 0 0 20px hsl(180 100% 50% / 0.3), 0 0 40px hsl(180 100% 50% / 0.1);
-    --shadow-neon-purple: 0 0 20px hsl(270 100% 65% / 0.3), 0 0 40px hsl(270 100% 65% / 0.1);
+    --shadow-neon: 0 0 20px hsl(42 56% 59% / 0.3), 0 0 40px hsl(42 56% 59% / 0.1);
+    --shadow-neon-gold: 0 0 20px hsl(43 83% 70% / 0.3), 0 0 40px hsl(43 83% 70% / 0.1);
   }
 
   .dark {
@@ -122,16 +122,16 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: hsl(220 25% 8%);
+    background: hsl(30 15% 10%);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: hsl(180 100% 50% / 0.3);
+    background: hsl(42 56% 59% / 0.3);
     border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(180 100% 50% / 0.5);
+    background: hsl(42 56% 59% / 0.5);
   }
 }
 
@@ -190,11 +190,11 @@
 
   /* Neon text glow */
   .text-glow {
-    text-shadow: 0 0 10px hsl(180 100% 50% / 0.7), 0 0 20px hsl(180 100% 50% / 0.5), 0 0 40px hsl(180 100% 50% / 0.3);
+    text-shadow: 0 0 10px hsl(42 56% 59% / 0.7), 0 0 20px hsl(42 56% 59% / 0.5), 0 0 40px hsl(42 56% 59% / 0.3);
   }
 
-  .text-glow-purple {
-    text-shadow: 0 0 10px hsl(270 100% 65% / 0.7), 0 0 20px hsl(270 100% 65% / 0.5), 0 0 40px hsl(270 100% 65% / 0.3);
+  .text-glow-gold {
+    text-shadow: 0 0 10px hsl(43 83% 70% / 0.7), 0 0 20px hsl(43 83% 70% / 0.5), 0 0 40px hsl(43 83% 70% / 0.3);
   }
 
   /* Scan line effect */
@@ -206,8 +206,8 @@
       0deg,
       transparent,
       transparent 2px,
-      hsl(180 100% 50% / 0.03) 2px,
-      hsl(180 100% 50% / 0.03) 4px
+      hsl(42 56% 59% / 0.02) 2px,
+      hsl(42 56% 59% / 0.02) 4px
     );
     pointer-events: none;
   }
@@ -229,21 +229,21 @@
 
   .glitch::before {
     animation: glitch-1 0.3s infinite linear alternate-reverse;
-    color: hsl(180 100% 50%);
+    color: hsl(42 56% 59%);
     z-index: -1;
   }
 
   .glitch::after {
     animation: glitch-2 0.3s infinite linear alternate-reverse;
-    color: hsl(270 100% 65%);
+    color: hsl(43 83% 70%);
     z-index: -2;
   }
 
   /* Grid overlay */
   .grid-overlay {
     background-image: 
-      linear-gradient(hsl(180 100% 50% / 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(180 100% 50% / 0.03) 1px, transparent 1px);
+      linear-gradient(hsl(42 56% 59% / 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(42 56% 59% / 0.03) 1px, transparent 1px);
     background-size: 50px 50px;
   }
 
@@ -258,7 +258,7 @@
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, hsl(180 100% 50%), hsl(270 100% 65%), hsl(180 100% 50%));
+    background: linear-gradient(135deg, hsl(42 56% 59%), hsl(43 83% 70%), hsl(42 56% 59%));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
@@ -274,7 +274,7 @@
   .data-stream {
     background: linear-gradient(180deg, 
       transparent 0%, 
-      hsl(180 100% 50% / 0.1) 50%, 
+      hsl(42 56% 59% / 0.1) 50%, 
       transparent 100%);
     animation: data-flow 2s linear infinite;
   }
@@ -306,8 +306,8 @@
 }
 
 @keyframes pulse-ring {
-  0%, 100% { box-shadow: 0 0 0 0 hsl(180 100% 50% / 0.4); }
-  50% { box-shadow: 0 0 0 10px hsl(180 100% 50% / 0); }
+  0%, 100% { box-shadow: 0 0 0 0 hsl(42 56% 59% / 0.4); }
+  50% { box-shadow: 0 0 0 10px hsl(42 56% 59% / 0); }
 }
 
 @keyframes data-flow {
@@ -327,7 +327,7 @@
 
 @keyframes blink-caret {
   from, to { border-color: transparent; }
-  50% { border-color: hsl(180 100% 50%); }
+  50% { border-color: hsl(42 56% 59%); }
 }
 
 @keyframes flicker {

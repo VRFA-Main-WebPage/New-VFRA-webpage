@@ -96,9 +96,9 @@ export function HeroSection() {
         <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="circuit-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="hsl(180 100% 50% / 0)" />
-              <stop offset="50%" stopColor="hsl(180 100% 50% / 0.5)" />
-              <stop offset="100%" stopColor="hsl(180 100% 50% / 0)" />
+              <stop offset="0%" stopColor="hsl(42 56% 59% / 0)" />
+              <stop offset="50%" stopColor="hsl(42 56% 59% / 0.5)" />
+              <stop offset="100%" stopColor="hsl(42 56% 59% / 0)" />
             </linearGradient>
           </defs>
           <motion.path
