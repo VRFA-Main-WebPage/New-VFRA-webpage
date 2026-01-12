@@ -1,9 +1,10 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Shield, Users, FileText, Calendar, LogOut, LayoutDashboard, Award, Briefcase, UserPlus, Globe, Settings } from "lucide-react";
+import { Shield, Users, FileText, Calendar, LogOut, LayoutDashboard, Award, Briefcase, UserPlus, Globe, Settings, Palette } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { ThemeSwitcher } from "@/components/admin/ThemeSwitcher";
 
 const AdminDashboard = () => {
   const { user, signOut, isAdmin } = useAuth();
@@ -147,6 +148,22 @@ const AdminDashboard = () => {
                 <span className="text-xs text-center">{action.label}</span>
               </Button>
             ))}
+          </CardContent>
+        </Card>
+
+        {/* Theme Settings */}
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Palette className="h-5 w-5" />
+              Theme Settings
+            </CardTitle>
+            <CardDescription>
+              Customize the website appearance
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ThemeSwitcher />
           </CardContent>
         </Card>
       </main>
