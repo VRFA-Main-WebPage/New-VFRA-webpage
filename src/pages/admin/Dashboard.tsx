@@ -58,13 +58,6 @@ const AdminDashboard = () => {
   ];
 
   const handleQuickAction = (action: typeof quickActions[0]) => {
-    if (action.comingSoon) {
-      toast({
-        title: "Coming Soon",
-        description: `${action.label} feature is under development.`,
-      });
-      return;
-    }
     if (action.path) {
       navigate(action.path);
     }
@@ -141,16 +134,9 @@ const AdminDashboard = () => {
               <Button
                 key={action.label}
                 variant="outline"
-                className={`h-auto py-4 flex-col gap-2 relative ${
-                  action.comingSoon ? "opacity-60" : ""
-                }`}
+                className="h-auto py-4 flex-col gap-2"
                 onClick={() => handleQuickAction(action)}
               >
-                {action.comingSoon && (
-                  <span className="absolute -top-2 -right-2 bg-accent text-accent-foreground text-[10px] px-1.5 py-0.5 rounded-full">
-                    Soon
-                  </span>
-                )}
                 <action.icon className="h-6 w-6" />
                 <span className="text-xs text-center">{action.label}</span>
               </Button>
