@@ -266,13 +266,13 @@ export function Navbar() {
       {/* Mobile Navigation */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="lg:hidden border-t border-primary/20 glass-navbar"
-          >
+        <motion.div
+  initial={{ opacity: 0, y: -10 }}
+  animate={{ opacity: 1, y: 0 }}
+  exit={{ opacity: 0, y: -10 }}
+  transition={{ duration: 0.3 }}
+  className="lg:hidden fixed top-16 left-0 w-full h-[calc(100vh-4rem)] bg-background shadow-xl border-t overflow-y-auto z-[90]"
+>
             <nav className="container py-4 space-y-2">
               {navLinks.map((link, index) => (
                 <motion.div
