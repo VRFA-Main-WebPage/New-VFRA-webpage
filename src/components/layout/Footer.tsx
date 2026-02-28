@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Shield, Mail, Phone, MapPin, Linkedin, Twitter, Github, Terminal } from "lucide-react";
+import { Shield, Mail, Phone, MapPin, Terminal } from "lucide-react";
 import { motion } from "framer-motion";
 import vfraLogo from "@/assets/vfra-logo.png";
 import { useWebsiteContent, defaultFooterContent, defaultContactContent, FooterContent, ContactContent } from "@/hooks/useWebsiteContent";
@@ -34,21 +34,16 @@ export function Footer() {
 
   return (
     <footer className="bg-background border-t border-primary/10 relative overflow-hidden">
-      {/* Grid overlay */}
       <div className="absolute inset-0 grid-overlay opacity-20" />
-      
-      {/* Gradient accent */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
       <div className="container py-12 lg:py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
+          
           {/* Brand & Contact */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-3 mb-4 group">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.3 }}
-              >
+              <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }}>
                 <img 
                   src={vfraLogo} 
                   alt="VFRA - Vigilant Forensic Research and Analytics" 
@@ -56,14 +51,19 @@ export function Footer() {
                 />
               </motion.div>
               <div className="flex flex-col">
-                <span className="font-display font-bold text-base text-foreground leading-tight">Vigilant Forensic</span>
-                <span className="font-display text-sm text-muted-foreground leading-tight">Research and Analytics Pvt. Ltd.</span>
+                <span className="font-display font-bold text-base text-foreground leading-tight">
+                  Vigilant Forensic
+                </span>
+                <span className="font-display text-sm text-muted-foreground leading-tight">
+                  Research and Analytics Pvt. Ltd.
+                </span>
               </div>
             </Link>
+
             <p className="text-muted-foreground text-sm mb-6 max-w-sm">
               {footerContent.tagline}
             </p>
-            
+
             <div className="space-y-3 text-sm">
               <div className="flex items-start gap-3 group">
                 <MapPin className="h-4 w-4 mt-0.5 text-primary shrink-0" />
@@ -74,32 +74,16 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-3 group">
                 <Phone className="h-4 w-4 text-primary" />
-                <span className="text-muted-foreground group-hover:text-foreground transition-colors font-mono">{contactContent.phone}</span>
+                <span className="text-muted-foreground group-hover:text-foreground transition-colors font-mono">
+                  {contactContent.phone}
+                </span>
               </div>
               <div className="flex items-center gap-3 group">
                 <Mail className="h-4 w-4 text-primary" />
-                <span className="text-muted-foreground group-hover:text-foreground transition-colors font-mono">{contactContent.email}</span>
+                <span className="text-muted-foreground group-hover:text-foreground transition-colors font-mono">
+                  {contactContent.email}
+                </span>
               </div>
-            </div>
-
-            <div className="flex items-center gap-4 mt-6">
-              {[
-                { icon: Linkedin, href: footerContent.linkedin },
-                { icon: Twitter, href: footerContent.twitter },
-                { icon: Github, href: footerContent.github },
-              ].map((social, index) => (
-                <motion.a
-                  key={index}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/20 hover:border-primary/40 hover:shadow-neon transition-all duration-300"
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <social.icon className="h-5 w-5" />
-                </motion.a>
-              ))}
             </div>
           </div>
 
@@ -165,13 +149,17 @@ export function Footer() {
               ))}
             </ul>
           </div>
+
         </div>
 
-        {/* Bottom Bar */}
         <div className="border-t border-primary/10 mt-12 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-            <p className="font-mono text-xs">© {new Date().getFullYear()} Vigilant Forensic Research and Analytics Pvt. Ltd. All rights reserved.</p>
-            <p className="font-mono text-xs">GSTIN: {footerContent.gstin} | CIN: {footerContent.cin}</p>
+            <p className="font-mono text-xs">
+              © {new Date().getFullYear()} Vigilant Forensic Research and Analytics Pvt. Ltd. All rights reserved.
+            </p>
+            <p className="font-mono text-xs">
+              GSTIN: {footerContent.gstin} | CIN: {footerContent.cin}
+            </p>
           </div>
         </div>
       </div>
