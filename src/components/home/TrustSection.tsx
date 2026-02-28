@@ -1,15 +1,8 @@
-import { useEffect, useState } from "react";
 import { CheckCircle, Building2, Scale, GraduationCap, Briefcase, Hexagon, LucideIcon } from "lucide-react";
 import { motion } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
 import { useWebsiteContent, defaultTrustContent, TrustContent } from "@/hooks/useWebsiteContent";
-
-interface Partner {
-  id: string;
-  name: string;
-  logo_url: string | null;
-  website_url: string | null;
-}
+import maharashtraPoliceLogo from "@/assets/partners/maharashtra-police.jpg";
+import nagpurPoliceLogo from "@/assets/partners/nagpur-police.jpg";
 
 const iconMap: Record<string, LucideIcon> = {
   Scale,
@@ -42,7 +35,7 @@ const itemVariants = {
 };
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.9 },
+  hidden: { opacity: 0, y: 30, scale: 0.95 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
@@ -56,80 +49,44 @@ const cardVariants = {
 };
 
 export function TrustSection() {
-  const [partners, setPartners] = useState<Partner[]>([]);
   const { content } = useWebsiteContent<TrustContent>("trust", defaultTrustContent);
-
-  useEffect(() => {
-    const fetchPartners = async () => {
-      const { data } = await supabase
-        .from("partners")
-        .select("*")
-        .eq("is_active", true)
-        .order("sort_order");
-
-      if (data) {
-        setPartners(data);
-      }
-    };
-    fetchPartners();
-  }, []);
 
   return (
     <section className="py-24 lg:py-32 bg-background relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 grid-overlay opacity-50" />
       
-      {/* Floating hexagons */}
+      {/* Background Grid */}
+      <div className="absolute inset-0 grid-overlay opacity-50" />
+
+      {/* Floating Decorative Icons */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           className="absolute top-20 right-[10%]"
-          animate={{ rotate: 360, y: [-10, 10, -10] }}
-          transition={{ rotate: { duration: 20, repeat: Infinity, ease: "linear" }, y: { duration: 5, repeat: Infinity, ease: "easeInOut" } }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
         >
           <Hexagon className="h-20 w-20 text-primary/5 stroke-[0.5]" />
         </motion.div>
-        <motion.div
-          className="absolute bottom-32 left-[5%]"
-          animate={{ rotate: -360, y: [10, -10, 10] }}
-          transition={{ rotate: { duration: 25, repeat: Infinity, ease: "linear" }, y: { duration: 6, repeat: Infinity, ease: "easeInOut" } }}
-        >
-          <Hexagon className="h-16 w-16 text-accent/5 stroke-[0.5]" />
-        </motion.div>
       </div>
-
-      {/* Glowing line */}
-      <motion.div 
-        className="absolute top-1/2 left-0 w-full h-px"
-        initial={{ scaleX: 0 }}
-        whileInView={{ scaleX: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
-      >
-        <div className="h-full bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-      </motion.div>
 
       <div className="container relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
+
           {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
           >
-            <motion.p
-              className="text-sm font-semibold text-primary mb-3 uppercase tracking-widest text-glow"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
+            <p className="text-sm font-semibold text-primary mb-3 uppercase tracking-widest">
               {content.badge}
-            </motion.p>
+            </p>
+
             <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
               {content.heading.replace(content.highlightWord, "").trim()}{" "}
               <span className="text-primary">{content.highlightWord}</span>
             </h2>
+
             <p className="text-muted-foreground text-lg mb-10 leading-relaxed">
               {content.description}
             </p>
@@ -145,19 +102,15 @@ export function TrustSection() {
               {content.certifications.map((cert, index) => (
                 <motion.div
                   key={index}
-                  className="flex items-center gap-4 group"
+                  className="flex items-center gap-4"
                   variants={itemVariants}
-                  whileHover={{ x: 5 }}
-                  transition={{ type: "spring", stiffness: 400 }}
                 >
-                  <motion.div
-                    className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 group-hover:border-primary/40 group-hover:shadow-neon transition-all duration-300"
-                    whileHover={{ rotate: 360 }}
-                    transition={{ duration: 0.5 }}
-                  >
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
                     <CheckCircle className="h-5 w-5 text-primary" />
-                  </motion.div>
-                  <span className="text-foreground font-medium text-lg group-hover:text-primary transition-colors">{cert}</span>
+                  </div>
+                  <span className="text-foreground font-medium text-lg">
+                    {cert}
+                  </span>
                 </motion.div>
               ))}
             </motion.div>
@@ -174,20 +127,18 @@ export function TrustSection() {
                   variants={cardVariants}
                   initial="hidden"
                   whileInView="visible"
-                  viewport={{ once: true, margin: "-50px" }}
-                  whileHover={{ y: -8, scale: 1.03 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                  className="bg-card/50 rounded-2xl p-6 border border-primary/10 hover:border-primary/30 hover:shadow-neon transition-all duration-300 cursor-pointer group backdrop-blur-sm"
+                  viewport={{ once: true }}
+                  className="bg-card rounded-xl p-6 border border-primary/10 transition-all duration-300"
                 >
-                  <motion.div
-                    className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-5 group-hover:bg-primary/20 group-hover:shadow-neon transition-all duration-300"
-                    whileHover={{ rotate: [0, -10, 10, 0] }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <IconComponent className="h-8 w-8 text-primary" />
-                  </motion.div>
-                  <h3 className="font-display font-bold text-foreground text-lg mb-1 group-hover:text-primary transition-colors">{client.label}</h3>
-                  <p className="text-sm text-muted-foreground">{client.description}</p>
+                  <div className="w-14 h-14 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-4">
+                    <IconComponent className="h-7 w-7 text-primary" />
+                  </div>
+                  <h3 className="font-display font-bold text-foreground text-lg mb-1">
+                    {client.label}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {client.description}
+                  </p>
                 </motion.div>
               );
             })}
@@ -196,54 +147,48 @@ export function TrustSection() {
 
         {/* Partners Section */}
         <motion.div
-          className="mt-20 pt-16 border-t border-primary/10"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-        >
-          <p className="text-center text-sm text-muted-foreground mb-10 uppercase tracking-widest font-medium">
-            Trusted by leading organizations across India
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 lg:gap-16">
-            {partners.length > 0 ? (
-              partners.map((partner, index) => (
-                <motion.a
-                  key={partner.id}
-                  href={partner.website_url || "#"}
-                  target={partner.website_url ? "_blank" : undefined}
-                  rel="noopener noreferrer"
-                  className="h-12 w-36 bg-primary/5 border border-primary/10 rounded-lg flex items-center justify-center hover:bg-primary/10 hover:border-primary/30 transition-all duration-300 cursor-pointer overflow-hidden"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.4 + index * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  {partner.logo_url ? (
-                    <img src={partner.logo_url} alt={partner.name} className="h-8 object-contain" />
-                  ) : (
-                    <span className="text-xs text-muted-foreground font-medium font-mono">{partner.name}</span>
-                  )}
-                </motion.a>
-              ))
-            ) : (
-              [1, 2, 3, 4, 5].map((_, index) => (
-                <motion.div
-                  key={index}
-                  className="h-12 w-36 bg-primary/5 border border-primary/10 rounded-lg flex items-center justify-center hover:bg-primary/10 hover:border-primary/30 transition-all duration-300 cursor-pointer"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.4 + index * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <span className="text-xs text-muted-foreground font-medium font-mono">PARTNER_{index + 1}</span>
-                </motion.div>
-              ))
-            )}
-          </div>
-        </motion.div>
+  className="mt-20 pt-16 border-t border-primary/10"
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.6 }}
+>
+  <p className="text-center text-sm text-muted-foreground mb-10 uppercase tracking-widest font-medium">
+    Trusted by Law Enforcement Agencies
+  </p>
+
+  <div className="flex flex-wrap items-center justify-center gap-12 lg:gap-20">
+
+    {/* Maharashtra Police */}
+    <div className="flex flex-col items-center gap-4">
+      <div className="h-24 w-56 bg-card border border-primary/20 rounded-lg flex items-center justify-center p-4">
+        <img
+          src={maharashtraPoliceLogo}
+          alt="Maharashtra Police"
+          className="h-16 object-contain"
+        />
+      </div>
+      <p className="text-foreground font-semibold tracking-wide">
+        Maharashtra Police
+      </p>
+    </div>
+
+    {/* Nagpur Police */}
+    <div className="flex flex-col items-center gap-4">
+      <div className="h-24 w-56 bg-card border border-primary/20 rounded-lg flex items-center justify-center p-4">
+        <img
+          src={nagpurPoliceLogo}
+          alt="Nagpur Police"
+          className="h-16 object-contain"
+        />
+      </div>
+      <p className="text-foreground font-semibold tracking-wide">
+        Nagpur Police
+      </p>
+    </div>
+
+  </div>
+</motion.div>
       </div>
     </section>
   );

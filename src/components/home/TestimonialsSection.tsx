@@ -15,23 +15,23 @@ interface Testimonial {
 const fallbackTestimonials = [
   {
     id: "1",
-    quote: "ForensiX provided exceptional forensic analysis that was crucial to our investigation. Their expert testimony was clear and compelling in court.",
-    author: "Deputy Commissioner of Police",
-    organization: "Cyber Crime Cell, Delhi",
+    quote: "The training session on cybercrime investigation techniques was highly practical and aligned with real-world investigative challenges. The structured approach, case-based discussions, and demonstration of digital evidence handling methods made it extremely valuable for enforcement professionals.",
+    author: "Senior Law Enforcement Officer",
+    organization: "Cyber Crime Cell, Nagpur",
     rating: 5,
   },
   {
     id: "2",
-    quote: "Their rapid incident response helped us contain a major data breach within hours. Professional, thorough, and completely confidential.",
-    author: "Chief Information Security Officer",
-    organization: "Leading Private Bank",
+    quote: "The cybersecurity awareness session was highly informative and directly relevant to emerging digital fraud and financial cybercrime trends. The practical examples and preventive strategies shared during the lecture were valuable for strengthening organizational security awareness.",
+    author: "Senior Officer",
+    organization: "Life Insurance Corporation of India (LIC)",
     rating: 5,
   },
   {
     id: "3",
-    quote: "The training workshops conducted for our officers were extremely practical and well-organized. Highly recommended for law enforcement training.",
-    author: "Senior Superintendent of Police",
-    organization: "State Cyber Cell",
+    quote: "The Dark Web investigation session conducted for our students was highly practical and engaging. The hands-on demonstrations, real-world case discussions, and live exploration techniques provided valuable insight into modern cybercrime investigation methodologies.",
+    author: "Cybersecurity Student",
+    organization: "Ramdeobaba College of Engineering & Management,Nagpur",
     rating: 5,
   },
 ];

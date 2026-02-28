@@ -27,7 +27,6 @@ const navLinks = [
   { title: "Home", href: "/" },
   { title: "About", href: "/about" },
   { title: "Case Studies", href: "/case-studies" },
-  { title: "Blog", href: "/blog" },
   { title: "Contact", href: "/contact" },
 ];
 

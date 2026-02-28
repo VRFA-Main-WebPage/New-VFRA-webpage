@@ -81,20 +81,23 @@ export interface AboutContent {
 export const defaultHeroContent: HeroContent = {
   companyName: "VFRA",
   companyFullName: "Vigilant Forensic Research and Analytics Pvt. Ltd.",
-  badge: "India's Trusted Digital Forensics Partner",
-  headingLine1: "Uncover the Truth with",
-  headingLine2: "Expert Digital Forensics",
-  description: "Professional cybercrime investigation, digital evidence analysis, and expert witness services for law enforcement, government agencies, and corporate clients across India.",
-  primaryButtonText: "Request Consultation",
-  secondaryButtonText: "Explore Services",
-  stats: [
-    { value: "500+", label: "Cases Solved" },
-    { value: "200+", label: "Clients Served" },
-    { value: "15+", label: "Years Experience" },
-    { value: "100%", label: "Confidential" },
-  ],
-};
+  badge: "Digital Forensics | Cyber Investigation | Expert Reporting",
 
+  headingLine1: "Digital Evidence. Structured Analysis.",
+  headingLine2: "Legally Defensible Results.",
+
+  description:
+    "We deliver structured digital forensic investigations, cybercrime analysis, and expert technical reporting. Every examination follows strict evidence handling protocols, ensuring accuracy, integrity, and courtroom defensibility.",
+
+  primaryButtonText: "Request Case Consultation",
+  secondaryButtonText: "View Our Services",
+stats: [
+  { value: "2026", label: "Established" },
+  { value: "100%", label: "Evidence Integrity" },
+  { value: "ISO-Ready", label: "Structured Protocols" },
+  { value: "24 / 7", label: "Confidential Response" },
+],
+};
 export const defaultCTAContent: CTAContent = {
   badge: "24/7 EMERGENCY RESPONSE",
   heading: "Need Urgent Assistance?",
@@ -141,15 +144,23 @@ export const defaultFooterContent: FooterContent = {
 
 export const defaultTrustContent: TrustContent = {
   badge: "Why Choose Us",
-  heading: "Trusted by India's Leading Organizations",
-  highlightWord: "Leading Organizations",
-  description: "With over 15 years of experience in digital forensics and cybercrime investigation, we've established ourselves as India's trusted partner for sensitive investigations. Our state-of-the-art laboratory and certified experts ensure accurate, court-admissible evidence.",
-  certifications: ["ISO 27001 Certified", "NABL Accredited Lab", "EnCase Certified", "Cellebrite Certified", "ACE Certified"],
+  heading: "Professional. Precise. Confidential.",
+  highlightWord: "Precise",
+  description:
+    "As a modern digital forensics and cyber investigation firm, we focus on structured investigative workflows, forensically sound evidence handling, and legally defensible reporting. Our work is guided by technical expertise, ethical standards, and practical field experience.",
+
+   certifications: [
+    "Structured Digital Forensic Methodologies",
+    "Forensically Sound Evidence Handling Practices",
+    "Advanced Tool Expertise (EnCase, Cellebrite, X-Ways, FTK, Autopsy)",
+    "Confidential & Court-Oriented Reporting"
+  ],
+
   clientTypes: [
-    { icon: "Scale", label: "Law Enforcement", description: "Police & Cyber Cells" },
-    { icon: "Building2", label: "Government", description: "Agencies & PSUs" },
-    { icon: "Briefcase", label: "Corporate", description: "Enterprises & MNCs" },
-    { icon: "GraduationCap", label: "Legal", description: "Courts & Law Firms" },
+    { icon: "Scale", label: "Law Enforcement", description: "Cybercrime Units & Investigative Teams" },
+    { icon: "Building2", label: "Corporate", description: "Organizations & Security Teams" },
+    { icon: "GraduationCap", label: "Academic Institutions", description: "Cybersecurity Workshops & Training" },
+    { icon: "Briefcase", label: "Legal Professionals", description: "Technical Consultation & Reporting Support" },
   ],
 };
 
@@ -161,9 +172,15 @@ export const defaultServicesSectionContent: ServicesSectionContent = {
 
 export const defaultAboutContent: AboutContent = {
   heroTitle: "India's Premier Digital Forensics Laboratory",
-  heroDescription: "For over 15 years, we've been at the forefront of digital forensics and cybercrime investigation, serving law enforcement, government agencies, and enterprises across India.",
-  mission: "To provide world-class digital forensics services that help uncover the truth, support justice, and protect organizations from cyber threats. We are committed to maintaining the highest standards of integrity, accuracy, and confidentiality in every investigation.",
-  vision: "To be India's most trusted digital forensics partner, recognized globally for excellence in investigation, innovation in methodology, and commitment to training the next generation of cybersecurity professionals.",
+  heroDescription:
+    "Established in 2026, we specialize in structured digital forensics and cybercrime investigation services, supporting legal professionals, organizations, and investigative teams with technically sound and defensible analysis.",
+
+  mission:
+    "To uncover digital truth through structured forensic methodologies, ensuring every investigation is conducted with accuracy, integrity, and strict confidentiality while meeting professional and evidentiary standards.",
+
+  vision:
+    "To build a respected digital forensics practice in India by maintaining investigative rigor, ethical standards, and continuous advancement in modern forensic techniques.",
+
   labEquipment: [
     "Cellebrite UFED for mobile device extraction",
     "EnCase Forensic workstations",
