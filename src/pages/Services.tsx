@@ -14,12 +14,19 @@ import {
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import digitalForensicsImg from "@/assets/services/digitalforensics.webp";
+import cybercrimeImg from "@/assets/services/cybercrimeinvestigation.jpg";
+import incidentResponseImg from "@/assets/services/incidenceresponse.jpg";
+import expertWitnessImg from "@/assets/services/expertwitness.jpg";
+import trainingImg from "@/assets/services/trainingandworkshops.jpeg";
+import labServicesImg from "@/assets/services/Labsetup.jpg";
 
 const services = [
   {
     id: "digital-forensics",
     icon: Monitor,
     title: "Digital Forensics",
+    image: digitalForensicsImg,
     description: "Comprehensive digital evidence collection and analysis across all platforms and devices.",
     features: [
       "Mobile device forensics (Android, iOS)",
@@ -35,6 +42,7 @@ const services = [
     id: "cybercrime-investigation",
     icon: Search,
     title: "Cybercrime Investigation",
+    image: cybercrimeImg,
     description: "Professional investigation of cyber frauds, hacking incidents, and online crimes.",
     features: [
       "Financial fraud investigation",
@@ -50,6 +58,7 @@ const services = [
     id: "incident-response",
     icon: ShieldAlert,
     title: "Incident Response",
+    image: incidentResponseImg,
     description: "Rapid response to security incidents with containment, investigation, and recovery.",
     features: [
       "24/7 emergency response",
@@ -65,6 +74,7 @@ const services = [
     id: "expert-witness",
     icon: FileText,
     title: "Expert Witness Services",
+    image: expertWitnessImg,
     description: "Court-admissible reports and expert testimony for legal proceedings.",
     features: [
       "Expert witness testimony",
@@ -80,6 +90,7 @@ const services = [
     id: "training",
     icon: GraduationCap,
     title: "Training & Workshops",
+    image: trainingImg,
     description: "Professional development programs for law enforcement and corporate teams.",
     features: [
       "Cyber forensics certification courses",
@@ -95,6 +106,7 @@ const services = [
     id: "lab-services",
     icon: HardDrive,
     title: "Lab Services",
+    image: labServicesImg,
     description: "Data recovery, evidence preservation, and specialized laboratory analysis.",
     features: [
       "Data recovery from damaged media",
@@ -159,9 +171,13 @@ const Services = () => {
                 <div className={`${index % 2 === 1 ? "lg:order-1" : ""}`}>
                   <Card className="bg-muted border-0">
                     <CardContent className="p-0">
-                      <div className="aspect-video flex items-center justify-center">
-                        <service.icon className="h-24 w-24 text-primary/20" />
-                      </div>
+                      <div className="aspect-video overflow-hidden rounded-lg">
+  <img
+    src={service.image}
+    alt={service.title}
+    className="w-full h-full object-cover"
+  />
+</div>
                     </CardContent>
                   </Card>
                 </div>

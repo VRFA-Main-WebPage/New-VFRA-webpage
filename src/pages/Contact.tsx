@@ -146,15 +146,16 @@ const Contact = () => {
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="email">Email Address *</Label>
-                        <Input id="email" type="email" placeholder="your@email.com" required />
+                        <Input id="email" type="email" placeholder="name@email.com" required />
                       </div>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="phone">Phone Number</Label>
-                        <Input id="phone" placeholder="+91 98765 43210" />
+                        <Input id="phone" placeholder="+91 9XXXXXXXXX" />
                       </div>
+                      
                       <div className="space-y-2">
                         <Label htmlFor="organization">Organization</Label>
                         <Input id="organization" placeholder="Your organization" />

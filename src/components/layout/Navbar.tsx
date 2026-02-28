@@ -202,27 +202,6 @@ export function Navbar() {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <Link to="/blog">
-                  <NavigationMenuLink
-                    className={cn(
-                      "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-all duration-300",
-                      "hover:text-primary hover:bg-primary/10",
-                      "text-foreground/80",
-                      isActive("/blog") && "text-primary bg-primary/10"
-                    )}
-                  >
-                    <span className="relative">
-                      Blog
-                      <span className={cn(
-                        "absolute -bottom-1 left-0 h-[2px] bg-primary transition-all duration-300",
-                        isActive("/blog") ? "w-full" : "w-0 group-hover:w-full"
-                      )} />
-                    </span>
-                  </NavigationMenuLink>
-                </Link>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
                 <Link to="/contact">
                   <NavigationMenuLink
                     className={cn(
