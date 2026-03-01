@@ -1,229 +1,206 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Building2, Scale, User, Award } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-const categories = [
-  { id: "all", label: "All Cases" },
-  { id: "government", label: "Government" },
-  { id: "corporate", label: "Corporate" },
-  { id: "legal", label: "Legal" },
-  { id: "individual", label: "Individual" },
-];
-
-const caseStudies = [
-  {
-    id: 1,
-    title: "Multi-State Financial Fraud Investigation",
-    category: "government",
-    client: "State Cyber Cell",
-    description: "Investigation of a complex financial fraud spanning multiple states involving cryptocurrency and shell companies.",
-    outcome: "₹15 Cr recovered, 12 arrests made",
-    services: ["Digital Forensics", "Network Analysis", "Expert Witness"],
-    impact: "Court conviction achieved",
-  },
-  {
-    id: 2,
-    title: "Corporate Data Breach Response",
-    category: "corporate",
-    client: "Fortune 500 IT Company",
-    description: "Rapid incident response to a ransomware attack targeting critical infrastructure and customer data.",
-    outcome: "Contained within 6 hours, zero data loss",
-    services: ["Incident Response", "Malware Analysis", "Recovery"],
-    impact: "Business continuity maintained",
-  },
-  {
-    id: 3,
-    title: "Matrimonial Digital Evidence Case",
-    category: "legal",
-    client: "High Court of Delhi",
-    description: "Analysis of digital communications and financial transactions for a high-profile divorce proceeding.",
-    outcome: "Evidence accepted, case decided",
-    services: ["Mobile Forensics", "Email Analysis", "Expert Testimony"],
-    impact: "Expert opinion cited in judgment",
-  },
-  {
-    id: 4,
-    title: "Employee IP Theft Investigation",
-    category: "corporate",
-    client: "Pharmaceutical Company",
-    description: "Investigation of suspected intellectual property theft by departing employees to a competitor.",
-    outcome: "Evidence trail established",
-    services: ["Computer Forensics", "Cloud Analysis", "Timeline Reconstruction"],
-    impact: "Civil suit filed successfully",
-  },
-  {
-    id: 5,
-    title: "Cyber Stalking & Harassment Case",
-    category: "individual",
-    client: "Private Client",
-    description: "Tracing and identification of anonymous cyber stalker using multiple social media platforms.",
-    outcome: "Perpetrator identified and arrested",
-    services: ["Social Media Analysis", "IP Tracking", "Evidence Documentation"],
-    impact: "Criminal case registered",
-  },
-  {
-    id: 6,
-    title: "Banking Sector Fraud Analysis",
-    category: "government",
-    client: "Economic Offences Wing",
-    description: "Large-scale investigation into banking fraud involving insider trading and account manipulation.",
-    outcome: "₹50 Cr fraud documented",
-    services: ["Database Forensics", "Transaction Analysis", "Report Generation"],
-    impact: "Chargesheet filed",
-  },
-];
+interface CaseStudy {
+  id: string;
+  title: string;
+  category: string;
+  client: string;
+  description: string;
+  outcome: string;
+  impact: string;
+  services: string[];
+}
 
 const CaseStudies = () => {
+  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
   const [activeCategory, setActiveCategory] = useState("all");
+  const [loading, setLoading] = useState(true);
 
-  const filteredCases = activeCategory === "all" 
-    ? caseStudies 
-    : caseStudies.filter(c => c.category === activeCategory);
+  useEffect(() => {
+    fetchCases();
+  }, []);
+
+  const fetchCases = async () => {
+    const { data, error } = await supabase
+      .from("case_studies")
+      .select("*")
+      .eq("is_active", true)
+      .order("sort_order");
+
+    if (error) {
+      console.error("Error fetching cases:", error);
+      setLoading(false);
+      return;
+    }
+
+    setCaseStudies(data || []);
+    setLoading(false);
+  };
+
+  const categories = [
+    { id: "all", label: "All Cases" },
+    ...Array.from(new Set(caseStudies.map((c) => c.category))).map(
+      (cat) => ({
+        id: cat,
+        label: cat.charAt(0).toUpperCase() + cat.slice(1),
+      })
+    ),
+  ];
+
+  const filteredCases =
+    activeCategory === "all"
+      ? caseStudies
+      : caseStudies.filter((c) => c.category === activeCategory);
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case "government": return Scale;
-      case "corporate": return Building2;
-      case "legal": return Scale;
-      case "individual": return User;
-      default: return Award;
+      case "government":
+        return Scale;
+      case "corporate":
+        return Building2;
+      case "legal":
+        return Scale;
+      case "individual":
+        return User;
+      default:
+        return Award;
     }
   };
 
+  if (loading) {
+    return (
+      <div className="py-32 text-center text-muted-foreground">
+        Loading case studies...
+      </div>
+    );
+  }
+
   return (
     <div className="bg-background">
-      {/* Hero Section */}
-      <section className="relative py-20 lg:py-28 bg-gradient-to-br from-background via-background to-primary/10 overflow-hidden">
-        <div className="absolute inset-0 grid-overlay opacity-30" />
-        <div className="container relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <p className="text-sm font-medium text-primary mb-2 uppercase tracking-wider font-mono">Case Studies</p>
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 font-display">
-              Our Success Stories
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              Explore anonymized case studies showcasing our expertise in solving complex 
-              digital forensics challenges across various sectors.
-            </p>
-          </div>
+
+      {/* Hero */}
+      <section className="py-24 text-center">
+        <div className="container max-w-3xl mx-auto">
+          <p className="text-sm text-primary uppercase tracking-widest mb-3">
+            Case Studies
+          </p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            Documented Investigation Outcomes
+          </h1>
+          <p className="text-muted-foreground">
+            Anonymized investigations demonstrating structured forensic
+            methodologies and legally defensible reporting.
+          </p>
         </div>
       </section>
 
-      {/* Filter & Cases */}
-      <section className="py-20 lg:py-28">
-        <div className="container">
-          {/* Category Filter */}
-          <div className="flex flex-wrap justify-center gap-2 mb-12">
-            {categories.map((cat) => (
-              <Button
-                key={cat.id}
-                variant={activeCategory === cat.id ? "default" : "outline"}
-                size="sm"
-                onClick={() => setActiveCategory(cat.id)}
-              >
-                {cat.label}
-              </Button>
-            ))}
-          </div>
+      {/* Filters */}
+      <section className="pb-12">
+        <div className="container flex flex-wrap justify-center gap-2">
+          {categories.map((cat) => (
+            <Button
+              key={cat.id}
+              variant={activeCategory === cat.id ? "default" : "outline"}
+              size="sm"
+              onClick={() => setActiveCategory(cat.id)}
+            >
+              {cat.label}
+            </Button>
+          ))}
+        </div>
+      </section>
 
-          {/* Cases Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCases.map((caseStudy) => {
-              const Icon = getCategoryIcon(caseStudy.category);
-              return (
-                <Card key={caseStudy.id} className="bg-card border-border/50 hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <Icon className="h-5 w-5 text-primary" />
-                      </div>
-                      <Badge variant="secondary" className="capitalize">
-                        {caseStudy.category}
+      {/* Cases */}
+      <section className="pb-24">
+        <div className="container grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredCases.map((caseStudy) => {
+            const Icon = getCategoryIcon(caseStudy.category);
+
+            return (
+              <Card key={caseStudy.id}>
+                <CardHeader>
+                  <div className="flex justify-between mb-2">
+                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                      <Icon className="h-5 w-5 text-primary" />
+                    </div>
+                    <Badge variant="secondary" className="capitalize">
+                      {caseStudy.category}
+                    </Badge>
+                  </div>
+                  <CardTitle>{caseStudy.title}</CardTitle>
+                  <CardDescription>{caseStudy.client}</CardDescription>
+                </CardHeader>
+
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    {caseStudy.description}
+                  </p>
+
+                  <div className="mb-4 space-y-2">
+                    <div>
+                      <span className="text-xs uppercase text-muted-foreground">
+                        Outcome
+                      </span>
+                      <p className="text-sm font-medium">
+                        {caseStudy.outcome}
+                      </p>
+                    </div>
+
+                    <div>
+                      <span className="text-xs uppercase text-muted-foreground">
+                        Impact
+                      </span>
+                      <p className="text-sm text-primary font-medium">
+                        {caseStudy.impact}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1">
+                    {caseStudy.services?.map((service, idx) => (
+                      <Badge key={idx} variant="outline" className="text-xs">
+                        {service}
                       </Badge>
-                    </div>
-                    <CardTitle className="text-lg">{caseStudy.title}</CardTitle>
-                    <CardDescription className="text-sm text-primary">
-                      {caseStudy.client}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      {caseStudy.description}
-                    </p>
-                    
-                    <div className="space-y-3 mb-4">
-                      <div>
-                        <span className="text-xs text-muted-foreground uppercase">Outcome</span>
-                        <p className="text-sm font-medium text-foreground">{caseStudy.outcome}</p>
-                      </div>
-                      <div>
-                        <span className="text-xs text-muted-foreground uppercase">Impact</span>
-                        <p className="text-sm font-medium text-primary">{caseStudy.impact}</p>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-wrap gap-1">
-                      {caseStudy.services.map((service, idx) => (
-                        <Badge key={idx} variant="outline" className="text-xs">
-                          {service}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-20 lg:py-28 bg-muted">
-        <div className="container">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-4xl lg:text-5xl font-bold text-primary mb-2">500+</div>
-              <p className="text-muted-foreground">Cases Completed</p>
-            </div>
-            <div>
-              <div className="text-4xl lg:text-5xl font-bold text-primary mb-2">95%</div>
-              <p className="text-muted-foreground">Success Rate</p>
-            </div>
-            <div>
-              <div className="text-4xl lg:text-5xl font-bold text-primary mb-2">₹100Cr+</div>
-              <p className="text-muted-foreground">Fraud Recovered</p>
-            </div>
-            <div>
-              <div className="text-4xl lg:text-5xl font-bold text-primary mb-2">200+</div>
-              <p className="text-muted-foreground">Expert Testimonies</p>
-            </div>
-          </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-20 lg:py-28">
-        <div className="container">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-              Have a Case to Discuss?
-            </h2>
-            <p className="text-muted-foreground mb-8">
-              Our team is ready to help you with your digital forensics needs. 
-              All consultations are strictly confidential.
-            </p>
-            <Link to="/contact">
-              <Button size="lg" className="gap-2">
-                Schedule Consultation
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
+      <section className="py-24 text-center bg-muted">
+        <div className="container max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold mb-6">
+            Have a Case to Discuss?
+          </h2>
+          <p className="text-muted-foreground mb-8">
+            All consultations are handled with strict confidentiality and
+            evidence integrity protocols.
+          </p>
+          <Link to="/contact">
+            <Button size="lg" className="gap-2">
+              Schedule Consultation
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
         </div>
       </section>
+
     </div>
   );
 };

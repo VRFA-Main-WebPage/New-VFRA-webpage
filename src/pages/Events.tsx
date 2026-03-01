@@ -27,22 +27,22 @@ interface Event {
 
 const pastEvents = [
   {
-    title: "Cyber Forensics for Law Enforcement",
-    date: "January 2024",
-    participants: "45 Officers",
-    location: "State Police Academy, UP",
+    title: "Dark Web Investigation & Digital Forensics Workshop",
+    date: "2026",
+    participants: "200+ Students & Faculty",
+    location: "Ramdeobaba College of Engineering & Management",
   },
   {
-    title: "Corporate Security Awareness Week",
-    date: "December 2023",
-    participants: "200+ Employees",
-    location: "Leading IT Company, Bangalore",
+    title: "Cybersecurity Awareness & Digital Fraud Prevention Session",
+    date: "2026",
+    participants: "500+ Officers & Staff",
+    location: "Life Insurance Corporation of India (LIC)",
   },
   {
-    title: "Digital Evidence Handling Workshop",
-    date: "November 2023",
-    participants: "30 Lawyers",
-    location: "Delhi High Court Bar Association",
+    title: "Cybercrime Investigation & Digital Evidence Techniques Training",
+    date: "2025",
+    participants: "1000+ Law Enforcement Personnel",
+    location: "Regional Law Enforcement Unit",
   },
 ];
 
