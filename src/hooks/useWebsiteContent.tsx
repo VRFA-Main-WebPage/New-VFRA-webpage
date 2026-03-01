@@ -92,7 +92,7 @@ export const defaultHeroContent: HeroContent = {
   primaryButtonText: "Request Case Consultation",
   secondaryButtonText: "View Our Services",
 stats: [
-  { value: "2026", label: "Established" },
+  { value: "2025", label: "Established" },
   { value: "100%", label: "Evidence Integrity" },
   { value: "ISO-Ready", label: "Structured Protocols" },
   { value: "24 / 7", label: "Confidential Response" },
@@ -186,7 +186,6 @@ export const defaultAboutContent: AboutContent = {
     "EnCase Forensic workstations",
     "X-Ways Forensics suite",
     "Hardware write blockers and imaging systems",
-    "Faraday cages for secure device handling",
     "Chain of custody compliant evidence storage",
   ],
 };

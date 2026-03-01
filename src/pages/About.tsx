@@ -86,7 +86,7 @@ const About = () => {
               India’s Emerging Digital Forensics & Cyber Investigation Firm
             </h1>
             <p className="text-lg text-muted-foreground">
-              Founded in 2026, we specialize in scientifically sound digital evidence analysis and cyber investigations with a strong focus on accuracy, integrity, and legal defensibility.
+              Founded in 2025, we specialize in scientifically sound digital evidence analysis and cyber investigations with a strong focus on accuracy, integrity, and legal defensibility.
             </p>
           </div>
         </div>
