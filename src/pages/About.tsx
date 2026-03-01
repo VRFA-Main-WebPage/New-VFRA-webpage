@@ -6,6 +6,7 @@ import { useWebsiteContent, defaultAboutContent, AboutContent } from "@/hooks/us
 import tanishPhoto from "@/assets/team/tanish.jpg";
 import omPhoto from "@/assets/team/om.jpg";
 import jafarPhoto from "@/assets/team/jafar.jpg";
+import ShouryaPhoto from "@/assets/team/Shourya.jpg"
 interface TeamMember {
   id: string;
   name: string;
@@ -24,30 +25,31 @@ const fallbackTeamMembers: TeamMember[] = [
     photo_url: tanishPhoto,
     sort_order: 0,
   },
-   {
+{
   id: "2",
+  name: "Mr. Shourya Bhagat",
+  role: "Blockchain & Cryptocurrency Forensic Analyst",
+  credentials: "Blockchain Transaction Analysis | Cryptocurrency Tracing & Wallet Attribution | Digital Asset Investigation | On-Chain Intelligence & Fraud Tracking",
+  photo_url:ShouryaPhoto ,
+  sort_order: 3,
+},
+   {
+  id: "3",
   name: "Mr. Om Gatlewar",
-  role: "Lead – Mobile Forensics & Cyber Investigation",
+  role: "Mobile Forensics & Cyber Investigation",
   credentials: "Mobile Device Forensics Specialist | Cellebrite & Advanced Mobile Extraction Workflows | Cybercrime Investigation & Digital Evidence Handling",
   photo_url: omPhoto,
   sort_order: 1,
   },
   {
-  id: "3",
+  id: "4",
   name: "Mr. Jafar Naqvi",
-  role: "Head – Cybercrime Investigation & Incident Response",
+  role: "Cybercrime Investigation & Incident Response",
   credentials: "Cybercrime Investigation & Incident Analysis | Digital Evidence Collection & Case Documentation | Assisted in Cybercrime Case Analysis with Cyber Cell, Nagpur",
   photo_url: jafarPhoto,
   sort_order: 2,
 },
- {
-  id: "4",
-  name: "Mr. Shourya Bhagat",
-  role: "Blockchain & Cryptocurrency Forensic Analyst",
-  credentials: "Blockchain Transaction Analysis | Cryptocurrency Tracing & Wallet Attribution | Digital Asset Investigation | On-Chain Intelligence & Fraud Tracking",
-  photo_url: null,
-  sort_order: 3,
-},
+ 
 ];
 
 const About = () => {
