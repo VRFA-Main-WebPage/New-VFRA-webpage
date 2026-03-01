@@ -18,7 +18,7 @@ interface TeamMember {
 const fallbackTeamMembers: TeamMember[] = [
   {
     id: "1",
-    name: "Mr. Tanish Chauhan",
+    name: "Mr. Tanish Chouhan",
     role: "Founder & Director – Vigilant Forensic",
     credentials: "Digital Forensics & Cybercrime Investigation Leader | Specialized in EnCase, Cellebrite, X-Ways, FTK & Autopsy | Incident Response & Advanced Evidence Analysis | Legally Defensible Forensic Reporting",
     photo_url: tanishPhoto,
