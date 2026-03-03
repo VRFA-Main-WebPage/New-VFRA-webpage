@@ -8,6 +8,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { mapAuthErrorToUserMessage } from "@/lib/errorHandler";
+import logo from "@/assets/vfra-logo.png";
+
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -57,7 +59,12 @@ const AdminLogin = () => {
       <Card className="w-full max-w-md border-primary/20 shadow-lg">
         <CardHeader className="text-center space-y-4">
           <div className="flex items-center justify-center gap-3">
-            <Shield className="h-10 w-10 text-primary" />
+           
+           <img 
+  src={logo} 
+  alt="VFRA Logo" 
+  className="h-10 w-auto object-contain"
+/>
             <span className="text-2xl font-bold tracking-wide">
               VFRA <span className="text-primary">Admin</span>
             </span>
