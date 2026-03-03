@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import EventRegistrationsPage from "@/pages/admin/EventRegistrationsPage";
 
 // Auth & Theme
 import { AuthProvider } from "@/hooks/useAuth";
@@ -18,7 +19,6 @@ import About from "./pages/About";
 import Services from "./pages/Services";
 import CaseStudies from "./pages/CaseStudies";
 import Events from "./pages/Events";
-import Blog from "./pages/Blog";
 import Contact from "./pages/Contact";
 import Verify from "./pages/Verify";
 import NotFound from "./pages/NotFound";
@@ -145,6 +145,10 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
+            <Route
+               path="/admin/events/:eventId/registrations"
+              element={<EventRegistrationsPage />}
+               />
 
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
