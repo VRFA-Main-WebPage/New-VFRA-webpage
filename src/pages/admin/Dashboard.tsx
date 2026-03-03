@@ -9,6 +9,7 @@ import { Shield, Users, FileText, Calendar, LogOut, LayoutDashboard, Award, Brie
 import { useToast } from "@/hooks/use-toast";
 import { ThemeSwitcher } from "@/components/admin/ThemeSwitcher";
 import { supabase } from "@/integrations/supabase/client";
+import logo from "@/assets/vfra-logo.png";
 
 
 
@@ -160,7 +161,11 @@ const stats = [
       <header className="border-b border-border bg-card">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Shield className="h-8 w-8 text-primary" />
+           <img 
+  src={logo} 
+  alt="VFRA Logo" 
+  className="h-10 w-auto object-contain"
+/>
             <div>
               <h1 className="text-xl font-bold text-foreground">
                 <span className="text-primary">VFRA</span> Admin
