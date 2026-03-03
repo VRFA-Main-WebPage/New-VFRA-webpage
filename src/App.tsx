@@ -146,9 +146,13 @@ const App = () => (
               }
             />
             <Route
-               path="/admin/events/:eventId/registrations"
-              element={<EventRegistrationsPage />}
-               />
+  path="/admin/events/:eventId/registrations"
+  element={
+    <ProtectedRoute>
+      <EventRegistrationsPage />
+    </ProtectedRoute>
+  }
+/>
 
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
