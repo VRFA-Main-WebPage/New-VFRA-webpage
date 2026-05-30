@@ -82,24 +82,10 @@ export default function FooterCMS() {
               />
             </div>
             <div>
-              <Label>24/7 Phone</Label>
-              <Input 
-                value={contactContent.phone24x7} 
-                onChange={e => setContactContent({...contactContent, phone24x7: e.target.value})} 
-              />
-            </div>
-            <div>
               <Label>Email</Label>
               <Input 
                 value={contactContent.email} 
                 onChange={e => setContactContent({...contactContent, email: e.target.value})} 
-              />
-            </div>
-            <div>
-              <Label>Urgent Email</Label>
-              <Input 
-                value={contactContent.urgentEmail} 
-                onChange={e => setContactContent({...contactContent, urgentEmail: e.target.value})} 
               />
             </div>
           </div>

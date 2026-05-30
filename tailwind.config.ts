@@ -69,6 +69,16 @@ export default {
           DEFAULT: "hsl(var(--info))",
           foreground: "hsl(var(--info-foreground))",
         },
+        vfra: {
+          bg: "#0A0A0A",
+          surface: "#121212",
+          panel: "#1C1C1C",
+          border: "#2A2A2A",
+          gold: "#D4AF37",
+          "gold-hover": "#B8891E",
+          warm: "#F5F3EE",
+          muted: "#B7B1A6",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -77,8 +87,10 @@ export default {
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
-        display: ["Orbitron", "Inter", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono", "monospace"],
+        body: ["Inter", "system-ui", "sans-serif"],
+        heading: ["Manrope", "Inter", "system-ui", "sans-serif"],
+        display: ["Manrope", "Inter", "system-ui", "sans-serif"],
+        mono: ["ui-monospace", "SFMono-Regular", "monospace"],
       },
       keyframes: {
         "accordion-down": {

@@ -36,9 +36,7 @@ export interface CaseSectionContent {
 
 export interface ContactContent {
   phone: string;
-  phone24x7: string;
   email: string;
-  urgentEmail: string;
   address: string;
   addressLine2: string;
   addressLine3: string;
@@ -91,13 +89,14 @@ export const defaultHeroContent: HeroContent = {
 
   primaryButtonText: "Request Case Consultation",
   secondaryButtonText: "View Our Services",
-stats: [
-  { value: "2025", label: "Established" },
-  { value: "100%", label: "Evidence Integrity" },
-  { value: "ISO-Ready", label: "Structured Protocols" },
-  { value: "24 / 7", label: "Confidential Response" },
-],
+  stats: [
+    { value: "2025", label: "Established" },
+    { value: "100%", label: "Evidence Integrity" },
+    { value: "ISO-Ready", label: "Structured Protocols" },
+    { value: "24 / 7", label: "Confidential Response" },
+  ],
 };
+
 export const defaultCTAContent: CTAContent = {
   badge: "24/7 EMERGENCY RESPONSE",
   heading: "Need Urgent Assistance?",
@@ -105,8 +104,8 @@ export const defaultCTAContent: CTAContent = {
   description: "Our expert team is available for emergency incident response and urgent consultations. Contact us now to discuss your case confidentially.",
   primaryButtonText: "Schedule Consultation",
   phoneNumber: "+91 95119 57687",
-  emergencyPhone: "+91 95119 57687",  // ADD THIS
-  emergencyEmail: "vfrapvtltd@gmail.com",
+  emergencyPhone: "+91 95119 57687",
+  emergencyEmail: "contact@vigilantforensics.com",
 };
 
 export const defaultCaseSectionContent: CaseSectionContent = {
@@ -124,9 +123,7 @@ export const defaultCaseSectionContent: CaseSectionContent = {
 
 export const defaultContactContent: ContactContent = {
   phone: "+91 95119 57687",
-  phone24x7: "+91 95119 57687",
   email: "contact@vigilantforensics.com",
-  urgentEmail: "vfrapvtltd@gmail.com",
   address: "Plot No. 5 Akhil Vishwa Bharti Co-Op. Society",
   addressLine2: "Opp. Prathamesh Towers, Besa Nagpur (M Corp.)",
   addressLine3: "Maharashtra – 440034",
@@ -135,9 +132,9 @@ export const defaultContactContent: ContactContent = {
 
 export const defaultFooterContent: FooterContent = {
   tagline: "India's trusted digital forensics and cybercrime investigation laboratory. Providing expert solutions to law enforcement, government, and corporate clients.",
-  gstin: "09AAACF1234A1ZZ",
+  gstin: "27AALCV7316E1Z5",
   cin: "U69100PN2025PTC250064 ",
-  linkedin: "#",
+  linkedin: "https://www.linkedin.com/company/vigilant-forensic-research-and-analytics-pvt-ltd/",
   twitter: "#",
   github: "#",
 };

@@ -1,3 +1,4 @@
+import { SEO } from "@/components/SEO";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -95,7 +96,9 @@ const TrackCase = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
+      <SEO title="Track Case | VFRA" description="Track the status of your ongoing case investigation." />
+      <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="bg-gradient-hero py-20 lg:py-28 relative overflow-hidden">
         <div className="absolute inset-0 grid-overlay opacity-50" />
@@ -164,11 +167,11 @@ const TrackCase = () => {
               <Card className="glass-card">
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle className="text-primary font-mono">{caseData.case_id}</CardTitle>
+                    <div className="min-w-0 pr-4">
+                      <CardTitle className="text-primary font-mono break-words md:break-normal truncate-on-mobile">{caseData.case_id}</CardTitle>
                       <CardDescription>{caseData.title}</CardDescription>
                     </div>
-                    <Badge className={statusConfig[caseData.status as CaseStatus]?.color}>
+                    <Badge className={statusConfig[caseData.status as CaseStatus]?.color + " shrink-0"}>
                       {statusConfig[caseData.status as CaseStatus]?.label || caseData.status}
                     </Badge>
                   </div>
@@ -177,9 +180,9 @@ const TrackCase = () => {
                   {/* Status Timeline */}
                   <div className="mb-8">
                     <h3 className="text-sm font-medium text-muted-foreground mb-4">Case Progress</h3>
-                    <div className="relative">
-                      {/* Progress Bar */}
-                      <div className="absolute top-4 left-4 right-4 h-0.5 bg-border">
+                    <div className="relative pl-6 md:pl-0">
+                      {/* Horizontal Progress Bar (Desktop) */}
+                      <div className="hidden md:block absolute top-4 left-4 right-4 h-0.5 bg-border">
                         <div
                           className="h-full bg-primary transition-all duration-500"
                           style={{
@@ -187,9 +190,19 @@ const TrackCase = () => {
                           }}
                         />
                       </div>
+                      
+                      {/* Vertical Progress Bar (Mobile) */}
+                      <div className="md:hidden absolute top-4 bottom-4 left-4 w-0.5 bg-border">
+                         <div
+                          className="w-full bg-primary transition-all duration-500"
+                          style={{
+                            height: `${(getCurrentStep(caseData.status) / (statusOrder.length - 1)) * 100}%`,
+                          }}
+                        />
+                      </div>
 
                       {/* Status Steps */}
-                      <div className="relative flex justify-between">
+                      <div className="relative flex flex-col md:flex-row justify-between gap-6 md:gap-0">
                         {statusOrder.map((status, idx) => {
                           const isActive = getCurrentStep(caseData.status) >= idx;
                           const isCurrent = caseData.status === status;
@@ -197,9 +210,9 @@ const TrackCase = () => {
                           const Icon = config.icon;
 
                           return (
-                            <div key={status} className="flex flex-col items-center">
+                            <div key={status} className="flex flex-row md:flex-col items-center gap-4 md:gap-0 relative">
                               <div
-                                className={`w-8 h-8 rounded-full flex items-center justify-center z-10 transition-all ${
+                                className={`w-8 h-8 rounded-full flex shrink-0 items-center justify-center z-10 transition-all ${
                                   isActive
                                     ? "bg-primary text-primary-foreground"
                                     : "bg-muted text-muted-foreground"
@@ -208,7 +221,7 @@ const TrackCase = () => {
                                 <Icon className="h-4 w-4" />
                               </div>
                               <span
-                                className={`text-xs mt-2 ${
+                                className={`text-xs md:mt-2 text-left md:text-center font-medium ${
                                   isActive ? "text-foreground" : "text-muted-foreground"
                                 }`}
                               >
@@ -229,7 +242,7 @@ const TrackCase = () => {
                   </div>
 
                   {/* Case Details */}
-                  <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
                     <div>
                       <span className="text-muted-foreground">Category</span>
                       <p className="capitalize font-medium">{caseData.category}</p>
@@ -288,6 +301,7 @@ const TrackCase = () => {
         </div>
       </section>
     </div>
+  </>
   );
 };
 

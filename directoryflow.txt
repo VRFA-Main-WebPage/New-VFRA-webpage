@@ -1,0 +1,314 @@
+PS D:\Skills\Projects\vigilantforensic> ls
+
+    Directory: D:\Skills\Projects\vigilantforensic
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----           2/28/2026  3:37 PM                node_modules
+d----           2/28/2026  3:34 PM                public
+d----           2/28/2026  3:34 PM                src
+d----           2/28/2026  3:34 PM                supabase
+-a---           2/28/2026  3:34 PM            353 .env
+-a---           2/28/2026  3:34 PM            277 .gitignore
+-a---           2/28/2026  3:34 PM         198722 bun.lockb
+-a---           2/28/2026  3:34 PM            434 components.json
+-a---           2/28/2026  3:34 PM            791 eslint.config.js
+-a---           2/28/2026  4:36 PM           2370 index.html
+-a---           2/28/2026  3:37 PM         271588 package-lock.json
+-a---           2/28/2026  3:34 PM           2923 package.json
+-a---           2/28/2026  3:34 PM             87 postcss.config.js
+-a---           2/28/2026  3:34 PM           2175 README.md
+-a---           2/28/2026  3:34 PM           6842 tailwind.config.ts
+-a---           2/28/2026  3:34 PM            682 tsconfig.app.json
+-a---           2/28/2026  3:34 PM            385 tsconfig.json
+-a---           2/28/2026  3:34 PM            503 tsconfig.node.json
+-a---           2/28/2026  3:34 PM            472 vite.config.ts
+
+PS D:\Skills\Projects\vigilantforensic> 
+
+PS D:\Skills\Projects\vigilantforensic\public> ls
+
+    Directory: D:\Skills\Projects\vigilantforensic\public
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---           2/28/2026  3:34 PM          20373 favicon.ico
+-a---           2/28/2026  3:34 PM           3253 placeholder.svg
+-a---           2/28/2026  3:34 PM            174 robots.txt
+
+
+PS D:\Skills\Projects\vigilantforensic\src> ls
+
+    Directory: D:\Skills\Projects\vigilantforensic\src
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----           2/28/2026  3:34 PM                assets
+d----           2/28/2026  3:34 PM                components
+d----           2/28/2026  3:34 PM                hooks
+d----           2/28/2026  3:34 PM                integrations
+d----           2/28/2026  3:34 PM                lib
+d----           2/28/2026  3:34 PM                pages
+-a---           2/28/2026  3:34 PM            648 App.css
+-a---           2/28/2026  3:34 PM           5306 App.tsx
+-a---           2/28/2026  3:51 PM           3657 index.css
+-a---           2/28/2026  5:04 PM            166 main.tsx
+-a---           2/28/2026  3:34 PM             39 vite-env.d.ts
+
+PS D:\Skills\Projects\vigilantforensic\src\assets> ls
+
+    Directory: D:\Skills\Projects\vigilantforensic\src\assets
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---           2/28/2026  3:34 PM         356146 vfra-logo.jpg
+-a---           2/28/2026  3:34 PM        1085986 vfra-logo.png
+-a---           2/28/2026  3:34 PM         632681 vfra-logo.svg
+
+
+PS D:\Skills\Projects\vigilantforensic\src\components> ls
+
+    Directory: D:\Skills\Projects\vigilantforensic\src\components
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----           2/28/2026  3:34 PM                admin
+d----           2/28/2026  3:34 PM                home
+d----           2/28/2026  3:34 PM                layout
+d----           2/28/2026  3:34 PM                ui
+-a---           2/28/2026  3:34 PM            779 NavLink.tsx
+
+
+PS D:\Skills\Projects\vigilantforensic\src\components\admin> ls
+
+    Directory: D:\Skills\Projects\vigilantforensic\src\components\admin
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----           2/28/2026  3:34 PM                cms
+-a---           2/28/2026  3:34 PM           1228 ProtectedRoute.tsx
+-a---           2/28/2026  3:34 PM           3859 ThemeSwitcher.tsx
+
+
+
+    Directory: D:\Skills\Projects\vigilantforensic\src\components\admin\cms
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---           2/28/2026  3:34 PM          23538 AboutCMS.tsx
+-a---           2/28/2026  5:05 PM           7448 FooterCMS.tsx
+-a---           2/28/2026  3:34 PM           3074 ServicesSectionCMS.tsx
+-a---           2/28/2026  3:34 PM           6449 TrustSectionCMS.tsx
+
+
+    Directory: D:\Skills\Projects\vigilantforensic\src\components\home
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---           2/28/2026  3:34 PM           5312 CaseSection.tsx
+-a---           2/28/2026  3:34 PM           8216 CTASection.tsx
+-a---           2/28/2026  3:34 PM          12442 HeroSection.tsx
+-a---           2/28/2026  3:34 PM           9284 ServicesSection.tsx
+-a---           2/28/2026  3:34 PM           7241 TestimonialsSection.tsx
+-a---           2/28/2026  3:34 PM          10098 TrustSection.tsx
+Directory: D:\Skills\Projects\vigilantforensic\src\components\layout
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---           2/28/2026  5:27 PM           7349 Footer.tsx
+-a---           2/28/2026  3:34 PM          16134 Navbar.tsx
+-a---           2/28/2026  3:34 PM            359 PublicLayout.tsx
+
+
+
+    Directory: D:\Skills\Projects\vigilantforensic\src\components\ui
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---           2/28/2026  3:34 PM           2028 accordion.tsx
+-a---           2/28/2026  3:34 PM           4417 alert-dialog.tsx
+-a---           2/28/2026  3:34 PM           1589 alert.tsx
+-a---           2/28/2026  3:34 PM            148 aspect-ratio.tsx
+-a---           2/28/2026  3:34 PM           1403 avatar.tsx
+-a---           2/28/2026  3:34 PM           1118 badge.tsx
+-a---           2/28/2026  3:34 PM           2777 breadcrumb.tsx
+-a---           2/28/2026  3:34 PM           1887 button.tsx
+-a---           2/28/2026  3:34 PM           2617 calendar.tsx
+-a---           2/28/2026  3:34 PM           1828 card.tsx
+-a---           2/28/2026  3:34 PM           6473 carousel.tsx
+-a---           2/28/2026  3:34 PM          10290 chart.tsx
+-a---           2/28/2026  3:34 PM           1079 checkbox.tsx
+-a---           2/28/2026  3:34 PM            329 collapsible.tsx
+-a---           2/28/2026  3:34 PM           4953 command.tsx
+-a---           2/28/2026  3:34 PM           7369 context-menu.tsx
+-a---           2/28/2026  3:34 PM           3856 dialog.tsx
+-a---           2/28/2026  3:34 PM           3028 drawer.tsx
+-a---           2/28/2026  3:34 PM           7439 dropdown-menu.tsx
+-a---           2/28/2026  3:34 PM           4143 form.tsx
+-a---           2/28/2026  3:34 PM           1220 hover-card.tsx
+-a---           2/28/2026  3:34 PM           2227 input-otp.tsx
+-a---           2/28/2026  3:34 PM            821 input.tsx
+-a---           2/28/2026  3:34 PM            713 label.tsx
+-a---           2/28/2026  3:34 PM           8070 menubar.tsx
+-a---           2/28/2026  3:34 PM           5150 navigation-menu.tsx
+-a---           2/28/2026  3:34 PM           2764 pagination.tsx
+-a---           2/28/2026  3:34 PM           1268 popover.tsx
+-a---           2/28/2026  3:34 PM            788 progress.tsx
+-a---           2/28/2026  3:34 PM           1483 radio-group.tsx
+-a---           2/28/2026  3:34 PM           1733 resizable.tsx
+-a---           2/28/2026  3:34 PM           1646 scroll-area.tsx
+-a---           2/28/2026  3:34 PM           5718 select.tsx
+-a---           2/28/2026  3:34 PM            718 separator.tsx
+-a---           2/28/2026  3:34 PM           4304 sheet.tsx
+-a---           2/28/2026  3:34 PM          23474 sidebar.tsx
+-a---           2/28/2026  3:34 PM            241 skeleton.tsx
+-a---           2/28/2026  3:34 PM           1088 slider.tsx
+-a---           2/28/2026  3:34 PM            904 sonner.tsx
+-a---           2/28/2026  3:34 PM           1174 switch.tsx
+-a---           2/28/2026  3:34 PM           2766 table.tsx
+-a---           2/28/2026  3:34 PM           1950 tabs.tsx
+-a---           2/28/2026  3:34 PM            772 textarea.tsx
+-a---           2/28/2026  3:34 PM           4909 toast.tsx
+-a---           2/28/2026  3:34 PM            754 toaster.tsx
+-a---           2/28/2026  3:34 PM           1763 toggle-group.tsx
+-a---           2/28/2026  3:34 PM           1453 toggle.tsx
+-a---           2/28/2026  3:34 PM           1183 tooltip.tsx
+-a---           2/28/2026  3:34 PM             85 use-toast.ts
+
+PS D:\Skills\Projects\vigilantforensic\src\components\ui> 
+
+ Directory: D:\Skills\Projects\vigilantforensic\src\hooks
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---           2/28/2026  3:34 PM            595 use-mobile.tsx
+-a---           2/28/2026  3:34 PM           4121 use-toast.ts
+-a---           2/28/2026  3:34 PM           3598 useAuth.tsx
+-a---           2/28/2026  3:34 PM           2689 useRazorpay.tsx
+-a---           2/28/2026  3:34 PM           1544 useTheme.tsx
+-a---           2/28/2026  5:40 PM           9273 useWebsiteContent.tsx
+
+
+PS D:\Skills\Projects\vigilantforensic\src\integrations> ls
+
+    Directory: D:\Skills\Projects\vigilantforensic\src\integrations
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----           2/28/2026  3:34 PM                supabase
+
+PS D:\Skills\Projects\vigilantforensic\src\integrations\supabase> ls
+
+    Directory: D:\Skills\Projects\vigilantforensic\src\integrations\supabase
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---           2/28/2026  3:34 PM            606 client.ts
+-a---           2/28/2026  3:34 PM          24113 types.ts
+
+PS D:\Skills\Projects\vigilantforensic\src\integrations\supabase> 
+
+PS D:\Skills\Projects\vigilantforensic\src> ls lib
+
+    Directory: D:\Skills\Projects\vigilantforensic\src\lib
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---           2/28/2026  3:34 PM           3046 errorHandler.ts
+-a---           2/28/2026  3:34 PM           9533 generateCertificatePDF.ts
+-a---           2/28/2026  3:34 PM           5053 generatePDF.ts
+-a---           2/28/2026  3:34 PM           5445 offerLetterTemplates.ts
+-a---           2/28/2026  3:34 PM            175 utils.ts
+
+PS D:\Skills\Projects\vigilantforensic\src> ls pages
+
+    Directory: D:\Skills\Projects\vigilantforensic\src\pages
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----           2/28/2026  3:34 PM                admin
+-a---           2/28/2026  3:34 PM          12285 About.tsx
+-a---           2/28/2026  3:34 PM           8345 Blog.tsx
+-a---           2/28/2026  3:34 PM           9528 CaseStudies.tsx
+-a---           2/28/2026  3:34 PM          10122 Contact.tsx
+-a---           2/28/2026  3:34 PM          19413 Events.tsx
+-a---           2/28/2026  4:59 PM            635 Index.tsx
+-a---           2/28/2026  3:34 PM            751 NotFound.tsx
+-a---           2/28/2026  3:34 PM           7170 Services.tsx
+-a---           2/28/2026  3:34 PM          11462 SubmitCase.tsx
+-a---           2/28/2026  3:34 PM          12319 TrackCase.tsx
+-a---           2/28/2026  3:34 PM          11649 Verify.tsx
+
+
+ Directory: D:\Skills\Projects\vigilantforensic\src\pages\admin
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---           2/28/2026  3:34 PM          15696 Cases.tsx
+-a---           2/28/2026  3:34 PM          10199 Certificates.tsx
+-a---           2/28/2026  3:34 PM          15514 Clients.tsx
+-a---           2/28/2026  3:34 PM          53371 ContentManagement.tsx
+-a---           2/28/2026  3:34 PM           8910 CreateCase.tsx
+-a---           2/28/2026  3:34 PM          20630 CreateCertificate.tsx
+-a---           2/28/2026  3:34 PM          14085 CreateOfferLetter.tsx
+-a---           2/28/2026  3:34 PM           9860 Dashboard.tsx
+-a---           2/28/2026  3:34 PM          16872 Events.tsx
+-a---           2/28/2026  3:34 PM           6864 Login.tsx
+-a---           2/28/2026  3:34 PM           9004 OfferLetters.tsx
+
+
+PS D:\Skills\Projects\vigilantforensic\supabase> ls
+
+    Directory: D:\Skills\Projects\vigilantforensic\supabase
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----           2/28/2026  3:34 PM                functions
+d----           2/28/2026  3:34 PM                migrations
+-a---           2/28/2026  3:34 PM            151 config.toml
+
+PS D:\Skills\Projects\vigilantforensic\supabase\functions> ls
+
+    Directory: D:\Skills\Projects\vigilantforensic\supabase\functions
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----           2/28/2026  3:34 PM                create-razorpay-order
+d----           2/28/2026  3:34 PM                verify-razorpay-payment
+
+ Directory: D:\Skills\Projects\vigilantforensic\supabase\functions\create-razorpay-order
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---           2/28/2026  3:34 PM           5687 index.ts
+
+
+    Directory: D:\Skills\Projects\vigilantforensic\supabase\functions\verify-razorpay-payment
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---           2/28/2026  3:34 PM           5234 index.ts
+
+PS D:\Skills\Projects\vigilantforensic\supabase\functions> 
+
+
+    Directory: D:\Skills\Projects\vigilantforensic\supabase\migrations
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---           2/28/2026  3:34 PM           1585 20260111113015_e8eef2c3-f26e-4e66-871e-009b40c9988e.sql
+-a---           2/28/2026  3:34 PM           2232 20260111114029_75f4c0d4-faba-49c6-b28d-4e37dcfd5d4b.sql
+-a---           2/28/2026  3:34 PM            398 20260112164306_e237dc15-af0c-41dc-b4ba-fa18e5089909.sql
+-a---           2/28/2026  3:34 PM           2990 20260112165434_8b8ad006-b4d1-4051-904b-7552d0ec83de.sql
+-a---           2/28/2026  3:34 PM           4764 20260112172905_5789fdac-a129-4427-bd2c-d08e90e7abbc.sql
+-a---           2/28/2026  3:34 PM           6085 20260112175221_997d126a-c6d3-4f1a-a408-989058d19751.sql
+-a---           2/28/2026  3:34 PM           2317 20260112192534_096843fe-2b3b-453b-8959-9daffd174d45.sql
+-a---           2/28/2026  3:34 PM           1790 20260112194726_8725ef8d-5ab9-4dc5-befc-09c45607fd41.sql
+
+
+
+this is the whole project files
+
+
+
+

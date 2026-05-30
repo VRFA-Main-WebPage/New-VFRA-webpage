@@ -1,5 +1,6 @@
+import { SEO } from "@/components/SEO";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,13 +13,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Shield, ArrowRight, CheckCircle, Copy } from "lucide-react";
+import { Shield, ArrowRight, CheckCircle, Copy, Lock, FileText, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 
 const SubmitCase = () => {
-  const navigate = useNavigate();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedCaseId, setSubmittedCaseId] = useState<string | null>(null);
@@ -64,13 +64,14 @@ const SubmitCase = () => {
 
       setSubmittedCaseId(data.case_id);
       toast({
-        title: "Case submitted successfully!",
-        description: "Save your Case ID to track the progress.",
+        title: "Case submitted successfully",
+        description: "Save your Case ID to track progress.",
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Submission failed";
       toast({
         title: "Error submitting case",
-        description: err.message,
+        description: message,
         variant: "destructive",
       });
     } finally {
@@ -87,46 +88,52 @@ const SubmitCase = () => {
 
   if (submittedCaseId) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center py-20">
+    <>
+      <SEO title="Register a Case | VFRA" description="Submit a new case for digital forensic investigation." />
+      <div className="min-h-screen bg-background flex items-center justify-center py-24 px-4">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-md w-full mx-4"
+          className="max-w-lg w-full"
         >
-          <Card className="glass-card text-center">
-            <CardContent className="pt-8 pb-8">
-              <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6">
-                <CheckCircle className="h-8 w-8 text-green-500" />
+          <Card className="premium-card text-center border-primary/20">
+            <CardContent className="pt-10 pb-10">
+              <div className="w-16 h-16 rounded-full bg-success/15 border border-success/30 flex items-center justify-center mx-auto mb-6">
+                <CheckCircle className="h-8 w-8 text-success" />
               </div>
-              <h2 className="text-2xl font-bold text-foreground mb-2">Case Submitted!</h2>
-              <p className="text-muted-foreground mb-6">
-                Your case has been registered. Please save your Case ID below:
+              <h2 className="font-heading text-2xl font-bold text-foreground mb-2">
+                Case Registered Successfully
+              </h2>
+              <p className="text-muted-foreground text-sm mb-8">
+                Your matter has been logged. Store your Case ID securely — you will need it to track status.
               </p>
 
-              <div className="bg-muted rounded-lg p-4 mb-6">
-                <p className="text-xs text-muted-foreground mb-1">Your Case ID</p>
+              <div className="bg-panel border-2 border-primary/30 rounded-xl p-6 mb-6">
+                <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Your Case ID</p>
                 <div className="flex items-center justify-center gap-2">
-                  <span className="text-2xl font-mono font-bold text-primary">{submittedCaseId}</span>
-                  <Button variant="ghost" size="sm" onClick={copyToClipboard}>
-                    <Copy className="h-4 w-4" />
+                  <span className="font-mono text-2xl md:text-3xl font-bold text-primary tracking-wide">
+                    {submittedCaseId}
+                  </span>
+                  <Button variant="ghost" size="icon" onClick={copyToClipboard} aria-label="Copy Case ID">
+                    <Copy className="h-5 w-5" />
                   </Button>
                 </div>
               </div>
 
-              <p className="text-sm text-muted-foreground mb-6">
-                Use this ID to track your case status anytime. We'll also send updates to your email.
+              <p className="text-xs text-muted-foreground mb-8 leading-relaxed">
+                VFRA will review your submission and respond based on scope, authorization, and engagement terms.
+                Submission does not guarantee acceptance or specific outcomes.
               </p>
 
-              <div className="flex flex-col gap-3">
-                <Link to={`/track-case`}>
-                  <Button className="w-full gap-2">
+              <div className="flex flex-col gap-2">
+                <Link to="/track-case">
+                  <Button className="w-full btn-gold gap-2">
                     Track Your Case
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                 </Link>
                 <Link to="/">
-                  <Button variant="outline" className="w-full">
+                  <Button variant="outline" className="w-full btn-outline-gold">
                     Back to Home
                   </Button>
                 </Link>
@@ -135,84 +142,81 @@ const SubmitCase = () => {
           </Card>
         </motion.div>
       </div>
+    </>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="bg-gradient-hero py-20 lg:py-28 relative overflow-hidden">
-        <div className="absolute inset-0 grid-overlay opacity-50" />
-        <div className="container relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-2 mb-6">
-                <Shield className="h-4 w-4 text-primary" />
-                <span className="text-sm text-primary font-medium">Submit a Case</span>
+    <>
+      <SEO title="Register a Case | VFRA" description="Submit a new case for digital forensic investigation." />
+      <div className="min-h-screen bg-background">
+        <section className="bg-gradient-hero py-20 lg:py-28 relative border-b border-border overflow-hidden">
+          <div className="absolute inset-0 grid-overlay opacity-30" />
+          <div className="container relative z-10">
+            <div className="max-w-3xl mx-auto text-center">
+              <div className="inline-flex items-center gap-2 border border-border bg-card/50 rounded-full px-4 py-1.5 mb-6 text-sm text-muted-foreground">
+                <Lock className="h-4 w-4 text-primary" />
+                Secure case intake
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 text-glow">
-                Request an Investigation
+              <h1 className="font-heading text-4xl md:text-5xl font-bold text-foreground mb-5">
+                Register a Case
               </h1>
               <p className="text-lg text-muted-foreground">
-                Submit your case details and our team will review it within 24 hours.
-                All information is kept strictly confidential.
+                Submit your matter for professional review. All information is handled confidentially under
+                our engagement and privacy protocols.
               </p>
-            </motion.div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Form Section */}
-      <section className="py-20">
-        <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="max-w-2xl mx-auto"
-          >
-            <Card className="glass-card">
-              <CardHeader>
-                <CardTitle>Case Details</CardTitle>
-                <CardDescription>
-                  Provide as much detail as possible to help us understand your case
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
+        <section className="py-16 lg:py-20">
+          <div className="container max-w-2xl">
+            <form onSubmit={handleSubmit} className="space-y-8">
+              <Card className="premium-card">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-3">
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary text-sm font-bold border border-primary/20">
+                      1
+                    </span>
+                    <div>
+                      <CardTitle className="font-heading flex items-center gap-2">
+                        <FileText className="h-4 w-4 text-primary" />
+                        Case Information
+                      </CardTitle>
+                      <CardDescription>Describe the matter you need assistance with</CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
                   <div>
                     <Label htmlFor="title">Case Title *</Label>
                     <Input
                       id="title"
                       value={formData.title}
                       onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                      placeholder="Brief description of your case"
+                      placeholder="Brief summary of your matter"
                       required
+                      className="mt-1.5"
                     />
                   </div>
-
                   <div>
                     <Label htmlFor="description">Detailed Description</Label>
                     <Textarea
                       id="description"
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      placeholder="Describe your situation in detail. Include relevant dates, people involved, and any evidence you may have..."
-                      rows={6}
+                      placeholder="Include relevant dates, context, and any evidence references..."
+                      rows={5}
+                      className="mt-1.5"
                     />
                   </div>
-
                   <div>
                     <Label htmlFor="category">Case Category</Label>
                     <Select
                       value={formData.category}
                       onValueChange={(v) => setFormData({ ...formData, category: v })}
                     >
-                      <SelectTrigger id="category">
+                      <SelectTrigger id="category" className="mt-1.5">
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
                       <SelectContent>
@@ -224,60 +228,86 @@ const SubmitCase = () => {
                       </SelectContent>
                     </Select>
                   </div>
+                </CardContent>
+              </Card>
 
-                  <div className="border-t border-border pt-6">
-                    <h3 className="text-lg font-semibold mb-4">Your Contact Information</h3>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="md:col-span-2">
-                        <Label htmlFor="client_name">Full Name *</Label>
-                        <Input
-                          id="client_name"
-                          value={formData.client_name}
-                          onChange={(e) => setFormData({ ...formData, client_name: e.target.value })}
-                          placeholder="Your full name"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="client_email">Email Address</Label>
-                        <Input
-                          id="client_email"
-                          type="email"
-                          value={formData.client_email}
-                          onChange={(e) => setFormData({ ...formData, client_email: e.target.value })}
-                          placeholder="you@example.com"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="client_phone">Phone Number</Label>
-                        <Input
-                          id="client_phone"
-                          value={formData.client_phone}
-                          onChange={(e) => setFormData({ ...formData, client_phone: e.target.value })}
-                          placeholder="+91 98765 43210"
-                        />
-                      </div>
+              <Card className="premium-card">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-3">
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary text-sm font-bold border border-primary/20">
+                      2
+                    </span>
+                    <div>
+                      <CardTitle className="font-heading flex items-center gap-2">
+                        <User className="h-4 w-4 text-primary" />
+                        Contact Details
+                      </CardTitle>
+                      <CardDescription>How we may reach you regarding this matter</CardDescription>
                     </div>
                   </div>
-
-                  <div className="bg-muted/50 rounded-lg p-4 text-sm text-muted-foreground">
-                    <p>
-                      <strong>Privacy Notice:</strong> Your information is protected and will only be used
-                      for case investigation purposes. We maintain strict confidentiality as per our privacy policy.
-                    </p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label htmlFor="client_name">Full Name *</Label>
+                    <Input
+                      id="client_name"
+                      value={formData.client_name}
+                      onChange={(e) => setFormData({ ...formData, client_name: e.target.value })}
+                      placeholder="Your full name"
+                      required
+                      className="mt-1.5"
+                    />
                   </div>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="client_email">Email</Label>
+                      <Input
+                        id="client_email"
+                        type="email"
+                        value={formData.client_email}
+                        onChange={(e) => setFormData({ ...formData, client_email: e.target.value })}
+                        placeholder="you@example.com"
+                        className="mt-1.5"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="client_phone">Phone</Label>
+                      <Input
+                        id="client_phone"
+                        value={formData.client_phone}
+                        onChange={(e) => setFormData({ ...formData, client_phone: e.target.value })}
+                        placeholder="+91"
+                        className="mt-1.5"
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-                  <Button type="submit" className="w-full gap-2" disabled={isSubmitting}>
-                    {isSubmitting ? "Submitting..." : "Submit Case"}
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
-      </section>
-    </div>
+              <div className="rounded-xl border border-border bg-panel/50 p-5 text-sm text-muted-foreground space-y-2">
+                <p className="flex items-start gap-2">
+                  <Shield className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                  <span>
+                    <strong className="text-foreground">Trust & confidentiality:</strong> Information submitted
+                    is used solely for case assessment and communication. VFRA does not guarantee specific
+                    investigation outcomes.
+                  </span>
+                </p>
+                <p className="text-xs">
+                  By submitting, you confirm that you have lawful authority to request assistance for this
+                  matter and that information provided is accurate to the best of your knowledge.
+                </p>
+              </div>
+
+              <Button type="submit" className="w-full btn-gold gap-2 py-6 text-base" disabled={isSubmitting}>
+                {isSubmitting ? "Submitting..." : "Submit Case Securely"}
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </form>
+          </div>
+        </section>
+      </div>
+    </>
   );
 };
 

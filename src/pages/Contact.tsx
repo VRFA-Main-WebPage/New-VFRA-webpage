@@ -1,3 +1,4 @@
+import { SEO } from "@/components/SEO";
 import { useState } from "react";
 import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -37,14 +38,16 @@ const Contact = () => {
   };
 
   return (
-    <div className="bg-background">
+    <>
+      <SEO title="Contact Us | VFRA" description="Get in touch with our forensic experts for investigation support." />
+      <div className="bg-background">
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-28 bg-gradient-to-br from-background via-background to-primary/10 overflow-hidden">
+      <section className="relative py-20 lg:py-28 bg-gradient-hero border-b border-border overflow-hidden">
         <div className="absolute inset-0 grid-overlay opacity-30" />
         <div className="container relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <p className="text-sm font-medium text-primary mb-2 uppercase tracking-wider font-mono">Contact Us</p>
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 font-display">
+            <p className="section-eyebrow">Contact Us</p>
+            <h1 className="font-heading text-4xl md:text-5xl font-bold text-foreground mb-6">
               Get in Touch
             </h1>
             <p className="text-lg text-muted-foreground">
@@ -61,7 +64,7 @@ const Contact = () => {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Contact Info */}
             <div className="space-y-6">
-              <Card className="bg-card border-border/50">
+              <Card className="premium-card">
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -70,13 +73,12 @@ const Contact = () => {
                     <div>
                       <h3 className="font-semibold text-foreground">Phone</h3>
                       <p className="text-sm text-muted-foreground mt-1">{content.phone}</p>
-                      <p className="text-sm text-muted-foreground">{content.phone24x7} (24/7)</p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-card border-border/50">
+              <Card className="premium-card">
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -85,13 +87,12 @@ const Contact = () => {
                     <div>
                       <h3 className="font-semibold text-foreground">Email</h3>
                       <p className="text-sm text-muted-foreground mt-1">{content.email}</p>
-                      <p className="text-sm text-muted-foreground">{content.urgentEmail}</p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-card border-border/50">
+              <Card className="premium-card">
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -109,7 +110,7 @@ const Contact = () => {
                 </CardContent>
               </Card>
 
-              <Card className="bg-card border-border/50">
+              <Card className="premium-card">
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -129,7 +130,7 @@ const Contact = () => {
 
             {/* Contact Form */}
             <div className="lg:col-span-2">
-              <Card className="bg-card border-border/50">
+              <Card className="premium-card">
                 <CardHeader>
                   <CardTitle className="text-foreground">Send us a Message</CardTitle>
                   <CardDescription>
@@ -199,7 +200,7 @@ const Contact = () => {
                       you agree to our privacy policy.</p>
                     </div>
 
-                    <Button type="submit" size="lg" className="w-full md:w-auto" disabled={isSubmitting}>
+                    <Button type="submit" size="lg" className="w-full md:w-auto btn-gold" disabled={isSubmitting}>
                       {isSubmitting ? (
                         "Sending..."
                       ) : (
@@ -217,6 +218,7 @@ const Contact = () => {
         </div>
       </section>
     </div>
+  </>
   );
 };
 

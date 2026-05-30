@@ -1,3 +1,4 @@
+import { SEO } from "@/components/SEO";
 import { useState } from "react";
 import { Search, CheckCircle, XCircle, Award, Calendar, User, BookOpen, Hash, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -80,21 +81,25 @@ const Verify = () => {
   const isExpired = result?.data?.expiry_date && new Date(result.data.expiry_date) < new Date();
 
   return (
-    <div className="bg-background">
+    <>
+      <SEO title="Verify Certificate | VFRA" description="Verify the authenticity of VFRA certificates." />
+      <div className="bg-background">
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-28 bg-gradient-to-br from-background via-background to-primary/10 overflow-hidden">
+      <section className="relative py-20 lg:py-28 bg-gradient-hero border-b border-border overflow-hidden">
         <div className="absolute inset-0 grid-overlay opacity-30" />
         <div className="container relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-6">
-              <Award className="h-8 w-8 text-primary" />
+            <div className="w-14 h-14 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-6">
+              <Award className="h-7 w-7 text-primary" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 font-display">
+            <h1 className="font-heading text-4xl md:text-5xl font-bold text-foreground mb-5">
               Certificate Verification
             </h1>
-            <p className="text-lg text-muted-foreground">
-              Verify the authenticity of certificates issued by VFRA for 
-              training programs, workshops, and courses.
+            <p className="text-lg text-muted-foreground mb-3">
+              Verify the authenticity of certificates issued by VFRA.
+            </p>
+            <p className="text-sm text-muted-foreground/90 italic">
+              This page verifies certificates issued by VFRA.
             </p>
           </div>
         </div>
@@ -104,9 +109,9 @@ const Verify = () => {
       <section className="py-20 lg:py-28">
         <div className="container">
           <div className="max-w-xl mx-auto">
-            <Card className="bg-card border-border/50">
+            <Card className="premium-card">
               <CardHeader className="text-center">
-                <CardTitle className="text-foreground">Enter Certificate ID</CardTitle>
+                <CardTitle className="font-heading text-foreground">Enter Certificate ID</CardTitle>
                 <CardDescription className="text-muted-foreground">
                   You can find the Certificate ID on the bottom of your certificate or scan the QR code.
                 </CardDescription>
@@ -122,7 +127,7 @@ const Verify = () => {
                       className="pl-10 uppercase"
                     />
                   </div>
-                  <Button type="submit" className="w-full" disabled={isVerifying}>
+                  <Button type="submit" className="w-full btn-gold" disabled={isVerifying}>
                     {isVerifying ? "Verifying..." : "Verify Certificate"}
                   </Button>
                 </form>
@@ -131,7 +136,15 @@ const Verify = () => {
 
             {/* Result */}
             {result && (
-              <Card className={`mt-6 border-2 ${result.valid ? (isExpired ? "border-warning" : "border-success") : "border-destructive"}`}>
+              <Card
+                className={`mt-6 border-2 premium-card ${
+                  result.valid
+                    ? isExpired
+                      ? "border-warning/50"
+                      : "border-success shadow-[0_0_24px_-4px_hsl(var(--success)/0.25)]"
+                    : "border-destructive/50"
+                }`}
+              >
                 <CardContent className="pt-6">
                   {result.valid && result.data ? (
                     <div className="text-center">
@@ -245,6 +258,7 @@ const Verify = () => {
         </div>
       </section>
     </div>
+  </>
   );
 };
 

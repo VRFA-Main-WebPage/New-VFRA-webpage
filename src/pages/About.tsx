@@ -1,3 +1,4 @@
+import { SEO } from "@/components/SEO";
 import { useState, useEffect } from "react";
 import { Users, CheckCircle, Target, Eye } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -73,17 +74,18 @@ const About = () => {
   }, []);
 
   return (
-    <div className="bg-background">
+    <>
+      <SEO title="About Us | VFRA" description="Learn about Vigilant Forensic Research and Analytics Pvt. Ltd. and our mission in cyber investigations." />
+      <div className="bg-background">
 
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-28 bg-gradient-to-br from-background via-background to-primary/10 overflow-hidden">
+      <section className="relative py-20 lg:py-28 bg-gradient-hero border-b border-border overflow-hidden">
+        <div className="absolute inset-0 grid-overlay opacity-30" />
         <div className="container relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <p className="text-sm font-medium text-primary mb-2 uppercase tracking-wider font-mono">
-              About Us
-            </p>
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 font-display">
-              India’s Emerging Digital Forensics & Cyber Investigation Firm
+            <p className="section-eyebrow">About Us</p>
+            <h1 className="font-heading text-4xl md:text-5xl font-bold text-foreground mb-6">
+              Digital Forensics & Investigation Intelligence
             </h1>
             <p className="text-lg text-muted-foreground">
               Founded in 2025, we specialize in scientifically sound digital evidence analysis and cyber investigations with a strong focus on accuracy, integrity, and legal defensibility.
@@ -97,12 +99,12 @@ const About = () => {
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-8">
 
-            <Card className="border-primary/20 bg-card">
+            <Card className="premium-card border-border">
               <CardContent className="pt-6">
                 <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
                   <Target className="h-7 w-7 text-primary" />
                 </div>
-                <h3 className="text-2xl font-bold text-foreground mb-4">
+                <h3 className="font-heading text-2xl font-bold text-foreground mb-4">
                   Our Mission
                 </h3>
                 <p className="text-muted-foreground leading-relaxed">
@@ -111,12 +113,12 @@ const About = () => {
               </CardContent>
             </Card>
 
-            <Card className="border-primary/20 bg-card">
+            <Card className="premium-card border-border">
               <CardContent className="pt-6">
                 <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
                   <Eye className="h-7 w-7 text-primary" />
                 </div>
-                <h3 className="text-2xl font-bold text-foreground mb-4">
+                <h3 className="font-heading text-2xl font-bold text-foreground mb-4">
                   Our Vision
                 </h3>
                 <p className="text-muted-foreground leading-relaxed">
@@ -136,7 +138,7 @@ const About = () => {
             <p className="text-sm font-medium text-primary mb-2 uppercase tracking-wider">
               Our Team
             </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4">
               Meet Our Experts
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -146,7 +148,7 @@ const About = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {teamMembers.map((member) => (
-              <Card key={member.id} className="bg-card border-border/50 hover:shadow-lg transition-shadow">
+              <Card key={member.id} className="premium-card">
                 <CardContent className="pt-6 text-center">
                   <div className="w-24 h-24 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center overflow-hidden">
                     {member.photo_url ? (
@@ -168,7 +170,7 @@ const About = () => {
       </section>
 
       {/* Lab Infrastructure */}
-      <section className="py-20 lg:py-28 bg-muted">
+      <section className="py-20 lg:py-28 bg-surface border-t border-border">
         <div className="container">
           <div className="max-w-3xl">
             <p className="text-sm font-medium text-primary mb-2 uppercase tracking-wider">
@@ -194,6 +196,7 @@ const About = () => {
       </section>
 
     </div>
+  </>
   );
 };
 

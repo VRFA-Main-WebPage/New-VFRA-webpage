@@ -1,3 +1,4 @@
+import { SEO } from "@/components/SEO";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Calendar, Clock, MapPin, Users, ArrowRight, ExternalLink, Loader2 } from "lucide-react";
@@ -185,7 +186,9 @@ const Events = () => {
   };
 
   return (
-    <div className="bg-background">
+    <>
+      <SEO title="Events & Training | VFRA" description="Upcoming events, workshops and training programs by VFRA." />
+      <div className="bg-background">
       {/* Hero Section */}
       <section className="relative py-20 lg:py-28 bg-gradient-to-br from-background via-background to-primary/10 overflow-hidden">
         <div className="absolute inset-0 grid-overlay opacity-30" />
@@ -464,6 +467,7 @@ const Events = () => {
         </DialogContent>
       </Dialog>
     </div>
+  </>
   );
 };
 

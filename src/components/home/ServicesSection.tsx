@@ -1,223 +1,139 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import {
-  Smartphone,
-  Monitor,
-  Cloud,
-  Network,
-  Search,
-  ShieldAlert,
-  FileText,
-  GraduationCap,
-  HardDrive,
-  Shield,
-  Lock,
-  Eye,
-  LucideIcon
-} from "lucide-react";
+import { ArrowRight, Smartphone, Bitcoin, Mic, FileCheck, GraduationCap, Building2 } from "lucide-react";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
-import { useWebsiteContent, defaultServicesSectionContent, ServicesSectionContent } from "@/hooks/useWebsiteContent";
+import { fadeUp, staggerContainer, useInView } from "@/lib/motion";
+import { cn } from "@/lib/utils";
 
-interface Service {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  image_url: string | null;
-  href: string | null;
-  sort_order: number;
-}
-
-const iconMap: Record<string, LucideIcon> = {
-  Shield,
-  Smartphone,
-  Monitor,
-  Cloud,
-  Network,
-  Search,
-  ShieldAlert,
-  FileText,
-  GraduationCap,
-  HardDrive,
-  Lock,
-  Eye,
-};
-
-const gradients = [
-  "from-blue-500/20 to-cyan-500/20",
-  "from-violet-500/20 to-purple-500/20",
-  "from-sky-500/20 to-blue-500/20",
-  "from-emerald-500/20 to-teal-500/20",
-  "from-orange-500/20 to-amber-500/20",
-  "from-red-500/20 to-rose-500/20",
-  "from-indigo-500/20 to-blue-500/20",
-  "from-pink-500/20 to-rose-500/20",
-  "from-slate-500/20 to-gray-500/20",
-];
-
-// Fallback services when database is empty
-const fallbackServices = [
-  { id: "1", title: "Mobile Forensics", description: "Extraction and analysis of data from smartphones, tablets, and mobile devices.", icon: "Smartphone", image_url: null, href: "/services/digital-forensics", sort_order: 0 },
-  { id: "2", title: "Computer Forensics", description: "Comprehensive analysis of computers, laptops, and storage media.", icon: "Monitor", image_url: null, href: "/services/digital-forensics", sort_order: 1 },
-  { id: "3", title: "Cloud Forensics", description: "Investigation of cloud-stored data and SaaS applications.", icon: "Cloud", image_url: null, href: "/services/digital-forensics", sort_order: 2 },
-  { id: "4", title: "Network Forensics", description: "Analysis of network traffic, logs, and intrusion detection.", icon: "Network", image_url: null, href: "/services/digital-forensics", sort_order: 3 },
-  { id: "5", title: "Cybercrime Investigation", description: "Professional investigation of cyber frauds, hacking, and online crimes.", icon: "Search", image_url: null, href: "/services/cybercrime-investigation", sort_order: 4 },
-  { id: "6", title: "Incident Response", description: "Rapid response to security incidents and data breaches.", icon: "ShieldAlert", image_url: null, href: "/services/incident-response", sort_order: 5 },
-  { id: "7", title: "Expert Witness", description: "Court testimony and expert reports for legal proceedings.", icon: "FileText", image_url: null, href: "/services/expert-witness", sort_order: 6 },
-  { id: "8", title: "Training & Workshops", description: "Professional development programs for organizations.", icon: "GraduationCap", image_url: null, href: "/services/training", sort_order: 7 },
-  { id: "9", title: "Data Recovery", description: "Recovery of deleted, corrupted, or damaged data.", icon: "HardDrive", image_url: null, href: "/services/lab-services", sort_order: 8 },
-];
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.2,
-    },
+const FEATURED_SERVICES = [
+  {
+    number: "01",
+    title: "Mobile Device Extraction & Unlocking",
+    category: "Digital Forensics",
+    description: "Advanced mobile acquisition, unlocking assistance, deleted data recovery and forensic examination for Android and iOS devices.",
+    icon: Smartphone,
+    link: "/services#service-1"
   },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 40, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.5,
-      ease: "easeOut" as const,
-    },
+  {
+    number: "02",
+    title: "Blockchain & Cryptocurrency Fraud Analysis",
+    category: "Financial Investigation",
+    description: "Transaction tracing, wallet intelligence, fund-flow reconstruction and cryptocurrency fraud investigation support.",
+    icon: Bitcoin,
+    link: "/services#service-17"
   },
-};
+  {
+    number: "03",
+    title: "Voice Recording Forensics & Transcription",
+    category: "Media Forensics",
+    description: "Audio authentication, speaker examination support, forensic enhancement and court-ready transcription services.",
+    icon: Mic,
+    link: "/services#service-19"
+  },
+  {
+    number: "04",
+    title: "Section 65B / BSA 2023 Certification",
+    category: "Legal Support",
+    description: "Preparation of legally compliant electronic evidence certification and supporting documentation for court proceedings.",
+    icon: FileCheck,
+    link: "/services#service-21"
+  },
+  {
+    number: "05",
+    title: "Law Enforcement Training Programmes",
+    category: "Training & Capacity Building",
+    description: "Specialized training programmes covering cybercrime investigation, digital forensics, OSINT, cyber intelligence and evidence handling.",
+    icon: GraduationCap,
+    link: "/services#service-24"
+  },
+  {
+    number: "06",
+    title: "Corporate Digital Forensics & Incident Response",
+    category: "Enterprise Services",
+    description: "Incident response, internal investigations, evidence preservation and digital forensic support for organizations.",
+    icon: Building2,
+    link: "/services#service-26"
+  }
+];
 
 export function ServicesSection() {
-  const [services, setServices] = useState<Service[]>(fallbackServices);
-  const { content } = useWebsiteContent<ServicesSectionContent>("services_section", defaultServicesSectionContent);
-
-  useEffect(() => {
-    const fetchServices = async () => {
-      const { data, error } = await supabase
-        .from("services")
-        .select("*")
-        .eq("is_active", true)
-        .order("sort_order");
-
-      if (data && data.length > 0) {
-        setServices(data);
-      }
-    };
-    fetchServices();
-  }, []);
+  const { ref, inView } = useInView();
 
   return (
-    <section className="py-24 lg:py-32 bg-background relative overflow-hidden">
-      {/* Subtle background decoration */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
-
-      <div className="container relative z-10">
-        {/* Section Header */}
+    <section className="py-24 lg:py-32 bg-background border-b border-border">
+      <div className="container">
         <motion.div
-          className="text-center max-w-3xl mx-auto mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <motion.p
-            className="text-sm font-semibold text-primary mb-3 uppercase tracking-widest"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            {content.badge}
-          </motion.p>
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-5">
-            {content.heading}
-          </h2>
-          <p className="text-muted-foreground text-lg">
-            {content.description}
-          </p>
-        </motion.div>
-
-        {/* Services Grid */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          variants={containerVariants}
+          ref={ref}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
+          animate={inView ? "visible" : "hidden"}
+          variants={staggerContainer}
         >
-          {services.map((service, index) => {
-            const IconComponent = iconMap[service.icon] || Shield;
-            const gradient = gradients[index % gradients.length];
+          <motion.div variants={fadeUp} className="text-center max-w-3xl mx-auto mb-16">
+            <p className="section-eyebrow">Forensic Services</p>
+            <h2 className="section-heading mb-4 text-3xl md:text-4xl lg:text-5xl">Comprehensive Investigation Support</h2>
+            <p className="section-subtext mx-auto text-base md:text-lg">
+              From digital evidence acquisition to court-ready reporting — specialized forensic, intelligence and legal support services for investigators, legal professionals and institutions.
+            </p>
+          </motion.div>
 
-            return (
-              <motion.div key={service.id} variants={cardVariants}>
-                <motion.div
-                  whileHover={{ y: -8, scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {FEATURED_SERVICES.map((service) => {
+              const Icon = service.icon;
+              return (
+                <motion.article 
+                  key={service.number} 
+                  variants={fadeUp}
+                  whileHover={{ y: -6, scale: 1.02 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  className="group premium-card p-6 h-full flex flex-col bg-card/80 backdrop-blur-sm hover:border-primary/50 hover:shadow-[0_0_25px_rgba(212,175,55,0.15)] relative overflow-hidden"
                 >
-                  <Card className="group h-full border-border/50 hover:border-primary/40 transition-all duration-300 bg-card hover:shadow-xl hover:shadow-primary/5 overflow-hidden relative">
-                    {/* Gradient overlay on hover */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                  <div className="flex items-start justify-between gap-3 mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+                      <Icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <span className="text-sm font-mono font-bold text-muted-foreground/50 group-hover:text-primary/50 transition-colors">
+                      #{service.number}
+                    </span>
+                  </div>
+                  
+                  <span className="inline-block px-2.5 py-1 mb-3 rounded-full text-[10px] font-bold uppercase tracking-wider bg-primary/10 text-primary w-max border border-primary/20">
+                    {service.category}
+                  </span>
 
-                    {service.image_url && (
-                      <div className="h-40 overflow-hidden">
-                        <img src={service.image_url} alt={service.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                      </div>
-                    )}
+                  <h3 className="font-heading font-bold text-xl text-foreground mb-3 group-hover:text-primary transition-colors">
+                    {service.title}
+                  </h3>
+                  
+                  <p className="text-sm text-muted-foreground leading-relaxed flex-1 mb-6 line-clamp-3">
+                    {service.description}
+                  </p>
+                  
+                  <div className="flex flex-wrap gap-3 mt-auto pt-5 border-t border-border">
+                    <Link to="/submit-case" className="flex-1">
+                      <Button className="w-full btn-gold h-10 text-sm font-semibold group/btn gap-1.5 shadow-[0_0_15px_rgba(212,175,55,0.1)] hover:shadow-[0_0_20px_rgba(212,175,55,0.3)]">
+                        Register Case
+                      </Button>
+                    </Link>
+                    <Link to={service.link} className="flex-1">
+                      <Button variant="outline" className="w-full btn-outline-gold h-10 text-sm group/btn gap-1.5">
+                        Learn More
+                        <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                      </Button>
+                    </Link>
+                  </div>
+                </motion.article>
+              );
+            })}
+          </div>
 
-                    <CardHeader className="relative z-10">
-                      <motion.div
-                        className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors duration-300"
-                        whileHover={{ rotate: [0, -5, 5, 0] }}
-                        transition={{ duration: 0.4 }}
-                      >
-                        <IconComponent className="h-7 w-7 text-primary group-hover:text-accent transition-colors duration-300" />
-                      </motion.div>
-                      <CardTitle className="text-lg group-hover:text-primary transition-colors duration-300">
-                        {service.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="relative z-10">
-                      <CardDescription className="text-muted-foreground group-hover:text-foreground/70 transition-colors duration-300">
-                        {service.description}
-                      </CardDescription>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-
-        {/* CTA */}
-        <motion.div
-          className="text-center mt-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4 }}
-        >
-          <Link to="/services">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ type: "spring", stiffness: 400 }}
-            >
-              <Button variant="outline" size="lg" className="gap-2 px-8 py-6 text-base font-semibold">
-                View All Services
+          <motion.div variants={fadeUp} className="text-center mt-16">
+            <Link to="/services">
+              <Button size="lg" className="h-14 px-8 text-base bg-transparent border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground group transition-all duration-300 shadow-[0_0_20px_rgba(212,175,55,0.15)] hover:shadow-[0_0_30px_rgba(212,175,55,0.3)] font-bold">
+                View All 26 Services
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-            </motion.div>
-          </Link>
+            </Link>
+          </motion.div>
         </motion.div>
       </div>
     </section>
