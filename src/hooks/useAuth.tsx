@@ -2,6 +2,8 @@ import { useState, useEffect, createContext, useContext, ReactNode } from "react
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
+console.log("Supabase URL initialized:", import.meta.env.VITE_SUPABASE_URL);
+
 type AppRole = "admin" | "moderator" | "user";
 
 interface AuthContextType {
@@ -35,6 +37,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return [];
       }
 
+      console.log("Fetched roles for user", userId, ":", data);
+
       return (data?.map((r) => r.role) as AppRole[]) || [];
     } catch (error) {
       console.error("Error fetching roles:", error);
@@ -48,6 +52,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
+        console.log("Session after auth change:", session);
+        console.log("User id after auth change:", session?.user?.id);
 
         if (session?.user) {
           // Defer role fetching to avoid blocking
@@ -67,6 +73,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
+      console.log("Session on initial load:", session);
+      console.log("User id on initial load:", session?.user?.id);
 
       if (session?.user) {
         const userRoles = await fetchUserRoles(session.user.id);
@@ -80,10 +88,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
+    const cleanedEmail = email.trim().toLowerCase();
+    console.log("Attempting login for email:", cleanedEmail);
+    console.log("Password length:", password.length);
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: cleanedEmail,
       password,
     });
+
+    console.log("signInWithPassword data:", data);
+    
+    if (error) {
+      console.error("signInWithPassword error.message:", error.message);
+      console.error("signInWithPassword error.status:", error.status);
+    }
+
     return { error: error as Error | null };
   };
 

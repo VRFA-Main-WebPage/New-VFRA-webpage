@@ -100,10 +100,11 @@ const AdminEvents = () => {
       setIsCreateDialogOpen(false);
       resetForm();
     },
-    onError: (error: unknown) => {
+    onError: (error: any) => {
+      console.error("Event save error:", error);
       toast({
         title: "Error creating event",
-        description: mapErrorToUserMessage(error, "create event"),
+        description: error?.message || "Unknown error",
         variant: "destructive",
       });
     },
@@ -118,6 +119,14 @@ const AdminEvents = () => {
       queryClient.invalidateQueries({ queryKey: ["admin-events"] });
       toast({ title: "Event updated successfully" });
       setIsEditDialogOpen(false);
+    },
+    onError: (error: any) => {
+      console.error("Event update error:", error);
+      toast({
+        title: "Error updating event",
+        description: error?.message || "Unknown error",
+        variant: "destructive",
+      });
     },
   });
 
@@ -184,45 +193,42 @@ const AdminEvents = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link to="/admin/dashboard">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
-              </Button>
-            </Link>
-            <Calendar className="h-8 w-8 text-primary" />
-            <div>
-              <h1 className="text-xl font-bold text-foreground">Event Management</h1>
-              <p className="text-sm text-muted-foreground">
-                Manage website events
-              </p>
-            </div>
-          </div>
-
-          <Button onClick={() => { resetForm(); setIsCreateDialogOpen(true); }}>
-            <Plus className="h-4 w-4 mr-2" />
-            Add Event
-          </Button>
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground mb-1">Event Management</h1>
+          <p className="text-muted-foreground">
+            Manage website events
+          </p>
         </div>
-      </header>
 
-      <main className="container mx-auto px-4 py-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>All Events ({filteredEvents?.length || 0})</CardTitle>
-            <CardDescription>
-              Manage events displayed on the public website
-            </CardDescription>
-          </CardHeader>
+        <Button onClick={() => { resetForm(); setIsCreateDialogOpen(true); }}>
+          <Plus className="h-4 w-4 mr-2" />
+          Add Event
+        </Button>
+      </div>
 
-          <CardContent>
-            {isLoading ? (
-              <div className="text-center py-8">Loading...</div>
-            ) : (
+      <Card>
+        <CardHeader>
+          <CardTitle>All Events ({filteredEvents?.length || 0})</CardTitle>
+          <CardDescription>
+            Manage events displayed on the public website
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          {isLoading ? (
+            <div className="space-y-2">
+              {Array(5).fill(0).map((_, i) => (
+                <div key={i} className="h-12 bg-muted/50 rounded animate-pulse" />
+              ))}
+            </div>
+          ) : filteredEvents?.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground bg-muted/20 rounded-md border border-dashed">
+              No events found
+            </div>
+          ) : (
+            <div className="rounded-md border">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -237,7 +243,7 @@ const AdminEvents = () => {
                 <TableBody>
                   {filteredEvents?.map((evt) => (
                     <TableRow key={evt.id}>
-                      <TableCell>{evt.title}</TableCell>
+                      <TableCell className="font-medium max-w-[200px] truncate" title={evt.title}>{evt.title}</TableCell>
                       <TableCell>
                         {new Date(evt.event_date).toLocaleDateString()}
                       </TableCell>
@@ -256,43 +262,182 @@ const AdminEvents = () => {
 
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
-
-                          <Link to={`/admin/events/${evt.id}/registrations`}>
-                            <Button variant="ghost" size="sm">
+                          <Button variant="ghost" size="sm" asChild>
+                            <Link to={`/admin/events/${evt.id}/registrations`}>
                               View Registrations
-                            </Button>
-                          </Link>
-
+                            </Link>
+                          </Button>
                           <Button
                             variant="ghost"
-                            size="sm"
+                            size="icon"
                             onClick={() => handleEditEvent(evt)}
+                            title="Edit Event"
                           >
-                            <Edit className="h-4 w-4" />
+                            <Edit className="h-4 w-4 text-muted-foreground" />
                           </Button>
-
                           <Button
                             variant="ghost"
-                            size="sm"
-                            className="text-destructive"
-                            onClick={() =>
-                              deleteEventMutation.mutate(evt.id)
-                            }
+                            size="icon"
+                            onClick={() => {
+                              if (window.confirm("Are you sure you want to delete this event?")) {
+                                deleteEventMutation.mutate(evt.id);
+                              }
+                            }}
+                            title="Delete Event"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-4 w-4 text-destructive" />
                           </Button>
-
                         </div>
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
-
               </Table>
-            )}
-          </CardContent>
-        </Card>
-      </main>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Create/Edit Dialog */}
+      <Dialog open={isCreateDialogOpen || isEditDialogOpen} onOpenChange={(open) => {
+        if (!open) {
+          setIsCreateDialogOpen(false);
+          setIsEditDialogOpen(false);
+        }
+      }}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle>{isEditDialogOpen ? "Edit Event" : "Create New Event"}</DialogTitle>
+            <DialogDescription>
+              {isEditDialogOpen ? "Update event details" : "Add a new event to the website"}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 overflow-y-auto pr-2 py-2 flex-grow">
+            <div>
+              <Label>Title *</Label>
+              <Input
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                placeholder="Event title"
+              />
+            </div>
+            <div>
+              <Label>Description</Label>
+              <Textarea
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                placeholder="Event description..."
+                rows={3}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Event Type</Label>
+                <Select
+                  value={formData.event_type}
+                  onValueChange={(v) => setFormData({ ...formData, event_type: v })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="workshop">Workshop</SelectItem>
+                    <SelectItem value="webinar">Webinar</SelectItem>
+                    <SelectItem value="conference">Conference</SelectItem>
+                    <SelectItem value="training">Training</SelectItem>
+                    <SelectItem value="meetup">Meetup</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Mode</Label>
+                <Select
+                  value={formData.mode}
+                  onValueChange={(v) => setFormData({ ...formData, mode: v })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="offline">Offline</SelectItem>
+                    <SelectItem value="online">Online</SelectItem>
+                    <SelectItem value="hybrid">Hybrid</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Date *</Label>
+                <Input
+                  type="date"
+                  value={formData.event_date}
+                  onChange={(e) => setFormData({ ...formData, event_date: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Time</Label>
+                <Input
+                  value={formData.event_time}
+                  onChange={(e) => setFormData({ ...formData, event_time: e.target.value })}
+                  placeholder="e.g., 10:00 AM - 5:00 PM"
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Location</Label>
+              <Input
+                value={formData.location}
+                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                placeholder="Venue or Online platform"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Price</Label>
+                <Input
+                  value={formData.price}
+                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  placeholder="Free or ₹X,XXX"
+                />
+              </div>
+              <div>
+                <Label>Seats Available</Label>
+                <Input
+                  type="number"
+                  value={formData.seats_available}
+                  onChange={(e) => setFormData({ ...formData, seats_available: parseInt(e.target.value) || 0 })}
+                />
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Switch
+                id="publish"
+                checked={formData.is_published}
+                onCheckedChange={(checked) => setFormData({ ...formData, is_published: checked })}
+              />
+              <Label htmlFor="publish">Publish immediately</Label>
+            </div>
+            <Button
+              onClick={() => {
+                if (isEditDialogOpen && selectedEvent) {
+                  updateEventMutation.mutate({ id: selectedEvent.id, updates: formData });
+                } else {
+                  createEventMutation.mutate();
+                }
+              }}
+              className="w-full mt-4"
+              disabled={!formData.title || !formData.event_date || createEventMutation.isPending || updateEventMutation.isPending}
+            >
+              {createEventMutation.isPending || updateEventMutation.isPending
+                ? "Saving..."
+                : isEditDialogOpen
+                ? "Update Event"
+                : "Create Event"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -487,18 +487,16 @@ export default function ContentManagement() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-7xl mx-auto">
-        <Button variant="ghost" onClick={() => navigate("/admin/dashboard")} className="mb-6">
-          <ArrowLeft className="h-4 w-4 mr-2" /> Back to Dashboard
-        </Button>
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground mb-1">Website Content Management</h2>
+          <p className="text-muted-foreground">Manage all website content including page sections, services, testimonials, and more</p>
+        </div>
+      </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Website Content Management</CardTitle>
-            <CardDescription>Manage all website content including page sections, services, testimonials, and more</CardDescription>
-          </CardHeader>
-          <CardContent>
+      <Card>
+        <CardContent className="pt-6">
             <Tabs defaultValue="hero">
               <TabsList className="grid w-full grid-cols-6 lg:grid-cols-12 mb-4 h-auto">
                 <TabsTrigger value="hero" className="flex items-center gap-1 text-xs">
@@ -1143,7 +1141,6 @@ export default function ContentManagement() {
             </Tabs>
           </CardContent>
         </Card>
-      </div>
     </div>
   );
 }

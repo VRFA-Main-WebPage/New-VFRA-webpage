@@ -154,110 +154,105 @@ const AdminClients = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link to="/admin/dashboard">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
-              </Button>
-            </Link>
-            <Users className="h-8 w-8 text-primary" />
-            <div>
-              <h1 className="text-xl font-bold text-foreground">Client Management</h1>
-              <p className="text-sm text-muted-foreground">Manage your clients</p>
-            </div>
-          </div>
-
-          <Button className="gap-2" onClick={() => { resetForm(); setIsCreateDialogOpen(true); }}>
-            <Plus className="h-4 w-4" />
-            Add Client
-          </Button>
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground mb-1">Client Management</h2>
+          <p className="text-muted-foreground">Manage your clients</p>
         </div>
-      </header>
+        <Button className="gap-2" onClick={() => { resetForm(); setIsCreateDialogOpen(true); }}>
+          <Plus className="h-4 w-4" />
+          Add Client
+        </Button>
+      </div>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        {/* Search */}
-        <Card className="mb-6">
-          <CardContent className="pt-6">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search by name, email, or company..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
+      {/* Search */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by name, email, or company..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Clients Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle>All Clients ({filteredClients?.length || 0})</CardTitle>
+          <CardDescription>Manage client information and contacts</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="space-y-2">
+              {Array(5).fill(0).map((_, i) => (
+                <div key={i} className="h-12 bg-muted/50 rounded animate-pulse" />
+              ))}
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Clients Table */}
-        <Card>
-          <CardHeader>
-            <CardTitle>All Clients ({filteredClients?.length || 0})</CardTitle>
-            <CardDescription>Manage client information and contacts</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="text-center py-8 text-muted-foreground">Loading clients...</div>
-            ) : filteredClients?.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">No clients found</div>
-            ) : (
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Phone</TableHead>
-                      <TableHead>Company</TableHead>
-                      <TableHead>Category</TableHead>
-                      <TableHead>Created</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+          ) : filteredClients?.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground bg-muted/20 rounded-md border border-dashed">
+              No clients found
+            </div>
+          ) : (
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Phone</TableHead>
+                    <TableHead>Company</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Created</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredClients?.map((client) => (
+                    <TableRow key={client.id}>
+                      <TableCell className="font-medium">{client.name}</TableCell>
+                      <TableCell>{client.email || "N/A"}</TableCell>
+                      <TableCell>{client.phone || "N/A"}</TableCell>
+                      <TableCell>{client.company || "N/A"}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className={categoryColors[client.category] || ""}>
+                          {client.category}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{new Date(client.created_at).toLocaleDateString()}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <Button variant="ghost" size="icon" onClick={() => handleEditClient(client)} title="Edit Client">
+                            <Edit className="h-4 w-4 text-muted-foreground" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-destructive"
+                            onClick={() => {
+                              if (window.confirm("Are you sure you want to delete this client?")) {
+                                deleteClientMutation.mutate(client.id);
+                              }
+                            }}
+                            title="Delete Client"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredClients?.map((client) => (
-                      <TableRow key={client.id}>
-                        <TableCell className="font-medium">{client.name}</TableCell>
-                        <TableCell>{client.email || "N/A"}</TableCell>
-                        <TableCell>{client.phone || "N/A"}</TableCell>
-                        <TableCell>{client.company || "N/A"}</TableCell>
-                        <TableCell>
-                          <Badge className={categoryColors[client.category] || ""}>
-                            {client.category}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{new Date(client.created_at).toLocaleDateString()}</TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-2">
-                            <Button variant="ghost" size="sm" onClick={() => handleEditClient(client)}>
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="text-destructive"
-                              onClick={() => deleteClientMutation.mutate(client.id)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </main>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Create Dialog */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>

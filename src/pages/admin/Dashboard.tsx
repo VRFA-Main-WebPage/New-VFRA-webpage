@@ -5,322 +5,214 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Shield, Users, FileText, Calendar, LogOut, LayoutDashboard, Award, Briefcase, UserPlus, Globe, Settings, Palette, CreditCard, Eye, EyeOff, Save, Loader2 } from "lucide-react";import { Link, useNavigate } from "react-router-dom";
+import { Shield, Users, FileText, Calendar, LayoutDashboard, Award, Briefcase, Globe, Settings, Loader2, Plus, ArrowRight, UserPlus } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { ThemeSwitcher } from "@/components/admin/ThemeSwitcher";
 import { supabase } from "@/integrations/supabase/client";
-import logo from "@/assets/vfra-logo.png";
-
-
 
 const AdminDashboard = () => {
-  const { user, signOut, isAdmin } = useAuth();
+  const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
-  // Razorpay config state
-  const [razorpayKeyId, setRazorpayKeyId] = useState("");
-  const [razorpayKeySecret, setRazorpayKeySecret] = useState("");
-  const [showSecret, setShowSecret] = useState(false);
-  const [savingRazorpay, setSavingRazorpay] = useState(false);
 
-  useEffect(() => {
-    fetchRazorpayConfig();
-  }, []);
 
-  const fetchRazorpayConfig = async () => {
-    const { data } = await supabase
-      .from("website_content")
-      .select("content")
-      .eq("section_key", "razorpay_config")
-      .maybeSingle();
-    
-    if (data?.content) {
-      const config = data.content as { keyId?: string; keySecret?: string };
-      setRazorpayKeyId(config.keyId || "");
-      setRazorpayKeySecret(config.keySecret || "");
-    }
-  };
+  const { data: dashboardStats, isLoading: statsLoading, isError: statsError } = useQuery({
+    queryKey: ["dashboard-stats"],
+    queryFn: async () => {
+      const [
+        totalCases, pendingCases, inProgressCases, closedCases,
+        publishedEvents, certificates, eventRegistrations
+      ] = await Promise.all([
+        supabase.from("cases").select("id", { count: "exact", head: true }),
+        supabase.from("cases").select("id", { count: "exact", head: true }).eq("status", "submitted"),
+        supabase.from("cases").select("id", { count: "exact", head: true }).in("status", ["in_progress", "under_review"]),
+        supabase.from("cases").select("id", { count: "exact", head: true }).in("status", ["closed", "resolved"]),
+        supabase.from("events").select("id", { count: "exact", head: true }).eq("is_published", true),
+        supabase.from("certificates").select("id", { count: "exact", head: true }),
+        supabase.from("event_registrations").select("id", { count: "exact", head: true }),
+      ]);
 
-  const saveRazorpayConfig = async () => {
-    setSavingRazorpay(true);
-    const { error } = await supabase
-      .from("website_content")
-      .upsert({
-        section_key: "razorpay_config",
-        content: { keyId: razorpayKeyId, keySecret: razorpayKeySecret },
-        updated_at: new Date().toISOString(),
-      }, { onConflict: "section_key" });
+      const { data: recentCases } = await supabase
+        .from("cases")
+        .select("id, case_id, title, status, created_at")
+        .order("created_at", { ascending: false })
+        .limit(5);
 
-    if (error) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
-    } else {
-      toast({ title: "Success", description: "Razorpay configuration saved!" });
-    }
-    setSavingRazorpay(false);
-  };
+      const { data: recentRegistrations } = await supabase
+        .from("event_registrations")
+        .select("id, name, created_at, events(title)")
+        .order("created_at", { ascending: false })
+        .limit(5);
 
-  const { data: dashboardStats, isLoading: statsLoading } = useQuery({
-  queryKey: ["dashboard-stats"],
-  queryFn: async () => {
-    const firstDay = new Date(
-      new Date().getFullYear(),
-      new Date().getMonth(),
-      1
-    ).toISOString();
-
-    const totalCasesRes = await supabase
-      .from("cases")
-      .select("id", { count: "exact", head: true });
-
-    const activeClientsRes = await supabase
-      .from("clients")
-      .select("id", { count: "exact", head: true });
-
-    const pendingEventsRes = await supabase
-      .from("events")
-      .select("id", { count: "exact", head: true })
-      .eq("is_published", false);
-
-    const thisMonthRes = await supabase
-      .from("cases")
-      .select("id", { count: "exact", head: true })
-      .gte("created_at", firstDay);
-
-    return {
-      totalCases: totalCasesRes.count ?? 0,
-      activeClients: activeClientsRes.count ?? 0,
-      pendingEvents: pendingEventsRes.count ?? 0,
-      thisMonth: thisMonthRes.count ?? 0,
-    };
-  },
-});
-
-const stats = [
-  { label: "Total Cases", value: dashboardStats?.totalCases ?? 0, icon: FileText, color: "text-primary" },
-  { label: "Active Clients", value: dashboardStats?.activeClients ?? 0, icon: Users, color: "text-accent" },
-  { label: "Pending Events", value: dashboardStats?.pendingEvents ?? 0, icon: Calendar, color: "text-yellow-500" },
-  { label: "This Month", value: dashboardStats?.thisMonth ?? 0, icon: LayoutDashboard, color: "text-green-500" },
-];
-
-  const quickActions = [
-    { 
-      label: "Offer Letters", 
-      icon: FileText, 
-      path: "/admin/offer-letters",
-      enabled: true 
+      return {
+        stats: {
+          totalCases: totalCases.count ?? 0,
+          pendingCases: pendingCases.count ?? 0,
+          inProgressCases: inProgressCases.count ?? 0,
+          closedCases: closedCases.count ?? 0,
+          publishedEvents: publishedEvents.count ?? 0,
+          certificates: certificates.count ?? 0,
+          eventRegistrations: eventRegistrations.count ?? 0,
+        },
+        recentCases: recentCases || [],
+        recentRegistrations: recentRegistrations || []
+      };
     },
-    { 
-      label: "Certificates", 
-      icon: Award, 
-      path: "/admin/certificates",
-      enabled: true 
-    },
-    { 
-      label: "Cases", 
-      icon: Briefcase, 
-      path: "/admin/cases",
-      enabled: true 
-    },
-    { 
-      label: "Clients", 
-      icon: UserPlus, 
-      path: "/admin/clients",
-      enabled: true 
-    },
-    { 
-      label: "Events", 
-      icon: Calendar, 
-      path: "/admin/events",
-      enabled: true 
-    },
-    { 
-      label: "Website Content", 
-      icon: Settings, 
-      path: "/admin/content",
-      enabled: true 
-    },
-    { 
-      label: "View Website", 
-      icon: Globe, 
-      path: "/",
-      enabled: true,
-      external: true 
-    },
+  });
+
+  const statsCards = [
+    { label: "Total Cases", value: dashboardStats?.stats.totalCases ?? 0, icon: Briefcase, color: "text-blue-500" },
+    { label: "Pending Cases", value: dashboardStats?.stats.pendingCases ?? 0, icon: FileText, color: "text-yellow-500" },
+    { label: "In Progress Cases", value: dashboardStats?.stats.inProgressCases ?? 0, icon: LayoutDashboard, color: "text-purple-500" },
+    { label: "Closed Cases", value: dashboardStats?.stats.closedCases ?? 0, icon: Shield, color: "text-green-500" },
+    { label: "Published Events", value: dashboardStats?.stats.publishedEvents ?? 0, icon: Calendar, color: "text-orange-500" },
+    { label: "Certificates Issued", value: dashboardStats?.stats.certificates ?? 0, icon: Award, color: "text-amber-500" },
+    { label: "Event Registrations", value: dashboardStats?.stats.eventRegistrations ?? 0, icon: Users, color: "text-indigo-500" },
   ];
 
-  const handleQuickAction = (action: typeof quickActions[0]) => {
-    if (action.path) {
-      navigate(action.path);
-    }
-  };
+  const quickActions = [
+    { label: "View Cases", icon: Briefcase, path: "/admin/cases" },
+    { label: "Create Event", icon: Calendar, path: "/admin/events" },
+    { label: "Issue Certificate", icon: Award, path: "/admin/certificates/create" },
+    { label: "Manage Content", icon: Settings, path: "/admin/content" },
+    { label: "View Website", icon: Globe, path: "/", external: true },
+  ];
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-           <img 
-  src={logo} 
-  alt="VFRA Logo" 
-  className="h-10 w-auto object-contain"
-/>
-            <div>
-              <h1 className="text-xl font-bold text-foreground">
-                <span className="text-primary">VFRA</span> Admin
-              </h1>
-              <p className="text-sm text-muted-foreground">Vigilant Forensic Research & Analytics</p>
-            </div>
-          </div>
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground mb-1">Dashboard</h2>
+        <p className="text-muted-foreground">Overview of your operations and recent activity.</p>
+      </div>
 
-          <div className="flex items-center gap-4">
-            <div className="text-right">
-              <p className="text-sm font-medium text-foreground">{user?.email}</p>
-              <p className="text-xs text-muted-foreground">
-                {isAdmin ? "Administrator" : "User"}
-              </p>
-            </div>
-            <Button variant="outline" size="sm" onClick={async () => {
-              await signOut();
-              navigate("/admin");
-            }}>
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
-            </Button>
-          </div>
+      {statsError ? (
+        <Card className="bg-destructive/10 border-destructive">
+          <CardContent className="py-6 flex justify-center text-destructive">
+            Failed to load dashboard statistics.
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
+          {statsLoading ? (
+            Array(7).fill(0).map((_, i) => (
+              <Card key={i} className="animate-pulse">
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <div className="h-4 w-20 bg-muted rounded" />
+                  <div className="h-4 w-4 bg-muted rounded" />
+                </CardHeader>
+                <CardContent>
+                  <div className="h-8 w-12 bg-muted rounded" />
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            statsCards.map((stat) => (
+              <Card key={stat.label}>
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-xs font-medium text-muted-foreground">
+                    {stat.label}
+                  </CardTitle>
+                  <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-bold text-foreground">{stat.value}</p>
+                </CardContent>
+              </Card>
+            ))
+          )}
         </div>
-      </header>
+      )}
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-foreground mb-2">
-            Welcome back!
-          </h2>
-          <p className="text-muted-foreground">
-            Here's an overview of your forensic operations.
-          </p>
-        </div>
-
-        {/* Stats Grid */}
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-  {statsLoading ? (
-    <div className="col-span-4 flex justify-center py-8">
-      <Loader2 className="h-6 w-6 animate-spin text-primary" />
-    </div>
-  ) : (
-    stats.map((stat) => (
-      <Card key={stat.label}>
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            {stat.label}
-          </CardTitle>
-          <stat.icon className={`h-5 w-5 ${stat.color}`} />
-        </CardHeader>
-        <CardContent>
-          <p className="text-3xl font-bold text-foreground">
-            {stat.value}
-          </p>
-        </CardContent>
-      </Card>
-    ))
-  )}
-</div>
-    
-
-        {/* Quick Actions */}
+      <div className="grid md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>
-              Common tasks and navigation shortcuts
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {quickActions.map((action) => (
-              <Button
-                key={action.label}
-                variant="outline"
-                className="h-auto py-4 flex-col gap-2"
-                onClick={() => handleQuickAction(action)}
-              >
-                <action.icon className="h-6 w-6" />
-                <span className="text-xs text-center">{action.label}</span>
-              </Button>
-            ))}
-          </CardContent>
-        </Card>
-
-        {/* Theme Settings */}
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Palette className="h-5 w-5" />
-              Theme Settings
-            </CardTitle>
-            <CardDescription>
-              Customize the website appearance
-            </CardDescription>
+            <CardTitle>Recent Cases</CardTitle>
+            <CardDescription>Latest submitted case inquiries</CardDescription>
           </CardHeader>
           <CardContent>
-            <ThemeSwitcher />
+            {statsLoading ? (
+              <div className="flex justify-center py-4"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>
+            ) : dashboardStats?.recentCases?.length === 0 ? (
+              <div className="text-center py-4 text-muted-foreground">No recent cases</div>
+            ) : (
+              <div className="space-y-4">
+                {dashboardStats?.recentCases.map(c => (
+                  <div key={c.id} className="flex items-center justify-between border-b pb-2 last:border-0 last:pb-0">
+                    <div>
+                      <p className="font-medium text-sm">{c.title || c.case_id}</p>
+                      <p className="text-xs text-muted-foreground">{new Date(c.created_at).toLocaleDateString()}</p>
+                    </div>
+                    <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary capitalize">
+                      {c.status.replace("_", " ")}
+                    </span>
+                  </div>
+                ))}
+                <Button variant="link" className="w-full text-xs" asChild>
+                  <Link to="/admin/cases">View all cases <ArrowRight className="h-3 w-3 ml-1" /></Link>
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
-
-        {/* Razorpay Configuration */}
-        <Card className="mt-8">
+        
+        <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CreditCard className="h-5 w-5" />
-              Payment Gateway (Razorpay)
-            </CardTitle>
-            <CardDescription>
-              Configure Razorpay keys for event payments
-            </CardDescription>
+            <CardTitle>Recent Event Registrations</CardTitle>
+            <CardDescription>Latest signups for your events</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="razorpay-key">Razorpay Key ID</Label>
-                <Input 
-                  id="razorpay-key"
-                  value={razorpayKeyId}
-                  onChange={e => setRazorpayKeyId(e.target.value)}
-                  placeholder="rzp_live_xxxxxxxxxxxxx"
-                />
+          <CardContent>
+            {statsLoading ? (
+              <div className="flex justify-center py-4"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>
+            ) : dashboardStats?.recentRegistrations?.length === 0 ? (
+              <div className="text-center py-4 text-muted-foreground">No recent registrations</div>
+            ) : (
+              <div className="space-y-4">
+                {dashboardStats?.recentRegistrations.map(r => (
+                  <div key={r.id} className="flex items-center justify-between border-b pb-2 last:border-0 last:pb-0">
+                    <div>
+                      <p className="font-medium text-sm">{r.name}</p>
+                      <p className="text-xs text-muted-foreground">{r.events?.title || "Unknown Event"}</p>
+                    </div>
+                    <p className="text-xs text-muted-foreground">{new Date(r.created_at).toLocaleDateString()}</p>
+                  </div>
+                ))}
+                <Button variant="link" className="w-full text-xs" asChild>
+                  <Link to="/admin/events">View all events <ArrowRight className="h-3 w-3 ml-1" /></Link>
+                </Button>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="razorpay-secret">Razorpay Key Secret</Label>
-                <div className="relative">
-                  <Input 
-                    id="razorpay-secret"
-                    type={showSecret ? "text" : "password"}
-                    value={razorpayKeySecret}
-                    onChange={e => setRazorpayKeySecret(e.target.value)}
-                    placeholder="••••••••••••••••"
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-0 top-0 h-full px-3"
-                    onClick={() => setShowSecret(!showSecret)}
-                  >
-                    {showSecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </Button>
-                </div>
-              </div>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Get your API keys from the <a href="https://dashboard.razorpay.com/app/keys" target="_blank" rel="noopener noreferrer" className="text-primary underline">Razorpay Dashboard</a>
-            </p>
-            <Button onClick={saveRazorpayConfig} disabled={savingRazorpay}>
-              <Save className="h-4 w-4 mr-2" /> Save Razorpay Configuration
-            </Button>
+            )}
           </CardContent>
         </Card>
-      </main>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Quick Actions</CardTitle>
+        </CardHeader>
+        <CardContent className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {quickActions.map((action) => (
+            <Button
+              key={action.label}
+              variant="outline"
+              className="h-auto py-4 flex-col gap-2"
+              asChild
+            >
+              {action.external ? (
+                 <a href={action.path} target="_blank" rel="noopener noreferrer">
+                  <action.icon className="h-5 w-5" />
+                  <span className="text-xs text-center">{action.label}</span>
+                </a>
+              ) : (
+                <Link to={action.path}>
+                  <action.icon className="h-5 w-5" />
+                  <span className="text-xs text-center">{action.label}</span>
+                </Link>
+              )}
+            </Button>
+          ))}
+        </CardContent>
+      </Card>
+
     </div>
   );
 };

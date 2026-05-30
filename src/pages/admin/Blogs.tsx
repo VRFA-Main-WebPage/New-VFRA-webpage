@@ -82,8 +82,9 @@ const AdminBlogs = () => {
       toast({ title: editingId ? "Blog updated" : "Blog created" });
       setIsDialogOpen(false);
     },
-    onError: (error: unknown) => {
-      toast({ title: "Error saving blog", description: mapErrorToUserMessage(error, "save blog"), variant: "destructive" });
+    onError: (error: any) => {
+      console.error(error);
+      toast({ title: "Error saving blog", description: error.message || error.toString(), variant: "destructive" });
     },
   });
 
@@ -96,8 +97,9 @@ const AdminBlogs = () => {
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
       toast({ title: "Blog deleted" });
     },
-    onError: (error: unknown) => {
-      toast({ title: "Error deleting blog", description: mapErrorToUserMessage(error, "delete blog"), variant: "destructive" });
+    onError: (error: any) => {
+      console.error(error);
+      toast({ title: "Error deleting blog", description: error.message || error.toString(), variant: "destructive" });
     },
   });
 
@@ -140,90 +142,85 @@ const AdminBlogs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link to="/admin/dashboard">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
-              </Button>
-            </Link>
-            <div>
-              <h1 className="text-xl font-bold text-foreground">Blog Management</h1>
-              <p className="text-sm text-muted-foreground">Manage articles and insights</p>
-            </div>
-          </div>
-          <Button onClick={handleCreateNew} className="gap-2">
-            <Plus className="h-4 w-4" />
-            New Blog Post
-          </Button>
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground mb-1">Blog Management</h2>
+          <p className="text-muted-foreground">Manage articles and insights</p>
         </div>
-      </header>
+        <Button onClick={handleCreateNew} className="gap-2">
+          <Plus className="h-4 w-4" />
+          New Blog Post
+        </Button>
+      </div>
 
-      <main className="container mx-auto px-4 py-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>All Blog Posts ({blogs?.length || 0})</CardTitle>
-            <CardDescription>Create, edit, or delete blog content</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="text-center py-8">Loading...</div>
-            ) : blogs?.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">No blogs found.</div>
-            ) : (
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Title</TableHead>
-                      <TableHead>Slug</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Category</TableHead>
-                      <TableHead>Created</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+      <Card>
+        <CardHeader>
+          <CardTitle>All Blog Posts ({blogs?.length || 0})</CardTitle>
+          <CardDescription>Create, edit, or delete blog content</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="space-y-2">
+              {Array(5).fill(0).map((_, i) => (
+                <div key={i} className="h-12 bg-muted/50 rounded animate-pulse" />
+              ))}
+            </div>
+          ) : blogs?.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground bg-muted/20 rounded-md border border-dashed">
+              No blogs found.
+            </div>
+          ) : (
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Slug</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Created</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {blogs?.map((b) => (
+                    <TableRow key={b.id}>
+                      <TableCell className="font-medium max-w-[200px] truncate" title={b.title}>{b.title}</TableCell>
+                      <TableCell className="max-w-[150px] truncate" title={b.slug}>{b.slug}</TableCell>
+                      <TableCell>
+                        <Badge variant={b.status === "published" ? "default" : "secondary"}>
+                          {b.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{b.category || "-"}</TableCell>
+                      <TableCell>{new Date(b.created_at).toLocaleDateString()}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <Button variant="ghost" size="icon" onClick={() => handleEdit(b)} title="Edit Blog">
+                            <Edit className="h-4 w-4 text-muted-foreground" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-destructive"
+                            onClick={() => {
+                              if(confirm("Delete this blog?")) deleteMutation.mutate(b.id);
+                            }}
+                            title="Delete Blog"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {blogs?.map((b) => (
-                      <TableRow key={b.id}>
-                        <TableCell className="font-medium">{b.title}</TableCell>
-                        <TableCell>{b.slug}</TableCell>
-                        <TableCell>
-                          <Badge variant={b.status === "published" ? "default" : "secondary"}>
-                            {b.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{b.category || "-"}</TableCell>
-                        <TableCell>{new Date(b.created_at).toLocaleDateString()}</TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-2">
-                            <Button variant="ghost" size="sm" onClick={() => handleEdit(b)}>
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="text-destructive"
-                              onClick={() => {
-                                if(confirm("Delete this blog?")) deleteMutation.mutate(b.id);
-                              }}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </main>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">

@@ -14,6 +14,7 @@ import { ProtectedRoute } from "@/components/admin/ProtectedRoute";
 
 // Layouts
 import { PublicLayout } from "@/components/layout/PublicLayout";
+import { AdminLayout } from "@/components/layout/AdminLayout";
 
 // Public Pages
 import Index from "./pages/Index";
@@ -72,88 +73,91 @@ const App = () => (
               <Route path="/blog/:slug" element={<BlogDetail />} />
             </Route>
 
-            {/* Admin Routes */}
+            {/* Admin Login Route */}
             <Route path="/admin" element={<AdminLogin />} />
-            <Route
-              path="/admin/dashboard"
-              element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/offer-letters"
-              element={
-                <ProtectedRoute>
-                  <OfferLetters />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/offer-letters/create"
-              element={
-                <ProtectedRoute>
-                  <CreateOfferLetter />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/certificates"
-              element={
-                <ProtectedRoute>
-                  <Certificates />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/certificates/create"
-              element={
-                <ProtectedRoute>
-                  <CreateCertificate />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/cases"
-              element={
-                <ProtectedRoute>
-                  <AdminCases />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/cases/create"
-              element={
-                <ProtectedRoute>
-                  <CreateCase />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/clients"
-              element={
-                <ProtectedRoute>
-                  <AdminClients />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/events"
-              element={
-                <ProtectedRoute>
-                  <AdminEvents />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/content"
-              element={
-                <ProtectedRoute>
-                  <ContentManagement />
-                </ProtectedRoute>
-              }
-            />
+            
+            {/* Admin Routes with Layout */}
+            <Route element={<AdminLayout />}>
+              <Route
+                path="/admin/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/offer-letters"
+                element={
+                  <ProtectedRoute>
+                    <OfferLetters />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/offer-letters/create"
+                element={
+                  <ProtectedRoute>
+                    <CreateOfferLetter />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/certificates"
+                element={
+                  <ProtectedRoute>
+                    <Certificates />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/certificates/create"
+                element={
+                  <ProtectedRoute>
+                    <CreateCertificate />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/cases"
+                element={
+                  <ProtectedRoute>
+                    <AdminCases />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/cases/create"
+                element={
+                  <ProtectedRoute>
+                    <CreateCase />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/clients"
+                element={
+                  <ProtectedRoute>
+                    <AdminClients />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/events"
+                element={
+                  <ProtectedRoute>
+                    <AdminEvents />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/content"
+                element={
+                  <ProtectedRoute>
+                    <ContentManagement />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/admin/events/:eventId/registrations"
                 element={
@@ -170,14 +174,15 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
+            </Route>
 
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
-  </ThemeProvider>
+        </TooltipProvider>
+      </AuthProvider>
+    </ThemeProvider>
   </QueryClientProvider>
   </HelmetProvider>
 );

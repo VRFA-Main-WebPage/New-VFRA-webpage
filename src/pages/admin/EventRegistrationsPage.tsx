@@ -50,60 +50,52 @@ const EventRegistrationsPage = () => {
   });
 
   return (
-    <div className="container mx-auto px-4 py-8">
-
-      <Button
-        variant="outline"
-        className="mb-6"
-        onClick={() => navigate("/admin/events")}
-      >
-        <ArrowLeft className="h-4 w-4 mr-2" />
-        Back to Events
-      </Button>
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground mb-1">
+            {eventData?.title ?? "Event Registrations"}
+          </h2>
+          <p className="text-muted-foreground">
+            {registrations?.length ?? 0} Total Registrations
+          </p>
+        </div>
+      </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>
-            {eventData?.title ?? "Event Registrations"}
-          </CardTitle>
-          <CardDescription>
-            {registrations?.length ?? 0} Total Registrations
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent>
+        <CardContent className="pt-6">
           {isLoading ? (
             <div className="flex justify-center py-10">
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
             </div>
           ) : registrations?.length === 0 ? (
-            <p className="text-muted-foreground text-sm">
+            <div className="text-center py-8 text-muted-foreground bg-muted/20 rounded-md border border-dashed">
               No registrations for this event.
-            </p>
+            </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="rounded-md border">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-2">Name</th>
-                    <th className="text-left py-2">Email</th>
-                    <th className="text-left py-2">Phone</th>
-                    <th className="text-left py-2">Amount</th>
-                    <th className="text-left py-2">Payment Status</th>
-                    <th className="text-left py-2">Date</th>
+                  <tr className="border-b bg-muted/50">
+                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Name</th>
+                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Email</th>
+                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Phone</th>
+                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Amount</th>
+                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Payment Status</th>
+                    <th className="text-left py-3 px-4 font-medium text-muted-foreground">Date</th>
                   </tr>
                 </thead>
                 <tbody>
                   {registrations.map((reg: any) => (
-                    <tr key={reg.id} className="border-b">
-                      <td className="py-2">{reg.name}</td>
-                      <td className="py-2">{reg.email}</td>
-                      <td className="py-2">{reg.phone ?? "-"}</td>
-                      <td className="py-2">₹{reg.amount}</td>
-                      <td className="py-2 capitalize">
+                    <tr key={reg.id} className="border-b last:border-0 hover:bg-muted/50 transition-colors">
+                      <td className="py-3 px-4 font-medium">{reg.name}</td>
+                      <td className="py-3 px-4">{reg.email}</td>
+                      <td className="py-3 px-4">{reg.phone ?? "-"}</td>
+                      <td className="py-3 px-4 font-mono">₹{reg.amount}</td>
+                      <td className="py-3 px-4 capitalize">
                         {reg.payment_status}
                       </td>
-                      <td className="py-2">
+                      <td className="py-3 px-4 text-muted-foreground">
                         {new Date(reg.created_at).toLocaleDateString("en-IN")}
                       </td>
                     </tr>

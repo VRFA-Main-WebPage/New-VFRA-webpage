@@ -134,135 +134,129 @@ const AdminCases = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link to="/admin/dashboard">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
-              </Button>
-            </Link>
-            <Shield className="h-8 w-8 text-primary" />
-            <div>
-              <h1 className="text-xl font-bold text-foreground">
-                Case Management
-              </h1>
-              <p className="text-sm text-muted-foreground">Track and manage all cases</p>
-            </div>
-          </div>
-
-          <Link to="/admin/cases/create">
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" />
-              New Case
-            </Button>
-          </Link>
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground mb-1">Case Management</h2>
+          <p className="text-muted-foreground">Track and manage all cases.</p>
         </div>
-      </header>
+        <Button asChild>
+          <Link to="/admin/cases/create">
+            <Plus className="h-4 w-4 mr-2" />
+            New Case
+          </Link>
+        </Button>
+      </div>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        {/* Filters */}
-        <Card className="mb-6">
-          <CardContent className="pt-6">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search by Case ID, title, or client..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-full md:w-48">
-                  <SelectValue placeholder="Filter by status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Statuses</SelectItem>
-                  <SelectItem value="submitted">Submitted</SelectItem>
-                  <SelectItem value="under_review">Under Review</SelectItem>
-                  <SelectItem value="in_progress">In Progress</SelectItem>
-                  <SelectItem value="on_hold">On Hold</SelectItem>
-                  <SelectItem value="resolved">Resolved</SelectItem>
-                  <SelectItem value="closed">Closed</SelectItem>
-                </SelectContent>
-              </Select>
+      {/* Filters */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search by Case ID, title, or client..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
             </div>
-          </CardContent>
-        </Card>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full md:w-[200px]">
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="submitted">Submitted</SelectItem>
+                <SelectItem value="under_review">Under Review</SelectItem>
+                <SelectItem value="in_progress">In Progress</SelectItem>
+                <SelectItem value="on_hold">On Hold</SelectItem>
+                <SelectItem value="resolved">Resolved</SelectItem>
+                <SelectItem value="closed">Closed</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
 
-        {/* Cases Table */}
-        <Card>
-          <CardHeader>
-            <CardTitle>All Cases ({filteredCases?.length || 0})</CardTitle>
-            <CardDescription>Manage case status, view details, and track progress</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="text-center py-8 text-muted-foreground">Loading cases...</div>
-            ) : filteredCases?.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">No cases found</div>
-            ) : (
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Case ID</TableHead>
-                      <TableHead>Title</TableHead>
-                      <TableHead>Client</TableHead>
-                      <TableHead>Category</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Priority</TableHead>
-                      <TableHead>Created</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+      {/* Cases Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle>All Cases ({filteredCases?.length || 0})</CardTitle>
+          <CardDescription>Manage case status, view details, and track progress</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="space-y-2">
+              {Array(5).fill(0).map((_, i) => (
+                <div key={i} className="h-12 bg-muted/50 rounded animate-pulse" />
+              ))}
+            </div>
+          ) : filteredCases?.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground bg-muted/20 rounded-md border border-dashed">
+              No cases found
+            </div>
+          ) : (
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Case ID</TableHead>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Client</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Created</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredCases?.map((caseItem) => (
+                    <TableRow key={caseItem.id}>
+                      <TableCell className="font-mono font-medium text-primary">
+                        {caseItem.case_id}
+                      </TableCell>
+                      <TableCell className="font-medium max-w-[200px] truncate" title={caseItem.title}>
+                        {caseItem.title}
+                      </TableCell>
+                      <TableCell>{caseItem.client_name}</TableCell>
+                      <TableCell className="capitalize">{caseItem.category}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className={statusColors[caseItem.status as CaseStatus] || ""}>
+                          {caseItem.status?.replace("_", " ")}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{new Date(caseItem.created_at).toLocaleDateString()}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button variant="ghost" size="icon" onClick={() => handleViewCase(caseItem)} title="View Case">
+                            <Eye className="h-4 w-4 text-muted-foreground" />
+                          </Button>
+                          <Button variant="ghost" size="icon" onClick={() => handleEditCase(caseItem)} title="Edit Status/Notes">
+                            <Edit className="h-4 w-4 text-muted-foreground" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              if (window.confirm("Are you sure you want to delete this case? This action cannot be undone.")) {
+                                deleteCaseMutation.mutate(caseItem.id);
+                              }
+                            }}
+                            title="Delete Case"
+                          >
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
+                        </div>
+                      </TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredCases?.map((caseItem) => (
-                      <TableRow key={caseItem.id}>
-                        <TableCell className="font-mono text-primary">{caseItem.case_id}</TableCell>
-                        <TableCell className="font-medium">{caseItem.title}</TableCell>
-                        <TableCell>{caseItem.client_name}</TableCell>
-                        <TableCell className="capitalize">{caseItem.category}</TableCell>
-                        <TableCell>
-                          <Badge className={statusColors[caseItem.status as CaseStatus] || ""}>
-                            {caseItem.status?.replace("_", " ")}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="capitalize">{caseItem.priority}</TableCell>
-                        <TableCell>{new Date(caseItem.created_at).toLocaleDateString()}</TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-2">
-                            <Button variant="ghost" size="sm" onClick={() => handleViewCase(caseItem)}>
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                            <Button variant="ghost" size="sm" onClick={() => handleEditCase(caseItem)}>
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="text-destructive"
-                              onClick={() => deleteCaseMutation.mutate(caseItem.id)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </main>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* View Dialog */}
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
