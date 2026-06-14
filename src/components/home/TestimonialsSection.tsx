@@ -78,7 +78,7 @@ export function TestimonialsSection() {
   }, []);
 
   return (
-    <section className="py-24 lg:py-32 bg-muted relative overflow-hidden">
+    <section className="py-10 md:py-24 lg:py-32 bg-muted relative overflow-hidden">
       {/* Background effects */}
       <div className="absolute inset-0 grid-overlay opacity-30" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[120px]" />
@@ -118,7 +118,7 @@ export function TestimonialsSection() {
             <Terminal className="h-4 w-4" />
             <span className="uppercase tracking-widest font-mono">// TESTIMONIALS</span>
           </motion.div>
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-5">
+          <h2 className="font-display text-[28px] md:text-4xl lg:text-5xl font-bold text-foreground mb-5">
             What Our <span className="text-primary text-glow">Clients</span> Say
           </h2>
           <p className="text-muted-foreground text-lg">

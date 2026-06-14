@@ -21,7 +21,7 @@ export function ProductsSection() {
   const { ref, inView } = useInView();
 
   return (
-    <section className="py-24 lg:py-32 bg-background border-b border-border relative overflow-hidden" id="platforms">
+    <section className="py-10 md:py-24 lg:py-32 bg-background border-b border-border relative overflow-hidden" id="platforms">
       {/* Subtle background glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-full opacity-[0.02] pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#D4AF37] rounded-full blur-[120px]" />
@@ -36,8 +36,8 @@ export function ProductsSection() {
           variants={staggerContainer}
         >
           <motion.div variants={fadeUp} className="text-center max-w-3xl mx-auto mb-16 lg:mb-24">
-            <div className="inline-flex items-center justify-center px-4 py-1.5 mb-6 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20">
-              <span className="text-sm font-semibold text-[#D4AF37] tracking-wider uppercase">Vigilant Forensic Research and Analytics Pvt. Ltd.</span>
+            <div className="inline-flex items-center justify-center pl-3 pr-4 py-1.5 mb-6 rounded-sm border-l-2 border-[#D4AF37] bg-gradient-to-r from-[#D4AF37]/10 to-transparent">
+              <span className="text-xs font-bold text-[#D4AF37] tracking-widest uppercase">Vigilant Forensic Research and Analytics Pvt. Ltd.</span>
             </div>
             <h2 className="section-heading mb-6 text-foreground">INVESTIGATION PLATFORMS</h2>
             <p className="text-lg text-muted-foreground mx-auto">
@@ -57,16 +57,16 @@ export function ProductsSection() {
               {/* Hover gradient background effect */}
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-[#D4AF37]/0 to-[#D4AF37]/0 group-hover:from-[#D4AF37]/5 group-hover:to-transparent transition-all duration-500 pointer-events-none" />
               
-              <div className="p-6 lg:p-8 flex-1 flex flex-col relative z-10 gap-5">
+              <div className="p-5 md:p-6 lg:p-8 flex-1 flex flex-col relative z-10 gap-5">
                 
                 {/* Header Section */}
                 <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 mb-5">
+                  <div className="inline-flex items-center gap-2 pl-2.5 pr-4 py-1 rounded-sm border-l-2 border-[#D4AF37] bg-gradient-to-r from-[#D4AF37]/10 to-transparent mb-5">
                     <Shield className="w-4 h-4 text-[#D4AF37] group-hover:-translate-y-0.5 transition-transform duration-300" />
-                    <span className="text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider">Cybercrime Investigation Platform</span>
+                    <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-widest">Cybercrime Investigation Platform</span>
                   </div>
                   
-                  <h3 className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-2 transition-transform duration-300 group-hover:translate-x-1">
+                  <h3 className="text-[24px] md:text-3xl font-heading font-bold text-foreground mb-2 transition-transform duration-300 group-hover:translate-x-1">
                     InvestiGate
                   </h3>
                   
@@ -168,16 +168,16 @@ export function ProductsSection() {
             >
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-[#D4AF37]/0 to-[#D4AF37]/0 group-hover:from-[#D4AF37]/5 group-hover:to-transparent transition-all duration-500 pointer-events-none" />
               
-              <div className="p-6 lg:p-8 flex-1 flex flex-col relative z-10 gap-5">
+              <div className="p-5 md:p-6 lg:p-8 flex-1 flex flex-col relative z-10 gap-5">
                 
                 {/* Header Section */}
                 <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 mb-5">
+                  <div className="inline-flex items-center gap-2 pl-2.5 pr-4 py-1 rounded-sm border-l-2 border-[#D4AF37] bg-gradient-to-r from-[#D4AF37]/10 to-transparent mb-5">
                     <Activity className="w-4 h-4 text-[#D4AF37] group-hover:-translate-y-0.5 transition-transform duration-300" />
-                    <span className="text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider">Telegram Threat Intelligence</span>
+                    <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-widest">Telegram Threat Intelligence</span>
                   </div>
                   
-                  <h3 className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-2 transition-transform duration-300 group-hover:translate-x-1">
+                  <h3 className="text-[24px] md:text-3xl font-heading font-bold text-foreground mb-2 transition-transform duration-300 group-hover:translate-x-1">
                     VFRA-TTI
                   </h3>
                   

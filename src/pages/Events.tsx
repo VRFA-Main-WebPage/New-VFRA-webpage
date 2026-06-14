@@ -190,7 +190,7 @@ const Events = () => {
       <SEO title="Events & Training | VFRA" description="Upcoming events, workshops and training programs by VFRA." />
       <div className="bg-background">
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-28 bg-gradient-to-br from-background via-background to-primary/10 overflow-hidden">
+      <section className="relative py-10 md:py-20 lg:py-28 bg-gradient-to-br from-background via-background to-primary/10 overflow-hidden">
         <div className="absolute inset-0 grid-overlay opacity-30" />
         <div className="container relative z-10">
           <div className="max-w-3xl mx-auto text-center">
@@ -207,10 +207,10 @@ const Events = () => {
       </section>
 
       {/* Upcoming Events */}
-      <section className="py-20 lg:py-28">
+      <section className="py-10 md:py-20 lg:py-28">
         <div className="container">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            <h2 className="text-[28px] md:text-4xl font-bold text-foreground mb-4">
               Upcoming Events
             </h2>
             <p className="text-muted-foreground">
@@ -300,12 +300,12 @@ const Events = () => {
       </section>
 
       {/* Training Programs */}
-      <section className="py-20 lg:py-28 bg-muted">
+      <section className="py-10 md:py-20 lg:py-28 bg-muted">
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <p className="text-sm font-medium text-primary mb-2 uppercase tracking-wider">Training Programs</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+              <h2 className="text-[28px] md:text-4xl font-bold text-foreground mb-6">
                 Custom Training for Your Organization
               </h2>
               <p className="text-muted-foreground mb-6">
@@ -384,10 +384,10 @@ const Events = () => {
       </section>
 
       {/* Certificate Verification CTA */}
-      <section className="py-20 lg:py-28">
+      <section className="py-10 md:py-20 lg:py-28">
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+            <h2 className="text-[28px] md:text-4xl font-bold text-foreground mb-6">
               Verify Your Certificate
             </h2>
             <p className="text-muted-foreground mb-8">

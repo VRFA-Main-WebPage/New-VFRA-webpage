@@ -14,7 +14,7 @@ export function CaseSection() {
   const headingParts = content.heading.split(content.highlightWord);
 
   return (
-    <section className="py-20 lg:py-28 relative overflow-hidden">
+    <section className="py-10 md:py-20 lg:py-28 relative overflow-hidden">
       {/* Background effects */}
       <div className="absolute inset-0 grid-overlay opacity-30" />
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
@@ -28,11 +28,11 @@ export function CaseSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-2 mb-6">
+            <div className="inline-flex items-center gap-2 pl-3 pr-4 py-1.5 mb-6 rounded-sm border-l-2 border-primary bg-gradient-to-r from-primary/10 to-transparent">
               <Shield className="h-4 w-4 text-primary" />
               <span className="text-sm text-primary font-medium">{content.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            <h2 className="text-[28px] md:text-4xl font-bold text-foreground mb-4">
               {headingParts[0]}
               <span className="text-primary text-glow">{content.highlightWord}</span>
               {headingParts[1]}

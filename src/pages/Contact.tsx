@@ -42,7 +42,7 @@ const Contact = () => {
       <SEO title="Contact Us | VFRA" description="Get in touch with our forensic experts for investigation support." />
       <div className="bg-background">
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-28 bg-gradient-hero border-b border-border overflow-hidden">
+      <section className="relative py-10 md:py-20 lg:py-28 bg-gradient-hero border-b border-border overflow-hidden">
         <div className="absolute inset-0 grid-overlay opacity-30" />
         <div className="container relative z-10">
           <div className="max-w-3xl mx-auto text-center">
@@ -59,7 +59,7 @@ const Contact = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="py-20 lg:py-28">
+      <section className="py-10 md:py-20 lg:py-28">
         <div className="container">
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Contact Info */}

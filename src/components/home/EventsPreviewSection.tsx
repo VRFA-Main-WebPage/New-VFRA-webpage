@@ -36,7 +36,7 @@ export function EventsPreviewSection() {
   if (events.length === 0) return null;
 
   return (
-    <section className="py-20 lg:py-24 bg-background border-b border-border">
+    <section className="py-10 md:py-20 lg:py-24 bg-background border-b border-border">
       <div className="container">
         <motion.div
           ref={ref}

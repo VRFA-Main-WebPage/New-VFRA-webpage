@@ -100,7 +100,7 @@ const TrackCase = () => {
       <SEO title="Track Case | VFRA" description="Track the status of your ongoing case investigation." />
       <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="bg-gradient-hero py-20 lg:py-28 relative overflow-hidden">
+      <section className="bg-gradient-hero py-10 md:py-20 lg:py-28 relative overflow-hidden">
         <div className="absolute inset-0 grid-overlay opacity-50" />
         <div className="container relative z-10">
           <div className="max-w-3xl mx-auto text-center">

@@ -85,7 +85,7 @@ const Verify = () => {
       <SEO title="Verify Certificate | VFRA" description="Verify the authenticity of VFRA certificates." />
       <div className="bg-background">
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-28 bg-gradient-hero border-b border-border overflow-hidden">
+      <section className="relative py-10 md:py-20 lg:py-28 bg-gradient-hero border-b border-border overflow-hidden">
         <div className="absolute inset-0 grid-overlay opacity-30" />
         <div className="container relative z-10">
           <div className="max-w-3xl mx-auto text-center">
@@ -106,7 +106,7 @@ const Verify = () => {
       </section>
 
       {/* Verification Form */}
-      <section className="py-20 lg:py-28">
+      <section className="py-10 md:py-20 lg:py-28">
         <div className="container">
           <div className="max-w-xl mx-auto">
             <Card className="premium-card">

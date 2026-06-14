@@ -79,7 +79,7 @@ const About = () => {
       <div className="bg-background">
 
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-28 bg-gradient-hero border-b border-border overflow-hidden">
+      <section className="relative py-10 md:py-20 lg:py-28 bg-gradient-hero border-b border-border overflow-hidden">
         <div className="absolute inset-0 grid-overlay opacity-30" />
         <div className="container relative z-10">
           <div className="max-w-3xl mx-auto text-center">
@@ -95,7 +95,7 @@ const About = () => {
       </section>
 
       {/* Mission & Vision */}
-      <section className="py-20 lg:py-28">
+      <section className="py-10 md:py-20 lg:py-28">
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-8">
 
@@ -132,13 +132,13 @@ const About = () => {
       </section>
 
       {/* Team */}
-      <section className="py-20 lg:py-28">
+      <section className="py-10 md:py-20 lg:py-28">
         <div className="container">
           <div className="text-center mb-16">
             <p className="text-sm font-medium text-primary mb-2 uppercase tracking-wider">
               Our Team
             </p>
-            <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4">
+            <h2 className="font-heading text-[28px] md:text-4xl font-bold text-foreground mb-4">
               Meet Our Experts
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -170,13 +170,13 @@ const About = () => {
       </section>
 
       {/* Lab Infrastructure */}
-      <section className="py-20 lg:py-28 bg-surface border-t border-border">
+      <section className="py-10 md:py-20 lg:py-28 bg-surface border-t border-border">
         <div className="container">
           <div className="max-w-3xl">
             <p className="text-sm font-medium text-primary mb-2 uppercase tracking-wider">
               Infrastructure
             </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+            <h2 className="text-[28px] md:text-4xl font-bold text-foreground mb-6">
               State-of-the-Art Forensic Laboratory
             </h2>
             <p className="text-muted-foreground mb-8">

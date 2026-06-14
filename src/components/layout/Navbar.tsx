@@ -108,6 +108,7 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
             className="lg:hidden border-t border-border bg-background overflow-hidden"
           >
             <nav className="container py-4 space-y-1">
@@ -119,7 +120,7 @@ export function Navbar() {
                   onClick={() => setIsOpen(false)}
                   className={({ isActive }) =>
                     cn(
-                      "block py-2.5 px-3 rounded-md text-sm font-medium",
+                      "block py-3 px-4 rounded-md text-sm font-medium",
                       isActive ? activeClassName : "text-muted-foreground"
                     )
                   }
@@ -127,14 +128,14 @@ export function Navbar() {
                   {link.title}
                 </NavLink>
               ))}
-              <div className="pt-4 flex flex-col gap-2 border-t border-border mt-2">
+              <div className="pt-5 pb-2 flex flex-col gap-3 border-t border-border mt-3">
                 <Link to="/track-case" onClick={() => setIsOpen(false)}>
-                  <Button variant="outline" className="w-full btn-outline-gold">
+                  <Button variant="outline" className="w-full btn-outline-gold h-12">
                     Track Case
                   </Button>
                 </Link>
                 <Link to="/submit-case" onClick={() => setIsOpen(false)}>
-                  <Button className="w-full btn-gold">Register a Case</Button>
+                  <Button className="w-full btn-gold h-12">Register a Case</Button>
                 </Link>
               </div>
             </nav>

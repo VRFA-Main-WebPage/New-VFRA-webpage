@@ -33,7 +33,7 @@ export function WhyVFRASection() {
   const { ref, inView } = useInView();
 
   return (
-    <section className="py-24 lg:py-32 bg-background border-b border-border">
+    <section className="py-10 md:py-24 lg:py-32 bg-background border-b border-border">
       <div className="container">
         <motion.div
           ref={ref}

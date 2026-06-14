@@ -36,7 +36,7 @@ export function RecognitionStrip() {
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
           variants={staggerContainer}
-          className="flex flex-col items-center justify-center gap-8"
+          className="flex flex-col items-center justify-center gap-4 md:gap-8"
         >
           {/* Section Label */}
           <motion.div variants={fadeUp} className="flex flex-col items-center gap-2">
@@ -47,15 +47,17 @@ export function RecognitionStrip() {
           </motion.div>
 
           {/* Cards Container */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 md:gap-8 w-full max-w-4xl">
-            {RECOGNITIONS.map((item) => (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-8 w-full max-w-4xl px-4 md:px-0">
+            {RECOGNITIONS.map((item, index) => (
               <motion.div
                 key={item.id}
                 variants={cardVariant}
-                className="group flex flex-col items-center bg-[#0A0A0A] border border-[rgba(212,175,55,0.28)] rounded-2xl p-4 md:p-5 hover:-translate-y-1 hover:border-primary/60 hover:shadow-[0_0_20px_rgba(212,175,55,0.15)] transition-all duration-300"
+                className={`group flex flex-col justify-start items-center bg-[#0A0A0A] border border-[rgba(212,175,55,0.28)] rounded-xl md:rounded-2xl p-3 md:p-5 hover:-translate-y-1 hover:border-primary/60 hover:shadow-[0_0_20px_rgba(212,175,55,0.15)] transition-all duration-300 w-full h-full ${
+                  index === 2 ? "col-span-2 md:col-span-1 max-w-[50%] mx-auto md:max-w-none" : ""
+                }`}
               >
                 {/* Image Container */}
-                <div className="w-full h-20 md:h-24 bg-white rounded-xl p-3 flex items-center justify-center mb-4 overflow-hidden shadow-inner">
+                <div className="w-full h-14 md:h-24 bg-white rounded-lg md:rounded-xl p-2 md:p-3 flex items-center justify-center mb-2 md:mb-4 overflow-hidden shadow-inner">
                   <img
                     src={item.image}
                     alt={item.alt}
@@ -64,7 +66,7 @@ export function RecognitionStrip() {
                 </div>
                 
                 {/* Caption */}
-                <p className="text-foreground/90 font-medium text-sm md:text-sm tracking-wide text-center uppercase">
+                <p className="text-foreground/90 font-semibold text-[10px] sm:text-[11px] md:text-sm tracking-tight md:tracking-wide text-center uppercase leading-tight md:leading-normal w-full px-0.5 mt-auto">
                   {item.label}
                 </p>
               </motion.div>

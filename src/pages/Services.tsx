@@ -261,7 +261,7 @@ const Services = () => {
         <section className="py-20 bg-surface border-y border-border overflow-hidden">
           <div className="container">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4">
+              <h2 className="font-heading text-[28px] md:text-4xl font-bold text-foreground mb-4">
                 How VFRA Supports Investigations
               </h2>
               <p className="text-muted-foreground text-lg">
@@ -333,7 +333,7 @@ const Services = () => {
         </section>
 
         {/* FINAL CTA */}
-        <section className="py-20 lg:py-28 relative overflow-hidden">
+        <section className="py-10 md:py-20 lg:py-28 relative overflow-hidden">
           <div className="absolute inset-0 bg-primary/5" />
           <div className="container relative z-10 text-center max-w-3xl">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 mb-8">

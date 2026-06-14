@@ -42,17 +42,17 @@ export function Footer() {
 
   return (
     <footer className="bg-background border-t border-border">
-      <div className="container py-14 lg:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-10">
+      <div className="container py-8 md:py-14 lg:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-6 gap-10 md:gap-14">
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-3 mb-4">
-              <img src={vfraLogo} alt="VFRA" className="h-12 w-auto object-contain" />
+              <img src={vfraLogo} alt="VFRA" className="h-10 md:h-12 w-auto object-contain" />
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed mb-6 max-w-sm">
               {footerContent.tagline ||
                 "Vigilant Forensic Research and Analytics — digital forensics, cybercrime investigation support, and intelligence workflows for authorized professional use."}
             </p>
-            <div className="space-y-2.5 text-sm text-muted-foreground">
+            <div className="space-y-3 text-sm text-muted-foreground">
               <div className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                 <span>
@@ -72,30 +72,32 @@ export function Footer() {
             </div>
           </div>
 
-          {(
-            [
-              ["Services", footerLinks.services],
-              ["Products", footerLinks.products],
-              ["Company", footerLinks.company],
-              ["Legal", footerLinks.legal],
-            ] as const
-          ).map(([title, links]) => (
-            <div key={title}>
-              <h4 className="font-heading font-semibold text-sm text-foreground mb-4">{title}</h4>
-              <ul className="space-y-2">
-                {links.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      to={link.href}
-                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      {link.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <div className="lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-8">
+            {(
+              [
+                ["Services", footerLinks.services],
+                ["Products", footerLinks.products],
+                ["Company", footerLinks.company],
+                ["Legal", footerLinks.legal],
+              ] as const
+            ).map(([title, links]) => (
+              <div key={title}>
+                <h4 className="font-heading font-semibold text-sm text-foreground mb-4">{title}</h4>
+                <ul className="space-y-1 md:space-y-2">
+                  {links.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        to={link.href}
+                        className="block py-1.5 md:py-0 text-sm text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {link.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">

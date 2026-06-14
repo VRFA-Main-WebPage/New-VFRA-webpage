@@ -60,7 +60,7 @@ export function ServicesSection() {
   const { ref, inView } = useInView();
 
   return (
-    <section className="py-24 lg:py-32 bg-background border-b border-border">
+    <section className="hidden md:block py-10 md:py-24 lg:py-32 bg-background border-b border-border">
       <div className="container">
         <motion.div
           ref={ref}
@@ -70,7 +70,7 @@ export function ServicesSection() {
         >
           <motion.div variants={fadeUp} className="text-center max-w-3xl mx-auto mb-16">
             <p className="section-eyebrow">Forensic Services</p>
-            <h2 className="section-heading mb-4 text-3xl md:text-4xl lg:text-5xl">Comprehensive Investigation Support</h2>
+            <h2 className="section-heading mb-4 text-[28px] md:text-4xl lg:text-5xl">Comprehensive Investigation Support</h2>
             <p className="section-subtext mx-auto text-base md:text-lg">
               From digital evidence acquisition to court-ready reporting — specialized forensic, intelligence and legal support services for investigators, legal professionals and institutions.
             </p>
@@ -96,7 +96,7 @@ export function ServicesSection() {
                     </span>
                   </div>
                   
-                  <span className="inline-block px-2.5 py-1 mb-3 rounded-full text-[10px] font-bold uppercase tracking-wider bg-primary/10 text-primary w-max border border-primary/20">
+                  <span className="inline-block px-2 py-1 mb-3 rounded-sm border-l-2 border-primary bg-gradient-to-r from-primary/10 to-transparent text-[10px] font-bold uppercase tracking-wider text-primary w-max">
                     {service.category}
                   </span>
 

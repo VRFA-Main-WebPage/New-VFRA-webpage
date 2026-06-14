@@ -17,7 +17,7 @@ export function TrustSection() {
   const { ref, inView } = useInView();
 
   return (
-    <section className="py-24 lg:py-32 bg-surface border-b border-border">
+    <section className="py-10 md:py-24 lg:py-32 bg-surface border-b border-border">
       <div className="container">
         <motion.div
           ref={ref}
@@ -71,16 +71,16 @@ export function TrustSection() {
           <p className="text-center text-xs text-muted-foreground mb-8 uppercase tracking-widest">
             Institutions & Agencies Engaged
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-10 lg:gap-16">
+          <div className="grid grid-cols-2 lg:flex lg:flex-row items-center justify-center gap-4 lg:gap-16 max-w-2xl mx-auto">
             {[
               { logo: maharashtraPoliceLogo, name: "Maharashtra Police" },
               { logo: nagpurPoliceLogo, name: "Nagpur Police" },
             ].map((partner) => (
-              <div key={partner.name} className="flex flex-col items-center gap-3">
-                <div className="h-20 w-48 bg-card border border-border rounded-lg flex items-center justify-center p-3">
-                  <img src={partner.logo} alt={partner.name} className="h-14 object-contain" />
+              <div key={partner.name} className="flex flex-col items-center gap-2 lg:gap-3 w-full">
+                <div className="h-16 lg:h-20 w-full lg:w-48 bg-card border border-border rounded-lg flex items-center justify-center p-2 lg:p-3 shadow-sm">
+                  <img src={partner.logo} alt={partner.name} className="h-10 lg:h-14 object-contain" />
                 </div>
-                <p className="text-sm text-muted-foreground font-medium">{partner.name}</p>
+                <p className="text-[11px] lg:text-sm text-muted-foreground font-medium text-center leading-tight">{partner.name}</p>
               </div>
             ))}
           </div>

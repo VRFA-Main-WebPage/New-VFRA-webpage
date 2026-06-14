@@ -6,7 +6,7 @@ export function ProcessTimelineSection() {
   const { ref, inView } = useInView();
 
   return (
-    <section className="py-24 lg:py-32 bg-surface border-b border-border">
+    <section className="hidden md:block py-10 md:py-24 lg:py-32 bg-surface border-b border-border">
       <div className="container">
         <motion.div
           ref={ref}

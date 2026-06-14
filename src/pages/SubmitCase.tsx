@@ -111,7 +111,7 @@ const SubmitCase = () => {
               <div className="bg-panel border-2 border-primary/30 rounded-xl p-6 mb-6">
                 <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Your Case ID</p>
                 <div className="flex items-center justify-center gap-2">
-                  <span className="font-mono text-2xl md:text-3xl font-bold text-primary tracking-wide">
+                  <span className="font-mono text-[24px] md:text-3xl font-bold text-primary tracking-wide">
                     {submittedCaseId}
                   </span>
                   <Button variant="ghost" size="icon" onClick={copyToClipboard} aria-label="Copy Case ID">
@@ -150,7 +150,7 @@ const SubmitCase = () => {
     <>
       <SEO title="Register a Case | VFRA" description="Submit a new case for digital forensic investigation." />
       <div className="min-h-screen bg-background">
-        <section className="bg-gradient-hero py-20 lg:py-28 relative border-b border-border overflow-hidden">
+        <section className="bg-gradient-hero py-10 md:py-20 lg:py-28 relative border-b border-border overflow-hidden">
           <div className="absolute inset-0 grid-overlay opacity-30" />
           <div className="container relative z-10">
             <div className="max-w-3xl mx-auto text-center">

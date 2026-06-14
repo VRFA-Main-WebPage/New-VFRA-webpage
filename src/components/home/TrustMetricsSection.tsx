@@ -6,7 +6,7 @@ export function TrustMetricsSection() {
   const { ref, inView } = useInView();
 
   return (
-    <section className="py-12 lg:py-16 border-b border-border bg-surface mt-10">
+    <section className="py-8 md:py-12 lg:py-16 border-b border-border bg-surface mt-10">
       <div className="container px-4">
         <motion.div
           ref={ref}
@@ -21,7 +21,7 @@ export function TrustMetricsSection() {
               variants={fadeUp}
               className="text-center p-6 rounded-xl border border-border bg-card/50"
             >
-              <p className="font-heading text-3xl md:text-4xl font-bold text-primary mb-2">
+              <p className="font-heading text-[28px] md:text-4xl font-bold text-primary mb-2">
                 {metric.value}
                 {metric.suffix ?? ""}
               </p>

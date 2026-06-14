@@ -11,7 +11,7 @@ export function CTASection() {
   const headingParts = content.heading.split(content.highlightWord);
 
   return (
-    <section className="relative py-24 lg:py-32 bg-gradient-hero overflow-hidden border-t border-border">
+    <section className="relative py-10 md:py-24 lg:py-32 bg-gradient-hero overflow-hidden border-t border-border">
       <div className="absolute inset-0 grid-overlay opacity-30" />
 
       <div className="container relative z-10">
