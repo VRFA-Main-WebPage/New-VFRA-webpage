@@ -2,63 +2,82 @@ import { SEO } from "@/components/SEO";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Shield, Search, ArrowRight, Clock, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import {
+  Shield,
+  Search,
+  ArrowRight,
+  Clock,
+  CheckCircle,
+  AlertCircle,
+  Loader2,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 
-type CaseStatus = "submitted" | "under_review" | "in_progress" | "on_hold" | "resolved" | "closed";
+type CaseStatus =
+  | "submitted"
+  | "under_review"
+  | "in_progress"
+  | "on_hold"
+  | "resolved"
+  | "closed";
 
-const statusConfig: Record<CaseStatus, { label: string; color: string; icon: any; description: string }> = {
+const statusConfig: Record<
+  CaseStatus,
+  { label: string; badgeClass: string; icon: any; description: string }
+> = {
   submitted: {
     label: "Submitted",
-    color: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+    badgeClass: "bg-[#F7F7F5] text-[#111111] border-[#D4D4D0]",
     icon: Clock,
-    description: "Your case has been received and is awaiting review.",
+    description: "Your case has been received and logged into the intake queue.",
   },
   under_review: {
     label: "Under Review",
-    color: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+    badgeClass: "bg-[#F7F7F5] text-[#111111] border-[#111111]",
     icon: AlertCircle,
-    description: "Our team is currently reviewing your case details.",
+    description: "Our forensic examiners are reviewing the scope and submitted details.",
   },
   in_progress: {
     label: "In Progress",
-    color: "bg-purple-500/20 text-purple-400 border-purple-500/30",
+    badgeClass: "bg-[#111111] text-white border-[#111111]",
     icon: Loader2,
-    description: "Active investigation is underway.",
+    description: "Active digital forensic investigation and analysis are underway.",
   },
   on_hold: {
     label: "On Hold",
-    color: "bg-orange-500/20 text-orange-400 border-orange-500/30",
+    badgeClass: "bg-amber-50 text-amber-800 border-amber-300",
     icon: AlertCircle,
-    description: "Case is temporarily paused. We may contact you for additional information.",
+    description: "Investigation is paused pending additional authorization or information.",
   },
   resolved: {
     label: "Resolved",
-    color: "bg-green-500/20 text-green-400 border-green-500/30",
+    badgeClass: "bg-emerald-50 text-emerald-800 border-emerald-300",
     icon: CheckCircle,
-    description: "Investigation complete. Final report is being prepared.",
+    description: "Examination complete. Final technical report is ready for release.",
   },
   closed: {
     label: "Closed",
-    color: "bg-muted text-muted-foreground border-border",
+    badgeClass: "bg-[#F0EFEA] text-[#555555] border-[#E5E5E3]",
     icon: CheckCircle,
-    description: "Case has been closed.",
+    description: "Case file has been formally closed and archived.",
   },
 };
 
-const statusOrder: CaseStatus[] = ["submitted", "under_review", "in_progress", "resolved", "closed"];
+const statusOrder: CaseStatus[] = [
+  "submitted",
+  "under_review",
+  "in_progress",
+  "resolved",
+  "closed",
+];
 
 const TrackCase = () => {
   const [caseId, setCaseId] = useState("");
   const [caseData, setCaseData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const { toast } = useToast();
 
   const handleSearch = async () => {
     if (!caseId.trim()) {
@@ -97,211 +116,183 @@ const TrackCase = () => {
 
   return (
     <>
-      <SEO title="Track Case | VFRA" description="Track the status of your ongoing case investigation." />
-      <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="bg-gradient-hero py-10 md:py-20 lg:py-28 relative overflow-hidden">
-        <div className="absolute inset-0 grid-overlay opacity-50" />
-        <div className="container relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-2 mb-6">
-                <Shield className="h-4 w-4 text-primary" />
-                <span className="text-sm text-primary font-medium">Case Tracking</span>
+      <SEO
+        title="Track Case Status | VFRA Nagpur"
+        description="Track the status of your ongoing digital forensic case investigation."
+      />
+      <div className="min-h-screen bg-white">
+        {/* Hero */}
+        <section className="py-16 md:py-24 bg-[#F7F7F5] border-b border-[#E5E5E3]">
+          <div className="container max-w-2xl text-center">
+            <span className="section-eyebrow">INVESTIGATION TRACKING // CASE REGISTRY</span>
+            <h1 className="font-heading text-4xl md:text-5xl font-semibold text-[#111111] tracking-[-0.035em] mb-4">
+              Track Your Case.
+            </h1>
+            <p className="text-base text-[#555555] mb-8">
+              Enter your unique cryptographic Case ID (`FX-YYYYMMDD-XXXXXX`) to view real-time investigation status.
+            </p>
+
+            <div className="premium-card p-4 bg-white max-w-lg mx-auto">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="FX-20260112-ABC123"
+                  value={caseId}
+                  onChange={(e) => setCaseId(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                  className="font-mono uppercase h-11 bg-[#F7F7F5]/60 border-[#E5E5E3]"
+                />
+                <Button
+                  onClick={handleSearch}
+                  disabled={isLoading}
+                  className="h-11 px-5 bg-[#111111] text-white hover:bg-[#2A2A2A]"
+                >
+                  {isLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Search className="h-4 w-4" />
+                  )}
+                </Button>
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 text-glow">
-                Track Your Case
-              </h1>
-              <p className="text-lg text-muted-foreground mb-8">
-                Enter your unique Case ID to check the current status of your investigation.
-              </p>
-            </motion.div>
-
-            {/* Search Box */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="max-w-md mx-auto"
-            >
-              <Card className="glass-card">
-                <CardContent className="pt-6">
-                  <div className="flex gap-2">
-                    <Input
-                      placeholder="Enter Case ID (e.g., FX-20260112-ABC123)"
-                      value={caseId}
-                      onChange={(e) => setCaseId(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                      className="font-mono"
-                    />
-                    <Button onClick={handleSearch} disabled={isLoading}>
-                      {isLoading ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Search className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </div>
-                  {error && <p className="text-destructive text-sm mt-2">{error}</p>}
-                </CardContent>
-              </Card>
-            </motion.div>
+              {error && <p className="text-red-600 text-xs font-mono mt-2.5 text-left">{error}</p>}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Results Section */}
-      <section className="py-20">
-        <div className="container">
-          {caseData && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="max-w-3xl mx-auto"
-            >
-              <Card className="glass-card">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="min-w-0 pr-4">
-                      <CardTitle className="text-primary font-mono break-words md:break-normal truncate-on-mobile">{caseData.case_id}</CardTitle>
-                      <CardDescription>{caseData.title}</CardDescription>
+        {/* Results */}
+        <section className="py-16 md:py-24">
+          <div className="container">
+            {caseData && (
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="max-w-3xl mx-auto"
+              >
+                <div className="premium-card p-6 md:p-8 bg-white">
+                  <div className="flex flex-wrap items-center justify-between gap-4 pb-6 mb-8 border-b border-[#E5E5E3]">
+                    <div>
+                      <span className="font-mono text-xs text-[#555555] uppercase tracking-wider block">
+                        CASE DOSSIER
+                      </span>
+                      <h2 className="font-mono text-xl md:text-2xl font-bold text-[#111111] mt-0.5">
+                        {caseData.case_id}
+                      </h2>
+                      <p className="text-sm text-[#555555] mt-1">{caseData.title}</p>
                     </div>
-                    <Badge className={statusConfig[caseData.status as CaseStatus]?.color + " shrink-0"}>
+                    <span
+                      className={`font-mono text-xs uppercase tracking-widest px-3 py-1 border ${
+                        statusConfig[caseData.status as CaseStatus]?.badgeClass || ""
+                      }`}
+                    >
                       {statusConfig[caseData.status as CaseStatus]?.label || caseData.status}
-                    </Badge>
+                    </span>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  {/* Status Timeline */}
+
+                  {/* Progress Steps */}
                   <div className="mb-8">
-                    <h3 className="text-sm font-medium text-muted-foreground mb-4">Case Progress</h3>
-                    <div className="relative pl-6 md:pl-0">
-                      {/* Horizontal Progress Bar (Desktop) */}
-                      <div className="hidden md:block absolute top-4 left-4 right-4 h-0.5 bg-border">
-                        <div
-                          className="h-full bg-primary transition-all duration-500"
-                          style={{
-                            width: `${(getCurrentStep(caseData.status) / (statusOrder.length - 1)) * 100}%`,
-                          }}
-                        />
-                      </div>
-                      
-                      {/* Vertical Progress Bar (Mobile) */}
-                      <div className="md:hidden absolute top-4 bottom-4 left-4 w-0.5 bg-border">
-                         <div
-                          className="w-full bg-primary transition-all duration-500"
-                          style={{
-                            height: `${(getCurrentStep(caseData.status) / (statusOrder.length - 1)) * 100}%`,
-                          }}
-                        />
-                      </div>
+                    <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#555555] mb-5">
+                      WORKFLOW PROGRESSION
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                      {statusOrder.map((status, idx) => {
+                        const isActive = getCurrentStep(caseData.status) >= idx;
+                        const isCurrent = caseData.status === status;
+                        const config = statusConfig[status];
+                        const Icon = config.icon;
 
-                      {/* Status Steps */}
-                      <div className="relative flex flex-col md:flex-row justify-between gap-6 md:gap-0">
-                        {statusOrder.map((status, idx) => {
-                          const isActive = getCurrentStep(caseData.status) >= idx;
-                          const isCurrent = caseData.status === status;
-                          const config = statusConfig[status];
-                          const Icon = config.icon;
-
-                          return (
-                            <div key={status} className="flex flex-row md:flex-col items-center gap-4 md:gap-0 relative">
-                              <div
-                                className={`w-8 h-8 rounded-full flex shrink-0 items-center justify-center z-10 transition-all ${
-                                  isActive
-                                    ? "bg-primary text-primary-foreground"
-                                    : "bg-muted text-muted-foreground"
-                                } ${isCurrent ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : ""}`}
-                              >
-                                <Icon className="h-4 w-4" />
-                              </div>
-                              <span
-                                className={`text-xs md:mt-2 text-left md:text-center font-medium ${
-                                  isActive ? "text-foreground" : "text-muted-foreground"
-                                }`}
-                              >
-                                {config.label}
-                              </span>
+                        return (
+                          <div
+                            key={status}
+                            className={`p-3.5 rounded-md border flex md:flex-col items-center md:items-start gap-3 ${
+                              isCurrent
+                                ? "bg-[#111111] text-white border-[#111111]"
+                                : isActive
+                                ? "bg-[#F7F7F5] text-[#111111] border-[#D4D4D0]"
+                                : "bg-white text-[#71717A] border-[#E5E5E3]"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between w-auto md:w-full">
+                              <span className="font-mono text-[10px]">0{idx + 1}</span>
+                              <Icon className="h-3.5 w-3.5 hidden md:block" />
                             </div>
-                          );
-                        })}
-                      </div>
+                            <span className="font-heading text-xs font-semibold">
+                              {config.label}
+                            </span>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
 
-                  {/* Status Description */}
-                  <div className="bg-muted/50 rounded-lg p-4 mb-6">
-                    <p className="text-sm text-foreground">
+                  <div className="p-4 rounded-md bg-[#F7F7F5] border border-[#E5E5E3] mb-6">
+                    <p className="text-sm text-[#111111]">
                       {statusConfig[caseData.status as CaseStatus]?.description}
                     </p>
                   </div>
 
-                  {/* Case Details */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-[#E5E5E3]">
                     <div>
-                      <span className="text-muted-foreground">Category</span>
-                      <p className="capitalize font-medium">{caseData.category}</p>
+                      <span className="font-mono text-[10px] uppercase tracking-widest text-[#71717A]">
+                        Category
+                      </span>
+                      <p className="capitalize text-sm font-semibold text-[#111111] mt-1">
+                        {caseData.category}
+                      </p>
                     </div>
                     <div>
-                      <span className="text-muted-foreground">Submitted On</span>
-                      <p className="font-medium">
+                      <span className="font-mono text-[10px] uppercase tracking-widest text-[#71717A]">
+                        Submitted Date
+                      </span>
+                      <p className="font-mono text-xs text-[#111111] mt-1">
                         {new Date(caseData.created_at).toLocaleDateString("en-IN", {
                           year: "numeric",
-                          month: "long",
+                          month: "short",
                           day: "numeric",
                         })}
                       </p>
                     </div>
                     <div>
-                      <span className="text-muted-foreground">Last Updated</span>
-                      <p className="font-medium">
+                      <span className="font-mono text-[10px] uppercase tracking-widest text-[#71717A]">
+                        Last Updated
+                      </span>
+                      <p className="font-mono text-xs text-[#111111] mt-1">
                         {new Date(caseData.updated_at).toLocaleDateString("en-IN", {
                           year: "numeric",
-                          month: "long",
+                          month: "short",
                           day: "numeric",
                         })}
                       </p>
                     </div>
                   </div>
+                </div>
+              </motion.div>
+            )}
 
-                  <div className="mt-6 pt-6 border-t border-border">
-                    <p className="text-sm text-muted-foreground">
-                      Need assistance? <Link to="/contact" className="text-primary hover:underline">Contact our support team</Link>
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          )}
-
-          {!caseData && !isLoading && !error && (
-            <div className="max-w-2xl mx-auto text-center">
-              <Card className="glass-card">
-                <CardContent className="py-12">
-                  <Shield className="h-16 w-16 text-primary/50 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-foreground mb-2">Enter Your Case ID</h3>
-                  <p className="text-muted-foreground mb-6">
-                    Your Case ID was provided when you submitted your case. It follows the format FX-YYYYMMDD-XXXXXX.
+            {!caseData && !isLoading && !error && (
+              <div className="max-w-xl mx-auto text-center">
+                <div className="premium-card p-8 md:p-10 bg-[#F7F7F5]/60">
+                  <Shield className="h-10 w-10 text-[#111111] mx-auto mb-4" />
+                  <h3 className="font-heading text-xl font-bold text-[#111111] mb-2">
+                    Awaiting Case Identifier
+                  </h3>
+                  <p className="text-sm text-[#555555] mb-6">
+                    Your Case ID is generated automatically upon submitting a case intake request.
                   </p>
                   <Link to="/submit-case">
-                    <Button variant="outline" className="gap-2">
-                      Submit a New Case
-                      <ArrowRight className="h-4 w-4" />
+                    <Button
+                      variant="outline"
+                      className="border-[#111111] text-[#111111] hover:bg-[#111111] hover:text-white font-mono text-xs uppercase tracking-[0.1em] gap-2"
+                    >
+                      Register a New Case
+                      <ArrowRight className="h-3.5 w-3.5" />
                     </Button>
                   </Link>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-        </div>
-      </section>
-    </div>
-  </>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
+    </>
   );
 };
 

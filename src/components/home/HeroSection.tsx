@@ -1,87 +1,214 @@
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ShieldCheck, FileCheck2, Lock, Terminal } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { fadeUp, staggerContainer } from "@/lib/motion";
-import { HeroParallaxBackground } from "@/components/visuals/HeroParallaxBackground";
+import { fadeUp, staggerContainer, APPLE_EASE } from "@/lib/motion";
+import { useWebsiteContent, defaultHeroContent, HeroContent } from "@/hooks/useWebsiteContent";
+import labSetupImg from "@/assets/services/Labsetup.jpg";
 
 export function HeroSection() {
+  const { content } = useWebsiteContent<HeroContent>("hero", defaultHeroContent);
+
   return (
-    <section className="relative overflow-hidden flex flex-col justify-center bg-[#0A0A0A] min-h-[80svh] md:min-h-[90vh] border-b border-border pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
-      <div
-        className="absolute top-0 right-0 bottom-0 z-0 h-full w-full md:w-[82%] opacity-90 pointer-events-none overflow-hidden"
-        aria-hidden
-      >
-        <HeroParallaxBackground />
-      </div>
+    <section className="relative overflow-hidden bg-[#F7F7F5] border-b border-[#E5E5E3]">
+      {/* Subtle Swiss Architectural Grid */}
+      <div className="absolute inset-0 grid-overlay pointer-events-none opacity-60" aria-hidden />
 
-      <div
-        className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/72 to-[#0A0A0A]/10"
-        aria-hidden
-      />
-
-      <div className="relative z-20 container mx-auto px-6 pt-12 pb-8 sm:px-8 md:pt-12 md:pb-20 lg:px-12 lg:pt-16 lg:pb-24 xl:px-16 w-full">
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-          className="max-w-xl"
-        >
+      <div className="container relative z-10 py-14 md:py-24 lg:py-28">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-10 items-center">
+          {/* Left Column: Editorial Headline & Actions */}
           <motion.div
-            variants={fadeUp}
-            className="mb-6 flex flex-col items-center text-center md:items-start md:text-left md:border-l-2 md:border-primary md:pl-4"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+            className="lg:col-span-7 flex flex-col items-start text-left"
           >
-            <div className="inline-flex items-center gap-2 pl-2 pr-3 py-1 rounded-sm border-l-2 border-[#D4AF37] bg-gradient-to-r from-[#D4AF37]/10 to-transparent mb-2 md:mb-1">
-              <span className="text-[10px] md:text-xs font-bold text-[#D4AF37] tracking-[0.2em] uppercase">VFRA</span>
+            {/* Clinical Index Pill */}
+            <motion.div
+              variants={fadeUp}
+              className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-md border border-[#E5E5E3] bg-white mb-6"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-[#111111]" />
+              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#111111] font-medium">
+                {content.companyName || "VFRA"} · NAGPUR LABORATORY
+              </span>
+              <span className="text-[#D4D4D0]">|</span>
+              <span className="font-mono text-[11px] text-[#555555] hidden sm:inline">
+                {content.badge}
+              </span>
+            </motion.div>
+
+            {/* Primary Apple-scale Headline */}
+            <motion.h1
+              variants={fadeUp}
+              className="font-heading text-[34px] sm:text-[44px] md:text-[54px] lg:text-[60px] font-semibold text-[#111111] tracking-[-0.035em] leading-[1.06] mb-6"
+            >
+              Digital Forensics,{" "}
+              <span className="text-[#555555] font-normal">
+                Cybercrime Investigation
+              </span>{" "}
+              &amp; Evidentiary Clarity.
+            </motion.h1>
+
+            {/* Editorial Subtext */}
+            <motion.p
+              variants={fadeUp}
+              className="text-base sm:text-lg text-[#555555] leading-relaxed max-w-2xl mb-9 font-normal"
+            >
+              {content.description ||
+                "Vigilant Forensic Research and Analytics Pvt. Ltd. delivers structured digital evidence examination, cybercrime intelligence, and BSA 2023 / Section 65B compliant technical reporting for law enforcement, legal professionals, and enterprises."}
+            </motion.p>
+
+            {/* Primary & Secondary CTAs */}
+            <motion.div
+              variants={fadeUp}
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto mb-12"
+            >
+              <Link to="/submit-case" className="w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto h-12 px-7 bg-[#111111] text-white hover:bg-[#2A2A2A] rounded-md text-sm font-medium gap-2 transition-all duration-300"
+                >
+                  Register a Case
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+
+              <Link to="/services" className="w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full sm:w-auto h-12 px-7 border-[#D4D4D0] bg-white text-[#111111] hover:bg-[#F0EFEA] hover:border-[#111111] rounded-md text-sm font-medium transition-all duration-300"
+                >
+                  Explore 26 Services
+                </Button>
+              </Link>
+
+              <Link to="/events" className="w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  variant="ghost"
+                  className="w-full sm:w-auto h-12 px-5 text-[#555555] hover:text-[#111111] hover:bg-white/60 rounded-md font-mono text-xs uppercase tracking-[0.1em]"
+                >
+                  Upcoming Events →
+                </Button>
+              </Link>
+            </motion.div>
+
+            {/* Beminimalist Ingredient-Style Specification Strip */}
+            <motion.div
+              variants={fadeUp}
+              className="w-full grid grid-cols-2 sm:grid-cols-4 border border-[#E5E5E3] bg-white rounded-lg divide-y sm:divide-y-0 sm:divide-x divide-[#E5E5E3]"
+            >
+              {(content.stats && content.stats.length > 0
+                ? content.stats
+                : defaultHeroContent.stats
+              ).map((stat, idx) => (
+                <div key={idx} className="p-4 flex flex-col justify-between">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#71717A] mb-1">
+                    0{idx + 1} / SPEC
+                  </span>
+                  <span className="font-heading text-xl sm:text-2xl font-bold text-[#111111] tracking-tight">
+                    {stat.value}
+                  </span>
+                  <span className="text-xs text-[#555555] mt-0.5">{stat.label}</span>
+                </div>
+              ))}
+            </motion.div>
+          </motion.div>
+
+          {/* Right Column: Clinical Forensic Dossier Card (Beminimalist + Apple Bento) */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.75, delay: 0.15, ease: APPLE_EASE }}
+            className="lg:col-span-5"
+          >
+            <div className="bg-white border border-[#E5E5E3] rounded-lg overflow-hidden shadow-[0_20px_50px_-20px_rgba(17,17,17,0.08)]">
+              {/* Top Dossier Header */}
+              <div className="px-5 py-3.5 border-b border-[#E5E5E3] bg-[#F7F7F5] flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Terminal className="h-3.5 w-3.5 text-[#111111]" />
+                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] font-semibold text-[#111111]">
+                    LAB SPECIFICATION // VFRA-NGP
+                  </span>
+                </div>
+                <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-white border border-[#E5E5E3] text-[#555555]">
+                  ACTIVE
+                </span>
+              </div>
+
+              {/* Laboratory Visual Frame */}
+              <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#F0EFEA] border-b border-[#E5E5E3]">
+                <img
+                  src={labSetupImg}
+                  alt="VFRA Digital Forensics Laboratory Nagpur"
+                  className="w-full h-full object-cover object-center transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.03]"
+                />
+                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between px-3 py-2 rounded bg-white/90 backdrop-blur-md border border-[#E5E5E3]">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#111111] font-medium">
+                    Write-Blocked Acquisition &amp; Analysis
+                  </span>
+                  <span className="font-mono text-[10px] text-[#555555]">
+                    SHA-256 VERIFIED
+                  </span>
+                </div>
+              </div>
+
+              {/* Structured Ingredient-Label Specifications */}
+              <div className="p-5 space-y-4">
+                <div className="grid grid-cols-1 gap-3">
+                  <div className="flex items-start gap-3 pb-3 border-b border-[#E5E5E3]">
+                    <ShieldCheck className="h-4 w-4 text-[#111111] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-xs font-semibold text-[#111111] uppercase tracking-wider font-mono">
+                        Chain of Custody Integrity
+                      </p>
+                      <p className="text-xs text-[#555555] mt-0.5 leading-relaxed">
+                        Every storage medium and mobile extraction is logged with cryptographic hash verification from intake to final release.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 pb-3 border-b border-[#E5E5E3]">
+                    <FileCheck2 className="h-4 w-4 text-[#111111] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-xs font-semibold text-[#111111] uppercase tracking-wider font-mono">
+                        Section 65B / BSA 2023 Admissibility
+                      </p>
+                      <p className="text-xs text-[#555555] mt-0.5 leading-relaxed">
+                        Structured technical reports and electronic evidence certificates formatted for judicial scrutiny across Indian courts.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <Lock className="h-4 w-4 text-[#111111] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-xs font-semibold text-[#111111] uppercase tracking-wider font-mono">
+                        Authorized Engagement Protocol
+                      </p>
+                      <p className="text-xs text-[#555555] mt-0.5 leading-relaxed">
+                        Dedicated investigative support for Law Enforcement Agencies (LEA), legal counsel, and corporate incident response.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex items-center justify-between border-t border-[#E5E5E3] text-[11px] font-mono text-[#555555]">
+                  <span>CIN: U69100PN2025PTC250064</span>
+                  <Link
+                    to="/gallery"
+                    className="text-[#111111] font-semibold hover:underline"
+                  >
+                    VIEW LAB GALLERY →
+                  </Link>
+                </div>
+              </div>
             </div>
-            <p className="mt-1 max-w-md text-[13px] md:text-sm text-muted-foreground font-medium">
-              Vigilant Forensic Research and Analytics Pvt. Ltd.
-            </p>
           </motion.div>
-
-          <motion.h1
-            variants={fadeUp}
-            className="font-heading text-[32px] sm:text-[36px] leading-[1.15] text-center px-1 md:px-0 md:text-5xl lg:text-[3.3rem] md:leading-[1.08] md:text-left font-bold text-foreground tracking-[-0.02em] md:tracking-[-0.04em] mb-4 md:mb-5"
-          >
-            Digital Forensics, Cybercrime Investigation & Intelligence Solutions
-          </motion.h1>
-
-          <motion.p
-            variants={fadeUp}
-            className="mt-4 mb-8 md:mb-5 text-[15px] sm:text-[16px] text-center px-2 md:px-0 mx-auto md:text-lg md:text-left md:max-w-lg md:mx-0 text-[#70707d] md:text-muted-foreground leading-relaxed"
-          >
-            VFRA delivers digital forensics, cybercrime investigation, intelligence analysis and secure evidence workflows for enterprises, legal teams, institutions and investigative operations.
-          </motion.p>
-
-          <motion.div
-            variants={fadeUp}
-            className="mt-7 flex flex-col gap-[12px] w-full md:flex-row md:w-auto md:gap-3 px-2 md:px-0"
-          >
-            <Link to="/submit-case" className="w-full md:w-auto">
-              <Button size="lg" className="btn-gold gap-2 w-full md:w-auto px-6 h-12">
-                Register a Case
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-
-            <Link to="/services" className="w-full md:w-auto">
-              <Button
-                size="lg"
-                variant="outline"
-                className="btn-outline-gold w-full md:w-auto px-6 h-12"
-              >
-                Explore Services
-              </Button>
-            </Link>
-
-          </motion.div>
-        </motion.div>
+        </div>
       </div>
-
-      <div
-        className="absolute bottom-0 left-0 right-0 z-20 h-20 bg-gradient-to-t from-[#0A0A0A] to-transparent pointer-events-none"
-        aria-hidden
-      />
     </section>
   );
 }

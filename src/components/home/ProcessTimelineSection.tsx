@@ -6,7 +6,7 @@ export function ProcessTimelineSection() {
   const { ref, inView } = useInView();
 
   return (
-    <section className="hidden md:block py-10 md:py-24 lg:py-32 bg-surface border-b border-border">
+    <section className="py-16 md:py-24 lg:py-28 bg-[#F7F7F5] border-b border-[#E5E5E3]">
       <div className="container">
         <motion.div
           ref={ref}
@@ -14,63 +14,46 @@ export function ProcessTimelineSection() {
           animate={inView ? "visible" : "hidden"}
           variants={staggerContainer}
         >
-          <motion.div variants={fadeUp} className="text-center max-w-3xl mx-auto mb-16">
-            <p className="section-eyebrow">Our Methodology</p>
-            <h2 className="section-heading mb-4">Six-Step Forensic Process</h2>
-            <p className="section-subtext mx-auto">
-              A disciplined workflow from consultation through court support — designed for evidentiary integrity
-              and professional accountability.
+          <motion.div
+            variants={fadeUp}
+            className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 mb-12 border-b border-[#E5E5E3]"
+          >
+            <div>
+              <span className="section-eyebrow">05 // STANDARD OPERATING PROTOCOL</span>
+              <h2 className="section-heading">Six-Step Forensic Workflow.</h2>
+            </div>
+            <p className="text-sm text-[#555555] max-w-md leading-relaxed">
+              A disciplined protocol from intake consultation through judicial testimony—engineered for evidentiary integrity and auditability.
             </p>
           </motion.div>
 
-          {/* Desktop horizontal timeline */}
-          <div className="hidden lg:block relative">
-            <div className="absolute top-8 left-0 right-0 h-px bg-border" />
-            <motion.div
-              className="absolute top-8 left-0 h-px bg-primary origin-left"
-              initial={{ scaleX: 0 }}
-              animate={inView ? { scaleX: 1 } : { scaleX: 0 }}
-              transition={{ duration: 1.2, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              style={{ width: "100%" }}
-            />
-            <div className="grid grid-cols-6 gap-4">
-              {FORENSIC_PROCESS_STEPS.map((item, i) => (
-                <motion.div
-                  key={item.step}
-                  variants={fadeUp}
-                  className="relative pt-14 text-center"
-                >
-                  <div className="absolute top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-card border-2 border-primary flex items-center justify-center font-heading text-sm font-bold text-primary z-10">
-                    {item.step}
-                  </div>
-                  <h3 className="font-heading text-sm font-semibold text-foreground mb-2 leading-snug">
-                    {item.title}
-                  </h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{item.description}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
-          {/* Mobile vertical timeline */}
-          <div className="lg:hidden space-y-0">
-            {FORENSIC_PROCESS_STEPS.map((item, i) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 border border-[#E5E5E3] bg-white rounded-lg divide-y sm:divide-y-0 sm:divide-x divide-[#E5E5E3]">
+            {FORENSIC_PROCESS_STEPS.map((item) => (
               <motion.div
                 key={item.step}
                 variants={fadeUp}
-                className="flex gap-4"
+                className="p-6 flex flex-col justify-between hover:bg-[#F7F7F5]/60 transition-colors duration-300"
               >
-                <div className="flex flex-col items-center">
-                  <div className="w-8 h-8 rounded-full bg-card border-2 border-primary flex items-center justify-center font-heading text-sm font-bold text-primary shrink-0">
-                    {item.step}
+                <div>
+                  <div className="flex items-center justify-between mb-6">
+                    <span className="font-mono text-xs font-semibold px-2 py-0.5 bg-[#111111] text-white rounded-sm">
+                      0{item.step}
+                    </span>
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-[#71717A]">
+                      PHASE
+                    </span>
                   </div>
-                  {i < FORENSIC_PROCESS_STEPS.length - 1 && (
-                    <div className="w-px flex-1 bg-border my-2 min-h-[40px]" />
-                  )}
+                  <h3 className="font-heading text-base font-semibold text-[#111111] mb-2 leading-snug">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-[#555555] leading-relaxed">
+                    {item.description}
+                  </p>
                 </div>
-                <div className="pb-8">
-                  <h3 className="font-heading font-semibold text-foreground mb-1">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
+
+                <div className="mt-6 pt-3 border-t border-[#E5E5E3] flex items-center justify-between font-mono text-[10px] text-[#71717A]">
+                  <span>VERIFIED</span>
+                  <span>STEP 0{item.step}/06</span>
                 </div>
               </motion.div>
             ))}

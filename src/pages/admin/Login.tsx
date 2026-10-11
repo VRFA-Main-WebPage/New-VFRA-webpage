@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Shield, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { mapAuthErrorToUserMessage } from "@/lib/errorHandler";
 import logo from "@/assets/vfra-logo.png";
-
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -48,89 +46,98 @@ const AdminLogin = () => {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="min-h-screen bg-[#F7F7F5] flex items-center justify-center font-mono text-xs uppercase tracking-widest text-[#555555]">
+        Verifying session...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Card className="w-full max-w-md border-primary/20 shadow-lg">
-        <CardHeader className="text-center space-y-4">
-          <div className="flex items-center justify-center gap-3">
-           
-           <img 
-  src={logo} 
-  alt="VFRA Logo" 
-  className="h-10 w-auto object-contain"
-/>
-            <span className="text-2xl font-bold tracking-wide">
-              VFRA <span className="text-primary">Admin</span>
-            </span>
+    <div className="min-h-screen bg-[#F7F7F5] flex items-center justify-center p-4">
+      <div className="w-full max-w-md premium-card bg-white p-8 md:p-10">
+        <div className="flex items-center justify-between pb-5 mb-6 border-b border-[#E5E5E3]">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded border border-[#E5E5E3] bg-[#F7F7F5] p-1 flex items-center justify-center">
+              <img src={logo} alt="VFRA Logo" className="h-full w-full object-contain" />
+            </div>
+            <div>
+              <span className="font-heading font-bold text-base text-[#111111] block leading-none">
+                VFRA Admin
+              </span>
+              <span className="font-mono text-[10px] uppercase tracking-widest text-[#555555]">
+                NAGPUR LABORATORY
+              </span>
+            </div>
+          </div>
+          <span className="font-mono text-[10px] px-2 py-0.5 bg-[#111111] text-white uppercase">
+            RESTRICTED
+          </span>
+        </div>
+
+        <h1 className="font-heading text-xl font-bold text-[#111111] mb-1">
+          Administrator Authentication
+        </h1>
+        <p className="text-xs text-[#555555] mb-6">
+          Authorized personnel only. Session activity is logged.
+        </p>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="space-y-2">
+            <Label className="font-mono text-xs uppercase tracking-wider">Email</Label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#555555]" />
+              <Input
+                type="email"
+                placeholder="admin@vigilantforensics.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="pl-10 h-11 bg-[#F7F7F5]/60"
+                required
+              />
+            </div>
           </div>
 
-          <CardTitle className="text-xl">
-            Restricted Access
-          </CardTitle>
-
-          <CardDescription>
-            Authorized personnel only. All access is monitored and logged.
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-5">
-
-            <div className="space-y-2">
-              <Label>Email</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="email"
-                  placeholder="admin@vigilantforensic.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10"
-                  required
-                />
-              </div>
+          <div className="space-y-2">
+            <Label className="font-mono text-xs uppercase tracking-wider">Password</Label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#555555]" />
+              <Input
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="pl-10 pr-10 h-11 bg-[#F7F7F5]/60"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#555555]"
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
             </div>
-
-            <div className="space-y-2">
-              <Label>Password</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 pr-10"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-                >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
-
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Authenticating..." : "Secure Login"}
-            </Button>
-          </form>
-
-          <div className="mt-6 text-center text-sm text-muted-foreground">
-            <Link to="/" className="text-primary hover:underline">
-              ← Back to Website
-            </Link>
           </div>
-        </CardContent>
-      </Card>
+
+          <Button
+            type="submit"
+            className="w-full h-11 bg-[#111111] text-white hover:bg-[#2A2A2A] font-mono text-xs uppercase tracking-[0.12em]"
+            disabled={isLoading}
+          >
+            {isLoading ? "Authenticating..." : "Sign In to Console"}
+          </Button>
+        </form>
+
+        <div className="mt-6 pt-5 border-t border-[#E5E5E3] text-center">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 font-mono text-xs text-[#555555] hover:text-[#111111]"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Return to Public Website
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

@@ -5,10 +5,10 @@ import { SEO } from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-import { ArrowLeft, Calendar, User, Tag } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Database } from "@/integrations/supabase/types";
 
-type Blog = Database['public']['Tables']['blogs']['Row'];
+type Blog = Database["public"]["Tables"]["blogs"]["Row"];
 
 export default function BlogDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -31,7 +31,7 @@ export default function BlogDetail() {
           navigate("/404");
           return;
         }
-        
+
         setBlog(data);
       } catch (error) {
         console.error("Error fetching blog:", error);
@@ -46,8 +46,8 @@ export default function BlogDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="min-h-screen flex items-center justify-center bg-white font-mono text-xs uppercase tracking-widest text-[#555555]">
+        Loading article...
       </div>
     );
   }
@@ -56,76 +56,74 @@ export default function BlogDetail() {
 
   return (
     <>
-      <SEO 
+      <SEO
         title={blog.seo_title || blog.title}
         description={blog.seo_description || blog.excerpt || ""}
         image={blog.thumbnail_url || undefined}
         type="article"
       />
-      
-      <div className="pt-24 pb-16 min-h-screen bg-background">
-        <article className="container max-w-4xl mx-auto px-4 sm:px-6">
-          <Link to="/blog" className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors mb-8">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Articles
+
+      <div className="py-16 md:py-24 min-h-screen bg-white">
+        <article className="container max-w-3xl mx-auto">
+          <Link
+            to="/blog"
+            className="inline-flex items-center font-mono text-xs uppercase tracking-wider text-[#555555] hover:text-[#111111] mb-8"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 mr-2" />
+            Back to Publications
           </Link>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6">
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+            <div className="flex flex-wrap items-center gap-3 pb-4 mb-6 border-b border-[#E5E5E3] font-mono text-xs uppercase tracking-wider text-[#555555]">
               {blog.category && (
-                <div className="flex items-center text-primary font-medium bg-primary/10 px-3 py-1 rounded-full">
-                  <Tag className="w-4 h-4 mr-1.5" />
+                <span className="px-2.5 py-0.5 bg-[#111111] text-white">
                   {blog.category}
-                </div>
+                </span>
               )}
               {blog.published_at && (
-                <div className="flex items-center">
-                  <Calendar className="w-4 h-4 mr-1.5" />
-                  {format(new Date(blog.published_at), 'MMMM dd, yyyy')}
-                </div>
+                <span>{format(new Date(blog.published_at), "MMMM dd, yyyy")}</span>
               )}
-              {blog.author && (
-                <div className="flex items-center">
-                  <User className="w-4 h-4 mr-1.5" />
-                  {blog.author}
-                </div>
-              )}
+              {blog.author && <span>· By {blog.author}</span>}
             </div>
 
-            <h1 className="text-3xl md:text-5xl font-heading font-bold mb-8 leading-tight">
+            <h1 className="text-3xl md:text-5xl font-heading font-bold text-[#111111] tracking-[-0.03em] mb-8 leading-tight">
               {blog.title}
             </h1>
 
             {blog.thumbnail_url && (
-              <div className="w-full aspect-video rounded-xl overflow-hidden bg-muted mb-10">
-                <img 
-                  src={blog.thumbnail_url} 
+              <div className="w-full aspect-video rounded-lg overflow-hidden bg-[#F7F7F5] border border-[#E5E5E3] mb-10">
+                <img
+                  src={blog.thumbnail_url}
                   alt={blog.title}
                   className="w-full h-full object-cover"
                 />
               </div>
             )}
 
-            <div 
-              className="prose prose-invert prose-lg max-w-none prose-headings:font-heading prose-a:text-primary hover:prose-a:text-primary/80"
+            <div
+              className="prose prose-neutral prose-lg max-w-none prose-headings:font-heading prose-headings:text-[#111111] prose-p:text-[#333333] prose-a:text-[#111111] prose-a:underline"
               dangerouslySetInnerHTML={{ __html: blog.content }}
             />
 
-            <div className="mt-16 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="mt-16 p-8 rounded-lg bg-[#F7F7F5] border border-[#E5E5E3] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
               <div>
-                <h3 className="font-heading text-xl font-bold mb-2">Need Expert Assistance?</h3>
-                <p className="text-muted-foreground">Our team of forensic experts is ready to help with your investigation.</p>
+                <h3 className="font-heading text-xl font-bold text-[#111111] mb-1">
+                  Require Forensic Consultation?
+                </h3>
+                <p className="text-sm text-[#555555]">
+                  Connect with our Nagpur laboratory team for case intake or technical support.
+                </p>
               </div>
-              <div className="flex gap-4 w-full sm:w-auto">
+              <div className="flex gap-3 w-full sm:w-auto">
                 <Link to="/contact" className="flex-1 sm:flex-none">
-                  <Button variant="outline" className="w-full">Contact Us</Button>
+                  <Button variant="outline" className="w-full border-[#111111] text-[#111111]">
+                    Contact Us
+                  </Button>
                 </Link>
                 <Link to="/submit-case" className="flex-1 sm:flex-none">
-                  <Button className="w-full btn-gold">Register Case</Button>
+                  <Button className="w-full bg-[#111111] text-white hover:bg-[#2A2A2A]">
+                    Register Case
+                  </Button>
                 </Link>
               </div>
             </div>

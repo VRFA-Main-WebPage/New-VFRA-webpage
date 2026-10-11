@@ -1,17 +1,16 @@
 import { Link } from "react-router-dom";
-import { 
-  ArrowRight, 
-  Shield, 
-  Network, 
-  Database, 
-  Lock, 
+import {
+  ArrowUpRight,
+  Shield,
+  Network,
+  Database,
+  Lock,
   Scale,
   Activity,
   Phone,
   Banknote,
   Search,
-  Eye,
-  MessageSquare
+  MessageSquare,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -21,271 +20,268 @@ export function ProductsSection() {
   const { ref, inView } = useInView();
 
   return (
-    <section className="py-10 md:py-24 lg:py-32 bg-background border-b border-border relative overflow-hidden" id="platforms">
-      {/* Subtle background glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-full opacity-[0.02] pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#D4AF37] rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-primary rounded-full blur-[120px]" />
-      </div>
-
-      <div className="container relative z-10">
+    <section
+      className="py-16 md:py-24 lg:py-28 bg-white border-b border-[#E5E5E3]"
+      id="platforms"
+    >
+      <div className="container">
         <motion.div
           ref={ref}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           variants={staggerContainer}
         >
-          <motion.div variants={fadeUp} className="text-center max-w-3xl mx-auto mb-16 lg:mb-24">
-            <div className="inline-flex items-center justify-center pl-3 pr-4 py-1.5 mb-6 rounded-sm border-l-2 border-[#D4AF37] bg-gradient-to-r from-[#D4AF37]/10 to-transparent">
-              <span className="text-xs font-bold text-[#D4AF37] tracking-widest uppercase">Vigilant Forensic Research and Analytics Pvt. Ltd.</span>
+          {/* Section Header */}
+          <motion.div
+            variants={fadeUp}
+            className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 mb-12 border-b border-[#E5E5E3]"
+          >
+            <div className="max-w-2xl">
+              <span className="section-eyebrow">
+                02 // PROPRIETARY INVESTIGATION PLATFORMS
+              </span>
+              <h2 className="section-heading">
+                Engineered for Lawful Cyber Intelligence.
+              </h2>
             </div>
-            <h2 className="section-heading mb-6 text-foreground">INVESTIGATION PLATFORMS</h2>
-            <p className="text-lg text-muted-foreground mx-auto">
-              Technology platforms built for lawful digital investigations, cybercrime intelligence, evidence operations and institutional investigative workflows.
+            <p className="text-sm text-[#555555] max-w-md leading-relaxed">
+              Purpose-built forensic software architectures designed for Indian law enforcement agencies, cyber cells, and institutional investigative workflows.
             </p>
           </motion.div>
 
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-10">
-            
-            {/* Product 01: InvestiGate */}
+          {/* 2-Column Editorial Platform Spec Cards */}
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Platform 01: InvestiGate */}
             <motion.div
               variants={fadeUp}
-              whileHover={{ y: -6 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="group relative flex flex-col h-full rounded-2xl bg-black/40 border border-white/5 hover:border-[#D4AF37]/50 hover:shadow-[0_8px_30px_rgba(212,175,55,0.1)] transition-all duration-300"
+              className="premium-card flex flex-col justify-between p-6 md:p-8 lg:p-10 bg-[#F7F7F5]/60 hover:bg-white"
             >
-              {/* Hover gradient background effect */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-[#D4AF37]/0 to-[#D4AF37]/0 group-hover:from-[#D4AF37]/5 group-hover:to-transparent transition-all duration-500 pointer-events-none" />
-              
-              <div className="p-5 md:p-6 lg:p-8 flex-1 flex flex-col relative z-10 gap-5">
-                
-                {/* Header Section */}
-                <div>
-                  <div className="inline-flex items-center gap-2 pl-2.5 pr-4 py-1 rounded-sm border-l-2 border-[#D4AF37] bg-gradient-to-r from-[#D4AF37]/10 to-transparent mb-5">
-                    <Shield className="w-4 h-4 text-[#D4AF37] group-hover:-translate-y-0.5 transition-transform duration-300" />
-                    <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-widest">Cybercrime Investigation Platform</span>
+              <div>
+                {/* Top Spec Row */}
+                <div className="flex items-center justify-between gap-4 pb-5 mb-6 border-b border-[#E5E5E3]">
+                  <div className="inline-flex items-center gap-2">
+                    <span className="font-mono text-xs font-semibold px-2 py-0.5 bg-[#111111] text-white rounded-sm">
+                      SYS-01
+                    </span>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#555555]">
+                      Cybercrime Investigation Suite
+                    </span>
                   </div>
-                  
-                  <h3 className="text-[24px] md:text-3xl font-heading font-bold text-foreground mb-2 transition-transform duration-300 group-hover:translate-x-1">
-                    InvestiGate
-                  </h3>
-                  
-                  <p className="text-[#D4AF37] font-semibold tracking-wide text-sm mb-4 uppercase">One Platform. Complete Investigation Workflow.</p>
-                  
-                  <p className="text-muted-foreground leading-relaxed text-sm">
-                    InvestiGate by VFRA is a secure cybercrime investigation platform designed for Indian law enforcement, cyber cells and investigation officers. It combines telecom analysis, IPDR intelligence, fund-flow investigation, OSINT workflows and legal notice generation into a unified investigation environment.
+                  <Shield className="h-4 w-4 text-[#111111]" />
+                </div>
+
+                <h3 className="font-heading text-2xl md:text-3xl font-bold text-[#111111] tracking-[-0.03em] mb-2">
+                  InvestiGate
+                </h3>
+                <p className="font-mono text-xs uppercase tracking-[0.12em] text-[#555555] mb-4">
+                  One Platform. Complete Investigation Workflow.
+                </p>
+                <p className="text-sm text-[#555555] leading-relaxed mb-8">
+                  InvestiGate by VFRA is a unified cybercrime investigation platform engineered for Indian law enforcement, cyber cells, and investigation officers. It consolidates telecom analysis, IPDR intelligence, fund-flow tracing, OSINT workflows, and statutory notice generation into one environment.
+                </p>
+
+                {/* 2x2 Ingredient-Style Capability Matrix */}
+                <div className="grid sm:grid-cols-2 gap-4 mb-8">
+                  {[
+                    {
+                      icon: Phone,
+                      title: "Telecom Intelligence",
+                      items: ["CDR & IMEI Analysis", "Call Pattern Mapping", "Timeline Reconstruction"],
+                    },
+                    {
+                      icon: Network,
+                      title: "IPDR Intelligence",
+                      items: ["NAT Log Correlation", "Session Attribution", "High-Volume Log Parsing"],
+                    },
+                    {
+                      icon: Banknote,
+                      title: "Financial Tracing",
+                      items: ["Multi-Hop Fund Flow", "Beneficiary Identification", "Transaction Graph Mapping"],
+                    },
+                    {
+                      icon: Scale,
+                      title: "Statutory Workflow",
+                      items: ["BNSS Sec 94 & 106 Notices", "Automated DOCX Output", "Court-Ready Exports"],
+                    },
+                  ].map((mod) => {
+                    const ModIcon = mod.icon;
+                    return (
+                      <div
+                        key={mod.title}
+                        className="p-4 rounded-md bg-white border border-[#E5E5E3]"
+                      >
+                        <div className="flex items-center gap-2 mb-2.5">
+                          <ModIcon className="h-3.5 w-3.5 text-[#111111]" />
+                          <span className="font-heading text-xs font-semibold text-[#111111]">
+                            {mod.title}
+                          </span>
+                        </div>
+                        <ul className="space-y-1">
+                          {mod.items.map((item) => (
+                            <li
+                              key={item}
+                              className="text-xs text-[#555555] flex items-center gap-2"
+                            >
+                              <span className="h-1 w-1 rounded-full bg-[#111111]" />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Architecture & CTA Footer */}
+              <div className="pt-6 border-t border-[#E5E5E3] space-y-5">
+                <div className="p-4 rounded-md bg-white border border-[#E5E5E3]">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <Lock className="h-3.5 w-3.5 text-[#111111]" />
+                    <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#111111]">
+                      Zero-Retention In-Session Architecture
+                    </span>
+                  </div>
+                  <p className="text-xs text-[#555555] leading-relaxed mb-3">
+                    Processes sensitive investigative datasets in-session so evidentiary outputs remain strictly under Investigator control.
                   </p>
-                </div>
-
-                <div className="h-[1px] w-full bg-gradient-to-r from-[#D4AF37]/40 to-transparent" />
-
-                {/* Capability Grid */}
-                <div className="grid grid-cols-2 gap-x-6 gap-y-6">
-                  <div>
-                    <div className="flex items-center gap-2 mb-2.5 text-foreground font-semibold">
-                      <Phone className="w-4 h-4 text-[#D4AF37]" />
-                      <span className="text-[13px]">Telecom Intelligence</span>
-                    </div>
-                    <ul className="text-[12px] text-muted-foreground space-y-1.5">
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> CDR Analysis</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> IMEI CDR Analysis</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Call Pattern Mapping</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Timeline Reconstruction</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-2.5 text-foreground font-semibold">
-                      <Network className="w-4 h-4 text-[#D4AF37]" />
-                      <span className="text-[13px]">IPDR Intelligence</span>
-                    </div>
-                    <ul className="text-[12px] text-muted-foreground space-y-1.5">
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> NAT Log Analysis</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Session Mapping</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> IP Attribution</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Large Dataset Processing</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-2.5 text-foreground font-semibold">
-                      <Banknote className="w-4 h-4 text-[#D4AF37]" />
-                      <span className="text-[13px]">Financial Investigation</span>
-                    </div>
-                    <ul className="text-[12px] text-muted-foreground space-y-1.5">
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Fund Flow Analysis</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Beneficiary Tracking</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Transaction Mapping</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Fraud Workflows</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-2.5 text-foreground font-semibold">
-                      <Scale className="w-4 h-4 text-[#D4AF37]" />
-                      <span className="text-[13px]">Legal Workflow</span>
-                    </div>
-                    <ul className="text-[12px] text-muted-foreground space-y-1.5">
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> BNSS Sec 94 Notices</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> BNSS Sec 106 Notices</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> DOCX Generation</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Report-Ready Exports</li>
-                    </ul>
+                  <div className="flex flex-wrap gap-1.5">
+                    {["Super Admin", "Police Station Admin", "Investigation Officer (IO)"].map((role) => (
+                      <span
+                        key={role}
+                        className="font-mono text-[10px] px-2 py-0.5 bg-[#F7F7F5] border border-[#E5E5E3] text-[#111111]"
+                      >
+                        {role}
+                      </span>
+                    ))}
                   </div>
                 </div>
 
-                <div className="mt-auto pt-2">
-                  <div className="bg-white/[0.03] border border-white/5 rounded-xl p-4 mb-5">
-                    <div className="flex items-center gap-2 mb-2.5">
-                      <Lock className="w-4 h-4 text-[#D4AF37]" />
-                      <h4 className="text-[13px] font-bold text-foreground">Privacy-First Architecture</h4>
-                    </div>
-                    <p className="text-[12px] text-muted-foreground mb-4 leading-relaxed">
-                      InvestiGate processes investigation datasets in-session and is designed to minimize permanent storage of sensitive investigative data. Investigation outputs remain under investigator control through secure exports and workflow management.
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      <span className="text-[10px] px-2 py-1 rounded-md bg-black/50 text-muted-foreground font-medium border border-white/5">Super Admin</span>
-                      <span className="text-[10px] px-2 py-1 rounded-md bg-black/50 text-muted-foreground font-medium border border-white/5">Police Station Admin</span>
-                      <span className="text-[10px] px-2 py-1 rounded-md bg-black/50 text-muted-foreground font-medium border border-white/5">Investigation Officer (IO)</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <Link to="/contact" className="w-full sm:w-auto">
-                      <Button className="bg-[#D4AF37] text-black hover:bg-[#F3E5AB] w-full font-bold h-10 px-6 text-xs">
-                        Request Platform Demo
-                      </Button>
-                    </Link>
-                    
-                  </div>
-                </div>
+                <Link to="/contact" className="block">
+                  <Button className="w-full h-11 bg-[#111111] text-white hover:bg-[#2A2A2A] text-xs font-mono uppercase tracking-[0.1em] gap-2">
+                    Request Platform Briefing
+                    <ArrowUpRight className="h-4 w-4" />
+                  </Button>
+                </Link>
               </div>
             </motion.div>
 
-            {/* Product 02: VFRA-TTI */}
+            {/* Platform 02: VFRA-TTI */}
             <motion.div
               variants={fadeUp}
-              whileHover={{ y: -6 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="group relative flex flex-col h-full rounded-2xl bg-black/40 border border-white/5 hover:border-[#D4AF37]/50 hover:shadow-[0_8px_30px_rgba(212,175,55,0.1)] transition-all duration-300"
+              className="premium-card flex flex-col justify-between p-6 md:p-8 lg:p-10 bg-[#F7F7F5]/60 hover:bg-white"
             >
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-[#D4AF37]/0 to-[#D4AF37]/0 group-hover:from-[#D4AF37]/5 group-hover:to-transparent transition-all duration-500 pointer-events-none" />
-              
-              <div className="p-5 md:p-6 lg:p-8 flex-1 flex flex-col relative z-10 gap-5">
-                
-                {/* Header Section */}
-                <div>
-                  <div className="inline-flex items-center gap-2 pl-2.5 pr-4 py-1 rounded-sm border-l-2 border-[#D4AF37] bg-gradient-to-r from-[#D4AF37]/10 to-transparent mb-5">
-                    <Activity className="w-4 h-4 text-[#D4AF37] group-hover:-translate-y-0.5 transition-transform duration-300" />
-                    <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-widest">Telegram Threat Intelligence</span>
+              <div>
+                {/* Top Spec Row */}
+                <div className="flex items-center justify-between gap-4 pb-5 mb-6 border-b border-[#E5E5E3]">
+                  <div className="inline-flex items-center gap-2">
+                    <span className="font-mono text-xs font-semibold px-2 py-0.5 bg-[#111111] text-white rounded-sm">
+                      SYS-02
+                    </span>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#555555]">
+                      Telegram Threat Intelligence
+                    </span>
                   </div>
-                  
-                  <h3 className="text-[24px] md:text-3xl font-heading font-bold text-foreground mb-2 transition-transform duration-300 group-hover:translate-x-1">
-                    VFRA-TTI
-                  </h3>
-                  
-                  <p className="text-[#D4AF37] font-semibold tracking-wide text-sm mb-4 uppercase">Real-Time Intelligence. Court-Ready Evidence.</p>
-                  
-                  <p className="text-muted-foreground leading-relaxed text-sm">
-                    VFRA-TTI is a purpose-built Telegram Threat Intelligence platform designed for lawful intelligence operations, cybercrime investigations and authorized investigative workflows. It supports real-time intelligence gathering, network mapping and evidence packaging under applicable legal authority.
-                  </p>
+                  <Activity className="h-4 w-4 text-[#111111]" />
                 </div>
 
-                <div className="h-[1px] w-full bg-gradient-to-r from-[#D4AF37]/40 to-transparent" />
+                <h3 className="font-heading text-2xl md:text-3xl font-bold text-[#111111] tracking-[-0.03em] mb-2">
+                  VFRA-TTI
+                </h3>
+                <p className="font-mono text-xs uppercase tracking-[0.12em] text-[#555555] mb-4">
+                  Real-Time Intelligence. Court-Ready Evidence.
+                </p>
+                <p className="text-sm text-[#555555] leading-relaxed mb-8">
+                  VFRA-TTI is a specialized Telegram Threat Intelligence platform built for lawful intelligence operations and authorized cybercrime investigations. It enables structured actor correlation, channel intelligence, and evidentiary packaging under legal mandate.
+                </p>
 
-                {/* Capability Grid */}
-                <div className="grid grid-cols-2 gap-x-6 gap-y-6">
-                  <div>
-                    <div className="flex items-center gap-2 mb-2.5 text-foreground font-semibold">
-                      <MessageSquare className="w-4 h-4 text-[#D4AF37]" />
-                      <span className="text-[13px]">Message Intelligence</span>
-                    </div>
-                    <ul className="text-[12px] text-muted-foreground space-y-1.5">
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Message Monitoring</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Metadata Collection</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Deleted Msg Capture</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Channel Intelligence</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-2.5 text-foreground font-semibold">
-                      <Network className="w-4 h-4 text-[#D4AF37]" />
-                      <span className="text-[13px]">Network Intelligence</span>
-                    </div>
-                    <ul className="text-[12px] text-muted-foreground space-y-1.5">
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Threat Actor Mapping</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Group Analysis</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Admin Identification</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Network Visualization</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-2.5 text-foreground font-semibold">
-                      <Database className="w-4 h-4 text-[#D4AF37]" />
-                      <span className="text-[13px]">Media Intelligence</span>
-                    </div>
-                    <ul className="text-[12px] text-muted-foreground space-y-1.5">
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Media Collection</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> File Intelligence</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Voice Msg Processing</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Evidence Packaging</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-2.5 text-foreground font-semibold">
-                      <Search className="w-4 h-4 text-[#D4AF37]" />
-                      <span className="text-[13px]">Intelligence Analysis</span>
-                    </div>
-                    <ul className="text-[12px] text-muted-foreground space-y-1.5">
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Threat Profiling</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Entity Correlation</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Pattern Detection</li>
-                      <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-[#D4AF37]/50" /> Invest. Reporting</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="mb-2">
-                   <div className="flex items-center gap-2 mb-3 text-foreground font-semibold">
-                      <Eye className="w-4 h-4 text-[#D4AF37]" />
-                      <span className="text-[13px]">Threat Intelligence Coverage</span>
-                   </div>
-                   <div className="flex flex-wrap gap-2">
-                      <span className="text-[11px] px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/5 text-muted-foreground">Cybercrime & Financial Fraud</span>
-                      <span className="text-[11px] px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/5 text-muted-foreground">Organized Crime</span>
-                      <span className="text-[11px] px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/5 text-muted-foreground">Narcotics Networks</span>
-                      <span className="text-[11px] px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/5 text-muted-foreground">Terrorism & Extremism</span>
-                      <span className="text-[11px] px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/5 text-muted-foreground">Trafficking Investigations</span>
-                      <span className="text-[11px] px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/5 text-muted-foreground">POCSO / CSAM Investigations</span>
-                   </div>
-                </div>
-
-                <div className="mt-auto pt-2">
-                  <div className="bg-white/[0.03] border border-white/5 rounded-xl p-4 mb-5 relative overflow-hidden group/compliance">
-                    <div className="flex items-center gap-2 mb-2.5 relative z-10">
-                      <Shield className="w-4 h-4 text-[#D4AF37]" />
-                      <h4 className="text-[13px] font-bold text-foreground">Authorized Investigation Use Only</h4>
-                    </div>
-                    <p className="text-[12px] text-muted-foreground mb-4 leading-relaxed relative z-10">
-                      VFRA-TTI is designed for lawful, authorized, institutional and government investigative workflows. Access and deployment are subject to legal authorization and applicable compliance requirements.
-                    </p>
-                    <div className="flex items-center flex-wrap gap-1.5 text-[9px] text-muted-foreground font-mono uppercase tracking-widest border-t border-white/5 pt-3 relative z-10">
-                      <span>Target</span> <ArrowRight className="w-2.5 h-2.5 text-[#D4AF37]" />
-                      <span>Capture</span> <ArrowRight className="w-2.5 h-2.5 text-[#D4AF37]" />
-                      <span>Analyze</span> <ArrowRight className="w-2.5 h-2.5 text-[#D4AF37]" />
-                      <span>Package</span> <ArrowRight className="w-2.5 h-2.5 text-[#D4AF37]" />
-                      <span className="text-[#D4AF37] font-bold">Court</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <Link to="/contact" className="w-full sm:w-auto">
-                      <Button className="bg-[#D4AF37] text-black hover:bg-[#F3E5AB] w-full font-bold h-10 px-6 text-xs">
-                        Request Authorized Access
-                      </Button>
-                    </Link>
-                  </div>
+                {/* 2x2 Capability Matrix */}
+                <div className="grid sm:grid-cols-2 gap-4 mb-8">
+                  {[
+                    {
+                      icon: MessageSquare,
+                      title: "Message Intelligence",
+                      items: ["Channel & Group Indexing", "Metadata Preservation", "Deleted Artifact Capture"],
+                    },
+                    {
+                      icon: Network,
+                      title: "Network Attribution",
+                      items: ["Threat Actor Graph", "Admin Correlation", "Cross-Channel Mapping"],
+                    },
+                    {
+                      icon: Database,
+                      title: "Media Forensics",
+                      items: ["Automated Hash Logging", "Voice Note Transcription", "Evidentiary Packaging"],
+                    },
+                    {
+                      icon: Search,
+                      title: "Analytical Coverage",
+                      items: ["Financial Fraud Networks", "Organized Cybercrime", "Narcotics & Contraband"],
+                    },
+                  ].map((mod) => {
+                    const ModIcon = mod.icon;
+                    return (
+                      <div
+                        key={mod.title}
+                        className="p-4 rounded-md bg-white border border-[#E5E5E3]"
+                      >
+                        <div className="flex items-center gap-2 mb-2.5">
+                          <ModIcon className="h-3.5 w-3.5 text-[#111111]" />
+                          <span className="font-heading text-xs font-semibold text-[#111111]">
+                            {mod.title}
+                          </span>
+                        </div>
+                        <ul className="space-y-1">
+                          {mod.items.map((item) => (
+                            <li
+                              key={item}
+                              className="text-xs text-[#555555] flex items-center gap-2"
+                            >
+                              <span className="h-1 w-1 rounded-full bg-[#111111]" />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-            </motion.div>
 
+              {/* Compliance & CTA Footer */}
+              <div className="pt-6 border-t border-[#E5E5E3] space-y-5">
+                <div className="p-4 rounded-md bg-white border border-[#E5E5E3]">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <Shield className="h-3.5 w-3.5 text-[#111111]" />
+                    <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#111111]">
+                      Authorized Government &amp; Institutional Use Only
+                    </span>
+                  </div>
+                  <p className="text-xs text-[#555555] leading-relaxed mb-3">
+                    Deployment is strictly restricted to authorized agencies and lawful investigative mandates.
+                  </p>
+                  <div className="flex items-center flex-wrap gap-1.5 font-mono text-[10px] uppercase tracking-wider text-[#111111]">
+                    <span className="px-2 py-0.5 bg-[#F7F7F5] border border-[#E5E5E3]">01 Target</span>
+                    <span>→</span>
+                    <span className="px-2 py-0.5 bg-[#F7F7F5] border border-[#E5E5E3]">02 Capture</span>
+                    <span>→</span>
+                    <span className="px-2 py-0.5 bg-[#F7F7F5] border border-[#E5E5E3]">03 Analyze</span>
+                    <span>→</span>
+                    <span className="px-2 py-0.5 bg-[#111111] text-white">04 Court Package</span>
+                  </div>
+                </div>
+
+                <Link to="/contact" className="block">
+                  <Button
+                    variant="outline"
+                    className="w-full h-11 border-[#111111] text-[#111111] hover:bg-[#111111] hover:text-white text-xs font-mono uppercase tracking-[0.1em] gap-2 transition-colors"
+                  >
+                    Request Authorized Access
+                    <ArrowUpRight className="h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
           </div>
         </motion.div>
       </div>

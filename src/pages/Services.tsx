@@ -1,11 +1,10 @@
 import { SEO } from "@/components/SEO";
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, AlertTriangle, Search, CheckCircle, Shield } from "lucide-react";
+import { ArrowRight, AlertTriangle, Search, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   VFRA_SERVICES,
   SERVICE_CATEGORIES,
@@ -19,13 +18,13 @@ function AudienceBadge({ audience }: { audience: string }) {
   return (
     <span
       className={cn(
-        "px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider",
-        audience === "LEA" && "bg-blue-500/10 text-blue-400 border border-blue-500/20",
-        audience === "Lawyers" && "bg-purple-500/10 text-purple-400 border border-purple-500/20",
-        audience === "Both" && "bg-success/10 text-success border border-success/20"
+        "px-2.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-[0.12em] border",
+        audience === "LEA" && "bg-[#111111] text-white border-[#111111]",
+        audience === "Lawyers" && "bg-[#F7F7F5] text-[#111111] border-[#D4D4D0]",
+        audience === "Both" && "bg-[#F7F7F5] text-[#555555] border-[#E5E5E3]"
       )}
     >
-      {audience === "Both" ? "LEA & Lawyers" : audience}
+      {audience === "Both" ? "LEA & Legal" : audience}
     </span>
   );
 }
@@ -56,126 +55,132 @@ const Services = () => {
 
   return (
     <>
-      <SEO title="Services | VFRA" description="Explore our digital forensic services and cybercrime investigation capabilities." />
-      <div className="bg-background min-h-screen">
-        
+      <SEO
+        title="Forensic Services Catalogue | VFRA Nagpur"
+        description="Explore all 26 digital forensic services, OSINT workflows, and cybercrime investigation capabilities by VFRA."
+      />
+      <div className="bg-white min-h-screen">
         {/* HERO SECTION */}
-        <section className="relative pt-24 pb-16 lg:pt-32 lg:pb-24 bg-gradient-hero border-b border-border overflow-hidden">
-          <div className="absolute inset-0 grid-overlay opacity-30" />
-          <div className="container relative z-10 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="max-w-4xl mx-auto"
-            >
-              <div className="inline-flex items-center gap-2 border border-primary/20 bg-primary/5 rounded-full px-4 py-1.5 mb-6 text-sm text-primary font-medium tracking-wide">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                </span>
-                Professional Forensic Catalogue
-              </div>
-              <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
-                Digital Forensics & Cyber <br className="hidden md:block"/> Investigation Services
+        <section className="relative py-16 md:py-24 bg-[#F7F7F5] border-b border-[#E5E5E3]">
+          <div className="absolute inset-0 grid-overlay opacity-60 pointer-events-none" />
+          <div className="container relative z-10">
+            <div className="max-w-3xl">
+              <span className="section-eyebrow">
+                CLINICAL SERVICE INDEX // 26 SPECIALIZED CAPABILITIES
+              </span>
+              <h1 className="font-heading text-4xl md:text-5xl lg:text-[54px] font-semibold text-[#111111] tracking-[-0.035em] leading-[1.08] mb-6">
+                Digital Forensics &amp; Cyber Investigation Catalogue.
               </h1>
-              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-10 max-w-3xl mx-auto">
-                Court-admissible forensic reporting, cybercrime investigation support, OSINT intelligence, digital evidence analysis and incident response services for law enforcement, legal professionals, institutions and enterprises.
+              <p className="text-base md:text-lg text-[#555555] leading-relaxed mb-8">
+                Court-admissible forensic reporting, device extraction, OSINT intelligence, financial fraud tracing, and incident response services for law enforcement, legal professionals, and enterprises.
               </p>
-              
-              <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <Link to="/submit-case" className="w-full sm:w-auto">
-                  <Button className="w-full btn-gold gap-2 h-12 px-8 text-base shadow-[0_0_20px_rgba(212,175,55,0.2)]">
+
+              <div className="flex flex-wrap gap-3">
+                <Link to="/submit-case">
+                  <Button className="bg-[#111111] text-white hover:bg-[#2A2A2A] h-11 px-6 text-xs font-mono uppercase tracking-[0.1em] gap-2">
                     Register a Case
-                    <ArrowRight className="h-4 w-4" />
+                    <ArrowRight className="h-3.5 w-3.5" />
                   </Button>
                 </Link>
-                <Link to="/contact" className="w-full sm:w-auto">
-                  <Button variant="outline" className="w-full btn-outline-gold h-12 px-8 text-base">
-                    Contact VFRA
+                <Link to="/contact">
+                  <Button
+                    variant="outline"
+                    className="border-[#D4D4D0] bg-white text-[#111111] hover:border-[#111111] h-11 px-6 text-xs font-mono uppercase tracking-[0.1em]"
+                  >
+                    Consult Forensic Desk
                   </Button>
                 </Link>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
-        {/* SEARCH & FILTER BAR */}
-        <section className="py-8 sticky top-14 lg:top-16 z-40 bg-background/95 backdrop-blur-xl border-b border-border shadow-sm">
-          <div className="container flex flex-col gap-5">
-            
-            <div className="relative max-w-2xl mx-auto w-full">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input 
+        {/* STICKY SEARCH & CATEGORY BAR */}
+        <section className="py-5 sticky top-16 z-40 bg-white/90 backdrop-blur-xl border-b border-[#E5E5E3]">
+          <div className="container flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div className="relative w-full lg:w-80 shrink-0">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#555555]" />
+              <Input
                 type="text"
-                placeholder="Search services, capabilities, or keywords..."
+                placeholder="Filter by capability or keyword..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-11 h-12 bg-card/50 border-primary/20 focus-visible:border-primary focus-visible:ring-primary/20 text-base"
+                className="pl-10 h-10 bg-[#F7F7F5] border-[#E5E5E3] focus-visible:ring-[#111111] text-sm"
               />
             </div>
 
-            <div className="overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 hide-scrollbar">
-              <Tabs
-                value={activeCategory}
-                onValueChange={(v) => setActiveCategory(v as ServiceCategory | "all")}
-                className="w-max min-w-full lg:min-w-0 mx-auto"
+            <div className="flex items-center gap-1.5 overflow-x-auto hide-scrollbar pb-1 lg:pb-0">
+              <button
+                type="button"
+                onClick={() => setActiveCategory("all")}
+                className={cn(
+                  "px-3.5 py-2 rounded-md font-mono text-[11px] uppercase tracking-[0.1em] whitespace-nowrap border transition-colors",
+                  activeCategory === "all"
+                    ? "bg-[#111111] text-white border-[#111111]"
+                    : "bg-white text-[#555555] border-[#E5E5E3] hover:border-[#111111] hover:text-[#111111]"
+                )}
               >
-                <TabsList className="bg-transparent border-0 h-auto flex gap-2 p-0">
-                  <TabsTrigger 
-                    value="all" 
-                    className="rounded-full border border-border data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/30 px-5 py-2 text-sm whitespace-nowrap transition-all"
-                  >
-                    All Services
-                  </TabsTrigger>
-                  {(Object.keys(SERVICE_CATEGORIES) as ServiceCategory[]).map((key) => (
-                    <TabsTrigger 
-                      key={key} 
-                      value={key} 
-                      className="rounded-full border border-border data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/30 px-5 py-2 text-sm whitespace-nowrap transition-all"
-                    >
-                      {key}. {SERVICE_CATEGORIES[key].label}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </Tabs>
+                All (26)
+              </button>
+              {(Object.keys(SERVICE_CATEGORIES) as ServiceCategory[]).map((key) => (
+                <button
+                  type="button"
+                  key={key}
+                  onClick={() => setActiveCategory(key)}
+                  className={cn(
+                    "px-3.5 py-2 rounded-md font-mono text-[11px] uppercase tracking-[0.1em] whitespace-nowrap border transition-colors",
+                    activeCategory === key
+                      ? "bg-[#111111] text-white border-[#111111]"
+                      : "bg-white text-[#555555] border-[#E5E5E3] hover:border-[#111111] hover:text-[#111111]"
+                  )}
+                >
+                  {key}. {SERVICE_CATEGORIES[key].label.split("&")[0].trim()}
+                </button>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* SERVICES GRID */}
+        {/* SERVICES SPECIFICATION GRID */}
         <section className="py-16 lg:py-24">
           <div className="container">
             {activeCategory !== "all" && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                key={activeCategory}
-                className="mb-12 max-w-3xl"
-              >
-                <h2 className="font-heading text-3xl font-bold text-foreground mb-3 flex items-center gap-3">
-                  <span className="text-primary">{activeCategory}.</span>
+              <div className="mb-10 pb-6 border-b border-[#E5E5E3] max-w-3xl">
+                <span className="font-mono text-xs uppercase tracking-[0.14em] text-[#555555]">
+                  CATEGORY {activeCategory}
+                </span>
+                <h2 className="font-heading text-2xl md:text-3xl font-bold text-[#111111] mt-1 mb-2">
                   {SERVICE_CATEGORIES[activeCategory].label}
                 </h2>
-                <p className="text-lg text-muted-foreground">{SERVICE_CATEGORIES[activeCategory].description}</p>
-              </motion.div>
+                <p className="text-sm text-[#555555]">
+                  {SERVICE_CATEGORIES[activeCategory].description}
+                </p>
+              </div>
             )}
 
             {filtered.length === 0 ? (
-              <div className="text-center py-20 bg-card/30 rounded-2xl border border-border">
-                <Search className="h-10 w-10 text-muted-foreground mx-auto mb-4 opacity-50" />
-                <h3 className="text-xl font-bold text-foreground mb-2">No services found</h3>
-                <p className="text-muted-foreground">We couldn't find any services matching "{searchQuery}"</p>
-                <Button variant="link" onClick={() => setSearchQuery("")} className="mt-4 text-primary">
-                  Clear search
+              <div className="text-center py-20 bg-[#F7F7F5] rounded-lg border border-[#E5E5E3]">
+                <Search className="h-8 w-8 text-[#555555] mx-auto mb-3" />
+                <h3 className="text-lg font-bold text-[#111111] mb-1">No matching services</h3>
+                <p className="text-sm text-[#555555]">
+                  No forensic services matched "{searchQuery}".
+                </p>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setActiveCategory("all");
+                  }}
+                  className="mt-4 font-mono text-xs uppercase"
+                >
+                  Reset Filter
                 </Button>
               </div>
             ) : (
               <motion.div
                 variants={staggerContainer}
                 initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-50px" }}
+                animate="visible"
                 className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
               >
                 <AnimatePresence mode="popLayout">
@@ -187,64 +192,73 @@ const Services = () => {
                         layout
                         key={service.number}
                         variants={fadeUp}
-                        whileHover={{ y: -6, scale: 1.02 }}
-                        transition={{ duration: 0.2 }}
-                        className="group relative premium-card p-6 flex flex-col bg-card/80 backdrop-blur-sm border-border hover:border-primary/50 hover:shadow-[0_4px_20px_rgba(212,175,55,0.1)] transition-all duration-300"
+                        id={`service-${service.number}`}
+                        className="group premium-card p-6 flex flex-col justify-between bg-white"
                       >
-                        <div className="flex items-start justify-between gap-3 mb-5">
-                          <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors group-hover:-translate-y-1 duration-300">
-                              <Icon className="h-6 w-6 text-primary" />
-                            </div>
-                            <span className="text-xs font-mono font-semibold text-muted-foreground bg-background/50 px-2 py-1 rounded">
-                              SRV-{String(service.number).padStart(2, "0")}
+                        <div>
+                          {/* Top Index Header */}
+                          <div className="flex items-center justify-between gap-2 pb-4 mb-5 border-b border-[#E5E5E3]">
+                            <span className="font-mono text-xs font-semibold text-[#111111]">
+                              SRV-{String(service.number).padStart(2, "0")} · CAT-{service.category}
                             </span>
+                            <AudienceBadge audience={service.audience} />
                           </div>
-                          <AudienceBadge audience={service.audience} />
-                        </div>
 
-                        <h3 className="font-heading text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
-                          {service.title}
-                        </h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-grow">
-                          {service.description}
-                        </p>
+                          <div className="w-10 h-10 rounded-md bg-[#F7F7F5] border border-[#E5E5E3] flex items-center justify-center mb-4 group-hover:bg-[#111111] group-hover:text-white transition-colors">
+                            <Icon className="h-5 w-5" />
+                          </div>
 
-                        <div className="mb-6 space-y-2.5">
-                          <p className="text-xs font-semibold uppercase tracking-wider text-foreground/70 mb-3">Key Capabilities</p>
-                          {service.capabilities.map((cap) => (
-                            <div key={cap} className="flex items-start gap-2.5">
-                              <CheckCircle className="h-4 w-4 text-primary shrink-0 mt-0.5 opacity-80" />
-                              <span className="text-sm text-muted-foreground">{cap}</span>
-                            </div>
-                          ))}
-                        </div>
+                          <h3 className="font-heading text-lg font-bold text-[#111111] mb-2 tracking-[-0.02em]">
+                            {service.title}
+                          </h3>
+                          <p className="text-sm text-[#555555] leading-relaxed mb-6">
+                            {service.description}
+                          </p>
 
-                        {isTTI && (
-                          <div className="flex gap-3 p-4 rounded-xl border border-primary/20 bg-primary/5 mb-6">
-                            <AlertTriangle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                            <div className="space-y-1">
-                              <p className="text-xs font-semibold text-primary">Restricted Service</p>
-                              <p className="text-xs text-muted-foreground leading-relaxed">
-                                Available only for lawful, authorized, institutional or government investigation use. No unauthorized access, monitoring or surveillance is supported.
-                              </p>
+                          {/* Ingredient-Style Capability List */}
+                          <div className="p-4 rounded-md bg-[#F7F7F5] border border-[#E5E5E3] mb-6">
+                            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#111111] mb-2.5">
+                              Technical Specifications
+                            </p>
+                            <div className="space-y-2">
+                              {service.capabilities.map((cap) => (
+                                <div key={cap} className="flex items-start gap-2">
+                                  <Check className="h-3.5 w-3.5 text-[#111111] shrink-0 mt-0.5" />
+                                  <span className="text-xs text-[#555555]">{cap}</span>
+                                </div>
+                              ))}
                             </div>
                           </div>
-                        )}
 
-                        <div className="flex flex-col sm:flex-row gap-3 pt-5 border-t border-border mt-auto">
-                          {service.showRegisterCase ? (
+                          {isTTI && (
+                            <div className="flex gap-2.5 p-3.5 rounded-md border border-[#111111]/20 bg-[#F7F7F5] mb-6">
+                              <AlertTriangle className="h-4 w-4 text-[#111111] shrink-0 mt-0.5" />
+                              <div>
+                                <p className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#111111]">
+                                  Restricted Institutional Service
+                                </p>
+                                <p className="text-[11px] text-[#555555] leading-relaxed mt-0.5">
+                                  Available exclusively for lawful, authorized government or institutional mandates.
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex items-center gap-2.5 pt-4 border-t border-[#E5E5E3]">
+                          {service.showRegisterCase && (
                             <Link to="/submit-case" className="flex-1">
-                              <Button className="w-full btn-gold group/btn gap-2">
+                              <Button className="w-full h-10 bg-[#111111] text-white hover:bg-[#2A2A2A] text-xs font-mono uppercase tracking-wider">
                                 Register Case
-                                <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                               </Button>
                             </Link>
-                          ) : null}
+                          )}
                           <Link to="/contact" className="flex-1">
-                            <Button variant="outline" className="w-full btn-outline-gold group/btn gap-2">
-                              Contact VFRA
-                              <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                            <Button
+                              variant="outline"
+                              className="w-full h-10 border-[#D4D4D0] text-[#111111] hover:border-[#111111] text-xs font-mono uppercase tracking-wider"
+                            >
+                              Inquire
                             </Button>
                           </Link>
                         </div>
@@ -258,108 +272,34 @@ const Services = () => {
         </section>
 
         {/* WORKFLOW TIMELINE */}
-        <section className="py-20 bg-surface border-y border-border overflow-hidden">
+        <section className="py-16 md:py-24 bg-[#F7F7F5] border-t border-[#E5E5E3]">
           <div className="container">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="font-heading text-[28px] md:text-4xl font-bold text-foreground mb-4">
-                How VFRA Supports Investigations
+            <div className="max-w-2xl mb-12">
+              <span className="section-eyebrow">OPERATIONAL PROTOCOL</span>
+              <h2 className="section-heading">
+                Standardized Evidentiary Workflow.
               </h2>
-              <p className="text-muted-foreground text-lg">
-                Our standardized operational workflow ensuring evidentiary integrity from acquisition to court testimony.
-              </p>
             </div>
 
-            {/* Desktop Horizontal Timeline */}
-            <div className="hidden lg:block relative">
-              <div className="absolute top-1/2 left-0 w-full h-0.5 bg-border -translate-y-1/2" />
-              <div className="absolute top-1/2 left-0 w-1/3 h-0.5 bg-gradient-to-r from-primary/50 to-transparent -translate-y-1/2" />
-              
-              <div className="grid grid-cols-6 gap-6 relative z-10">
-                {FORENSIC_PROCESS_STEPS.map((step, idx) => (
-                  <motion.div 
-                    key={step.step}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="relative flex flex-col items-center text-center"
-                  >
-                    <div className="mb-6 mt-auto">
-                      <div className="text-xs font-bold text-primary mb-2 uppercase tracking-widest">Phase {step.step}</div>
-                      <h4 className="font-heading font-semibold text-sm">{step.title}</h4>
-                    </div>
-                    
-                    <div className="w-8 h-8 rounded-full bg-background border-2 border-primary flex items-center justify-center mb-6 z-10 shadow-[0_0_15px_rgba(212,175,55,0.3)]">
-                      <div className="w-2.5 h-2.5 rounded-full bg-primary" />
-                    </div>
-                    
-                    <p className="text-xs text-muted-foreground leading-relaxed px-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 border border-[#E5E5E3] bg-white rounded-lg divide-y sm:divide-y-0 sm:divide-x divide-[#E5E5E3]">
+              {FORENSIC_PROCESS_STEPS.map((step) => (
+                <div key={step.step} className="p-6 flex flex-col justify-between">
+                  <div>
+                    <span className="font-mono text-xs font-semibold px-2 py-0.5 bg-[#111111] text-white inline-block mb-4">
+                      0{step.step}
+                    </span>
+                    <h4 className="font-heading font-semibold text-sm text-[#111111] mb-2">
+                      {step.title}
+                    </h4>
+                    <p className="text-xs text-[#555555] leading-relaxed">
                       {step.description}
                     </p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            {/* Mobile Vertical Timeline */}
-            <div className="lg:hidden relative pl-6 sm:pl-8 max-w-lg mx-auto">
-              <div className="absolute top-0 bottom-0 left-[15px] sm:left-[23px] w-px bg-border" />
-              
-              <div className="space-y-10">
-                {FORENSIC_PROCESS_STEPS.map((step, idx) => (
-                  <motion.div 
-                    key={step.step}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="relative pl-8"
-                  >
-                    <div className="absolute top-1 -left-[25px] sm:-left-[17px] w-6 h-6 rounded-full bg-background border-2 border-primary flex items-center justify-center shadow-[0_0_10px_rgba(212,175,55,0.3)]">
-                      <div className="w-2 h-2 rounded-full bg-primary" />
-                    </div>
-                    
-                    <div className="text-xs font-bold text-primary mb-1 uppercase tracking-widest">Phase {step.step}</div>
-                    <h4 className="font-heading font-bold text-lg mb-2 text-foreground">{step.title}</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {step.description}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-            
-          </div>
-        </section>
-
-        {/* FINAL CTA */}
-        <section className="py-10 md:py-20 lg:py-28 relative overflow-hidden">
-          <div className="absolute inset-0 bg-primary/5" />
-          <div className="container relative z-10 text-center max-w-3xl">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 mb-8">
-              <Shield className="h-8 w-8 text-primary" />
-            </div>
-            <h2 className="font-heading text-3xl md:text-5xl font-bold text-foreground mb-6">
-              Need guidance on the right service?
-            </h2>
-            <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto">
-              Contact our forensic team for a confidential consultation. We will scope engagement based on your legal authority, technical requirements, and court admissibility standards.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link to="/submit-case" className="w-full sm:w-auto">
-                <Button className="w-full sm:w-auto btn-gold h-14 px-10 text-base shadow-[0_0_20px_rgba(212,175,55,0.2)]">
-                  Register a Case
-                </Button>
-              </Link>
-              <Link to="/contact" className="w-full sm:w-auto">
-                <Button variant="outline" className="w-full sm:w-auto btn-outline-gold h-14 px-10 text-base bg-background/50 backdrop-blur-sm">
-                  Contact Forensic Team
-                </Button>
-              </Link>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
-
       </div>
     </>
   );

@@ -1,19 +1,21 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { APPLE_EASE } from "@/lib/motion";
 import vfraLogo from "@/assets/vfra-logo.png";
 
 const navLinks = [
   { title: "Home", href: "/" },
   { title: "About", href: "/about" },
   { title: "Services", href: "/services" },
-  { title: "Events", href: "/events" },
-  { title: "Blogs", href: "/blog" },
+  { title: "Gallery", href: "/gallery" },
+  { title: "Upcoming Events", href: "/events" },
+  { title: "Insights", href: "/blog" },
+  { title: "Verify", href: "/verify" },
   { title: "Contact", href: "/contact" },
-  { title: "Verify Certificate", href: "/verify" },
 ];
 
 export function Navbar() {
@@ -22,8 +24,8 @@ export function Navbar() {
   const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 16);
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 8);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -31,37 +33,40 @@ export function Navbar() {
     setIsOpen(false);
   }, [location.pathname]);
 
-  const activeClassName = "text-primary bg-primary/10";
-  const inactiveClassName = "text-muted-foreground hover:text-foreground hover:bg-muted/50";
-
   return (
-    <motion.header
-      initial={{ y: -80 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+    <header
       className={cn(
-        "fixed top-0 z-50 w-full transition-all duration-300",
-        scrolled ? "glass-navbar" : "bg-background/80 backdrop-blur-md border-b border-transparent"
+        "fixed top-0 z-50 w-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        scrolled
+          ? "bg-white/85 backdrop-blur-xl border-b border-[#E5E5E3]"
+          : "bg-white/75 backdrop-blur-md border-b border-[#E5E5E3]/70"
       )}
     >
-      <div className="container flex min-h-14 items-center justify-between gap-2 py-3 md:py-4">
-        <Link to="/" className="flex items-center gap-2 min-w-0 shrink flex-1 md:flex-none mr-2">
-          <img
-            src={vfraLogo}
-            alt="VFRA"
-            className="h-8 w-8 sm:h-9 sm:w-auto shrink-0 object-contain"
-          />
-          <div className="flex flex-col leading-none min-w-0 justify-center">
-            <span className="font-heading font-bold text-[11px] sm:text-sm text-foreground truncate block">
-              Vigilant Forensic
+      <div className="container flex h-16 items-center justify-between gap-4">
+        {/* Brand Identity */}
+        <Link
+          to="/"
+          className="flex items-center gap-3 min-w-0 shrink-0 group focus:outline-none"
+        >
+          <div className="h-9 w-9 rounded-md border border-[#E5E5E3] bg-[#F7F7F5] p-1 flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-[1.02]">
+            <img
+              src={vfraLogo}
+              alt="VFRA"
+              className="h-full w-full object-contain"
+            />
+          </div>
+          <div className="flex flex-col leading-none">
+            <span className="font-heading font-bold text-[13px] sm:text-sm tracking-[-0.02em] text-[#111111]">
+              VIGILANT FORENSIC
             </span>
-            <span className="text-[9px] sm:text-xs text-muted-foreground truncate block">
-              Research & Analytics Pvt. Ltd. 
+            <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[#555555] mt-1">
+              Research &amp; Analytics · Nagpur
             </span>
           </div>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-0.5">
+        {/* Desktop Navigation */}
+        <nav className="hidden xl:flex items-center gap-1" aria-label="Primary Navigation">
           {navLinks.map((link) => (
             <NavLink
               key={link.href}
@@ -69,8 +74,10 @@ export function Navbar() {
               end={link.href === "/"}
               className={({ isActive }) =>
                 cn(
-                  "px-3 py-2 text-sm font-medium rounded-md transition-colors",
-                  isActive ? activeClassName : inactiveClassName
+                  "relative px-3 py-1.5 text-[13px] font-medium tracking-[-0.01em] transition-colors duration-300 rounded-md",
+                  isActive
+                    ? "text-[#111111] bg-[#F7F7F5]"
+                    : "text-[#555555] hover:text-[#111111] hover:bg-[#F7F7F5]/60"
                 )
               }
             >
@@ -79,40 +86,51 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden lg:flex items-center gap-2 shrink-0">
+        {/* Action Buttons */}
+        <div className="hidden lg:flex items-center gap-2.5 shrink-0">
           <Link to="/track-case">
-            <Button variant="ghost" size="sm" className="text-muted-foreground">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9 px-3.5 text-[12px] font-mono uppercase tracking-[0.08em] text-[#555555] hover:text-[#111111] hover:bg-[#F7F7F5]"
+            >
               Track Case
             </Button>
           </Link>
           <Link to="/submit-case">
-            <Button size="sm" className="btn-gold">
-              Register a Case
+            <Button
+              size="sm"
+              className="h-9 px-4 bg-[#111111] text-white hover:bg-[#2A2A2A] text-[12px] font-medium tracking-[-0.01em] rounded-md gap-1.5 transition-all duration-300"
+            >
+              Register Case
+              <ArrowUpRight className="h-3.5 w-3.5" />
             </Button>
           </Link>
         </div>
 
+        {/* Mobile Menu Trigger */}
         <button
           type="button"
-          className="lg:hidden p-2 text-foreground shrink-0 ml-auto"
+          className="xl:hidden p-2 text-[#111111] hover:bg-[#F7F7F5] rounded-md transition-colors ml-auto lg:ml-0"
           onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle menu"
+          aria-label="Toggle navigation menu"
         >
           {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="lg:hidden border-t border-border bg-background overflow-hidden"
+            transition={{ duration: 0.35, ease: APPLE_EASE }}
+            className="xl:hidden border-t border-[#E5E5E3] bg-white/95 backdrop-blur-xl overflow-hidden"
           >
-            <nav className="container py-4 space-y-1">
-              {navLinks.map((link) => (
+            <nav className="container py-5 flex flex-col gap-1">
+              {navLinks.map((link, idx) => (
                 <NavLink
                   key={link.href}
                   to={link.href}
@@ -120,29 +138,38 @@ export function Navbar() {
                   onClick={() => setIsOpen(false)}
                   className={({ isActive }) =>
                     cn(
-                      "block py-3 px-4 rounded-md text-sm font-medium",
-                      isActive ? activeClassName : "text-muted-foreground"
+                      "flex items-center justify-between py-3 px-3 rounded-md text-sm font-medium border-b border-[#E5E5E3]/50 last:border-b-0 transition-colors",
+                      isActive
+                        ? "text-[#111111] bg-[#F7F7F5] font-semibold"
+                        : "text-[#555555] hover:text-[#111111]"
                     )
                   }
                 >
-                  {link.title}
+                  <span>{link.title}</span>
+                  <span className="font-mono text-[10px] text-[#71717A]">
+                    0{idx + 1}
+                  </span>
                 </NavLink>
               ))}
-              <div className="pt-5 pb-2 flex flex-col gap-3 border-t border-border mt-3">
+              <div className="pt-4 mt-2 grid grid-cols-2 gap-3 border-t border-[#E5E5E3]">
                 <Link to="/track-case" onClick={() => setIsOpen(false)}>
-                  <Button variant="outline" className="w-full btn-outline-gold h-12">
+                  <Button
+                    variant="outline"
+                    className="w-full h-11 border-[#D4D4D0] text-[#111111] font-mono text-xs uppercase tracking-wider"
+                  >
                     Track Case
                   </Button>
                 </Link>
                 <Link to="/submit-case" onClick={() => setIsOpen(false)}>
-                  <Button className="w-full btn-gold h-12">Register a Case</Button>
+                  <Button className="w-full h-11 bg-[#111111] text-white hover:bg-[#2A2A2A] text-xs font-medium">
+                    Register Case
+                  </Button>
                 </Link>
               </div>
             </nav>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.header>
+    </header>
   );
 }
-

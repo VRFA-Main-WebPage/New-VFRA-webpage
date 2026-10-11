@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
 import vfraLogo from "@/assets/vfra-logo.png";
 import {
   useWebsiteContent,
@@ -11,28 +11,29 @@ import {
 
 const footerLinks = {
   services: [
-    { title: "All Services", href: "/services" },
-    { title: "Digital Forensics", href: "/services#category-a" },
-    { title: "OSINT & SOCMINT", href: "/services#category-b" },
-    { title: "Legal & Court Support", href: "/services#category-f" },
-    { title: "Training Programmes", href: "/services#category-g" },
+    { title: "All 26 Forensic Services", href: "/services" },
+    { title: "Digital & Mobile Forensics", href: "/services" },
+    { title: "OSINT & Threat Intelligence", href: "/services" },
+    { title: "Section 65B / BSA Certification", href: "/services" },
+    { title: "LEA & Corporate Training", href: "/services" },
   ],
-  products: [
-    { title: "InvestiGate", href: "/contact" },
-    { title: "VFRA-TTI", href: "/contact" },
+  platforms: [
+    { title: "InvestiGate Platform", href: "/#platforms" },
+    { title: "VFRA-TTI Intelligence", href: "/#platforms" },
+    { title: "Forensic Lab Archive", href: "/gallery" },
+    { title: "Upcoming Events", href: "/events" },
   ],
-  company: [
-    { title: "About Us", href: "/about" },
-    { title: "Case Studies", href: "/case-studies" },
-    { title: "Events & Training", href: "/events" },
-    { title: "Contact", href: "/contact" },
+  institution: [
+    { title: "About VFRA Nagpur", href: "/about" },
+    { title: "Documented Case Studies", href: "/case-studies" },
+    { title: "Research & Insights", href: "/blog" },
+    { title: "Contact Laboratory", href: "/contact" },
   ],
-  legal: [
+  operations: [
+    { title: "Register a Case", href: "/submit-case" },
+    { title: "Track Investigation", href: "/track-case" },
     { title: "Verify Certificate", href: "/verify" },
-    { title: "Register Case", href: "/submit-case" },
-    { title: "Track Case", href: "/track-case" },
-    { title: "Privacy Policy"},
-    { title: "Terms of Service"},
+    { title: "Admin Portal", href: "/admin" },
   ],
 };
 
@@ -41,56 +42,75 @@ export function Footer() {
   const { content: contactContent } = useWebsiteContent<ContactContent>("contact", defaultContactContent);
 
   return (
-    <footer className="bg-background border-t border-border">
-      <div className="container py-8 md:py-14 lg:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-6 gap-10 md:gap-14">
-          <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center gap-3 mb-4">
-              <img src={vfraLogo} alt="VFRA" className="h-10 md:h-12 w-auto object-contain" />
+    <footer className="bg-[#F7F7F5] border-t border-[#E5E5E3] text-[#111111]">
+      <div className="container py-14 md:py-20">
+        {/* Top Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-14 border-b border-[#E5E5E3]">
+          {/* Column 1: Institutional Spec Block */}
+          <div className="lg:col-span-4 space-y-6">
+            <Link to="/" className="inline-flex items-center gap-3">
+              <div className="h-10 w-10 rounded-md border border-[#E5E5E3] bg-white p-1.5 flex items-center justify-center">
+                <img src={vfraLogo} alt="VFRA" className="h-full w-full object-contain" />
+              </div>
+              <div>
+                <p className="font-heading font-bold text-sm tracking-[-0.02em] text-[#111111]">
+                  VIGILANT FORENSIC
+                </p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#555555]">
+                  Research &amp; Analytics Pvt. Ltd.
+                </p>
+              </div>
             </Link>
-            <p className="text-sm text-muted-foreground leading-relaxed mb-6 max-w-sm">
+
+            <p className="text-sm text-[#555555] leading-relaxed max-w-sm">
               {footerContent.tagline ||
-                "Vigilant Forensic Research and Analytics — digital forensics, cybercrime investigation support, and intelligence workflows for authorized professional use."}
+                "Structured digital forensics, cybercrime investigation support, and legally defensible technical reporting for law enforcement, legal teams, and institutions."}
             </p>
-            <div className="space-y-3 text-sm text-muted-foreground">
-              <div className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                <span>
-                  {contactContent.address}
-                  <br />
-                  {contactContent.addressLine2}
+
+            <div className="space-y-2.5 pt-1 text-xs text-[#555555] font-mono">
+              <div className="flex items-start gap-2.5">
+                <MapPin className="h-3.5 w-3.5 text-[#111111] shrink-0 mt-0.5" />
+                <span className="font-sans text-[13px] leading-relaxed">
+                  {contactContent.address}, {contactContent.addressLine2}, {contactContent.addressLine3}
                 </span>
               </div>
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-primary shrink-0" />
-                <span>{contactContent.phone}</span>
+              <div className="flex items-center gap-2.5">
+                <Phone className="h-3.5 w-3.5 text-[#111111] shrink-0" />
+                <a href={`tel:${contactContent.phone.replace(/\s/g, "")}`} className="hover:text-[#111111] transition-colors">
+                  {contactContent.phone}
+                </a>
               </div>
-              <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-primary shrink-0" />
-                <span>{contactContent.email}</span>
+              <div className="flex items-center gap-2.5">
+                <Mail className="h-3.5 w-3.5 text-[#111111] shrink-0" />
+                <a href={`mailto:${contactContent.email}`} className="hover:text-[#111111] transition-colors">
+                  {contactContent.email}
+                </a>
               </div>
             </div>
           </div>
 
-          <div className="lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-8">
+          {/* Columns 2-5: Navigation Links */}
+          <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-8">
             {(
               [
-                ["Services", footerLinks.services],
-                ["Products", footerLinks.products],
-                ["Company", footerLinks.company],
-                ["Legal", footerLinks.legal],
+                ["01 / Capabilities", footerLinks.services],
+                ["02 / Platforms", footerLinks.platforms],
+                ["03 / Institution", footerLinks.institution],
+                ["04 / Verification", footerLinks.operations],
               ] as const
             ).map(([title, links]) => (
               <div key={title}>
-                <h4 className="font-heading font-semibold text-sm text-foreground mb-4">{title}</h4>
-                <ul className="space-y-1 md:space-y-2">
+                <h4 className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#111111] font-semibold mb-4">
+                  {title}
+                </h4>
+                <ul className="space-y-2.5">
                   {links.map((link) => (
-                    <li key={link.href}>
+                    <li key={link.title}>
                       <Link
                         to={link.href}
-                        className="block py-1.5 md:py-0 text-sm text-muted-foreground hover:text-primary transition-colors"
+                        className="inline-flex items-center gap-1 text-[13px] text-[#555555] hover:text-[#111111] transition-colors"
                       >
-                        {link.title}
+                        <span>{link.title}</span>
                       </Link>
                     </li>
                   ))}
@@ -100,14 +120,33 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
-          <p>
-            © {new Date().getFullYear()} Vigilant Forensic Research and Analytics Pvt. Ltd. All rights
-            reserved.
-          </p>
-          <p>
-            GSTIN: {footerContent.gstin} · CIN: {footerContent.cin}
-          </p>
+        {/* Bottom Clinical Metadata Bar */}
+        <div className="pt-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs text-[#555555]">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <p>© {new Date().getFullYear()} Vigilant Forensic Research and Analytics Pvt. Ltd.</p>
+            <span className="hidden md:inline text-[#D4D4D0]">|</span>
+            <p className="font-mono text-[11px]">
+              HQ: Nagpur, Maharashtra (440034)
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-4 font-mono text-[11px] text-[#555555]">
+            <span>GSTIN: {footerContent.gstin}</span>
+            <span>·</span>
+            <span>CIN: {footerContent.cin}</span>
+            {footerContent.linkedin && footerContent.linkedin !== "#" && (
+              <>
+                <span>·</span>
+                <a
+                  href={footerContent.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-0.5 text-[#111111] hover:underline"
+                >
+                  LinkedIn <ArrowUpRight className="h-3 w-3" />
+                </a>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </footer>

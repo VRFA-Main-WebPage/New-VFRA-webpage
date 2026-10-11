@@ -1,31 +1,35 @@
-import { CheckCircle2, Scale, Building2, Shield, FileText } from "lucide-react";
+import { Check, Scale, Building2, Shield, FileText } from "lucide-react";
 import { motion } from "framer-motion";
 import { fadeUp, staggerContainer, useInView } from "@/lib/motion";
 
 const reasons = [
   {
+    code: "STD-01",
     icon: Shield,
     title: "Evidentiary Integrity",
     description:
-      "Chain-of-custody protocols and hash verification are applied throughout acquisition and analysis.",
+      "Strict chain-of-custody logging and cryptographic hash verification applied throughout acquisition and examination.",
   },
   {
+    code: "STD-02",
     icon: FileText,
     title: "Court-Ready Documentation",
     description:
-      "Reports are structured for legal review, with clear methodology and reproducible findings.",
+      "Technical reports structured for judicial review with transparent methodology and reproducible findings.",
   },
   {
+    code: "STD-03",
     icon: Scale,
     title: "Legal & LEA Alignment",
     description:
-      "Workflows designed for advocates, institutions, and authorized investigation teams.",
+      "Investigative workflows tailored for advocates, law enforcement units, and authorized investigative teams.",
   },
   {
+    code: "STD-04",
     icon: Building2,
     title: "Institutional Readiness",
     description:
-      "Training, incident response, and capacity-building programmes for organizations.",
+      "Capacity-building workshops, incident response retainers, and forensic laboratory advisory for institutions.",
   },
 ];
 
@@ -33,52 +37,62 @@ export function WhyVFRASection() {
   const { ref, inView } = useInView();
 
   return (
-    <section className="py-10 md:py-24 lg:py-32 bg-background border-b border-border">
+    <section className="py-16 md:py-24 lg:py-28 bg-white border-b border-[#E5E5E3]">
       <div className="container">
         <motion.div
           ref={ref}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           variants={staggerContainer}
-          className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start"
+          className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start"
         >
-          <motion.div variants={fadeUp}>
-            <p className="section-eyebrow">Why VFRA</p>
+          <motion.div variants={fadeUp} className="lg:col-span-5">
+            <span className="section-eyebrow">04 // CLINICAL TRANSPARENCY</span>
             <h2 className="section-heading mb-5">
-              Trusted Digital Forensics & Investigation Support
+              Uncompromising Forensic Discipline.
             </h2>
-            <p className="section-subtext mb-8">
-              VFRA combines forensic laboratory capability with intelligence workflows and secure case
-              operations — supporting clients who require professional, accountable investigation assistance.
+            <p className="text-base text-[#555555] leading-relaxed mb-8">
+              Inspired by laboratory-grade transparency, VFRA operates on verifiable evidence standards—combining forensic workstation capability with accountable case management.
             </p>
-            <ul className="space-y-3">
+            <div className="border-t border-[#E5E5E3] pt-6 space-y-3.5">
               {[
-                "No exaggerated claims or guaranteed outcomes",
-                "Lawful-use and authorization-first engagement",
-                "Support, analysis, and documentation — not surveillance",
+                "No exaggerated claims or unverified assumptions",
+                "Lawful-use and authorization-first engagement protocol",
+                "Scientific examination and documentation — never unauthorized surveillance",
               ].map((item) => (
-                <li key={item} className="flex items-start gap-3 text-sm text-muted-foreground">
-                  <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  {item}
-                </li>
+                <div key={item} className="flex items-start gap-3 text-sm text-[#111111]">
+                  <div className="w-5 h-5 rounded-sm bg-[#F7F7F5] border border-[#E5E5E3] flex items-center justify-center shrink-0 mt-0.5">
+                    <Check className="h-3 w-3 text-[#111111]" />
+                  </div>
+                  <span>{item}</span>
+                </div>
               ))}
-            </ul>
+            </div>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="lg:col-span-7 grid sm:grid-cols-2 gap-5">
             {reasons.map((reason) => {
               const Icon = reason.icon;
               return (
                 <motion.div
                   key={reason.title}
                   variants={fadeUp}
-                  className="premium-card p-5"
+                  className="premium-card p-6 bg-[#F7F7F5]/60 hover:bg-white"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center mb-3">
-                    <Icon className="h-5 w-5 text-primary" />
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-9 h-9 rounded-md bg-white border border-[#E5E5E3] flex items-center justify-center">
+                      <Icon className="h-4 w-4 text-[#111111]" />
+                    </div>
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-[#71717A]">
+                      {reason.code}
+                    </span>
                   </div>
-                  <h3 className="font-heading font-semibold text-foreground mb-2">{reason.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{reason.description}</p>
+                  <h3 className="font-heading font-semibold text-base text-[#111111] mb-2">
+                    {reason.title}
+                  </h3>
+                  <p className="text-sm text-[#555555] leading-relaxed">
+                    {reason.description}
+                  </p>
                 </motion.div>
               );
             })}

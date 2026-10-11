@@ -1,16 +1,35 @@
 import { SEO } from "@/components/SEO";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Calendar, Clock, MapPin, Users, ArrowRight, ExternalLink, Loader2 } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Users,
+  ArrowRight,
+  ArrowUpRight,
+  ExternalLink,
+  Loader2,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useRazorpay } from "@/hooks/useRazorpay";
+import {
+  useWebsiteContent,
+  defaultEventsExtendedContent,
+  EventsExtendedContent,
+} from "@/hooks/useWebsiteContent";
+import { APPLE_EASE } from "@/lib/motion";
 
 interface Event {
   id: string;
@@ -26,32 +45,18 @@ interface Event {
   is_published: boolean | null;
 }
 
-const pastEvents = [
-  {
-    title: "Dark Web Investigation & Digital Forensics Workshop",
-    date: "2026",
-    participants: "200+ Students & Faculty",
-    location: "Ramdeobaba College of Engineering & Management",
-  },
-  {
-    title: "Cybersecurity Awareness & Digital Fraud Prevention Session",
-    date: "2026",
-    participants: "500+ Officers & Staff",
-    location: "Life Insurance Corporation of India (LIC)",
-  },
-  {
-    title: "Cybercrime Investigation & Digital Evidence Techniques Training",
-    date: "2025",
-    participants: "1000+ Law Enforcement Personnel",
-    location: "Regional Law Enforcement Unit",
-  },
-];
-
 const Events = () => {
   const { toast } = useToast();
   const { openPayment, isLoading: paymentLoading } = useRazorpay();
-  const [events, setEvents] = useState<Event[]>([]);
+  const { content: extendedContent } = useWebsiteContent<EventsExtendedContent>(
+    "events_extended",
+    defaultEventsExtendedContent
+  );
+
+  const [allEvents, setAllEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"upcoming" | "past">("upcoming");
+  const [typeFilter, setTypeFilter] = useState<string>("All");
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [registrationOpen, setRegistrationOpen] = useState(false);
   const [registering, setRegistering] = useState(false);
@@ -66,16 +71,31 @@ const Events = () => {
       .from("events")
       .select("*")
       .eq("is_published", true)
-      .gte("event_date", new Date().toISOString().split("T")[0])
-      .order("event_date");
+      .order("event_date", { ascending: true });
 
     if (error) {
       console.error("Error fetching events:", error);
     } else {
-      setEvents(data || []);
+      setAllEvents(data || []);
     }
     setLoading(false);
   };
+
+  const todayIso = useMemo(() => new Date().toISOString().split("T")[0], []);
+
+  const upcomingEvents = useMemo(() => {
+    const list = allEvents.filter((evt) => evt.event_date >= todayIso);
+    if (typeFilter === "All") return list;
+    return list.filter(
+      (evt) => evt.event_type.toLowerCase() === typeFilter.toLowerCase()
+    );
+  }, [allEvents, todayIso, typeFilter]);
+
+  const pastDatabaseEvents = useMemo(() => {
+    return allEvents
+      .filter((evt) => evt.event_date < todayIso)
+      .sort((a, b) => b.event_date.localeCompare(a.event_date));
+  }, [allEvents, todayIso]);
 
   const parsePrice = (priceStr: string | null): number => {
     if (!priceStr || priceStr.toLowerCase() === "free") return 0;
@@ -91,7 +111,11 @@ const Events = () => {
 
   const handleRegistration = async () => {
     if (!selectedEvent || !formData.name || !formData.email) {
-      toast({ title: "Error", description: "Please fill in all required fields", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -100,7 +124,6 @@ const Events = () => {
 
     try {
       if (price === 0) {
-        // Free event - direct registration
         const { error } = await supabase.from("event_registrations").insert({
           event_id: selectedEvent.id,
           name: formData.name,
@@ -112,11 +135,13 @@ const Events = () => {
 
         if (error) throw error;
 
-        toast({ title: "Success!", description: "You have successfully registered for this event." });
+        toast({
+          title: "Success!",
+          description: "You have successfully registered for this event.",
+        });
         setRegistrationOpen(false);
         fetchEvents();
       } else {
-        // Paid event - create Razorpay order
         const response = await supabase.functions.invoke("create-razorpay-order", {
           body: {
             eventId: selectedEvent.id,
@@ -133,7 +158,6 @@ const Events = () => {
 
         const { orderId, registrationId, keyId, amount } = response.data;
 
-        // Open Razorpay checkout
         openPayment({
           key: keyId,
           amount: amount,
@@ -146,328 +170,623 @@ const Events = () => {
             email: formData.email,
             contact: formData.phone,
           },
-          theme: { color: "#D3AA5A" },
+          theme: { color: "#111111" },
           handler: async (paymentResponse) => {
-            // Verify payment
-            const verifyResponse = await supabase.functions.invoke("verify-razorpay-payment", {
-              body: {
-                razorpay_order_id: paymentResponse.razorpay_order_id,
-                razorpay_payment_id: paymentResponse.razorpay_payment_id,
-                razorpay_signature: paymentResponse.razorpay_signature,
-                registrationId,
-              },
-            });
+            const verifyResponse = await supabase.functions.invoke(
+              "verify-razorpay-payment",
+              {
+                body: {
+                  razorpay_order_id: paymentResponse.razorpay_order_id,
+                  razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                  razorpay_signature: paymentResponse.razorpay_signature,
+                  registrationId,
+                },
+              }
+            );
 
             if (verifyResponse.data?.verified) {
-              toast({ title: "Payment Successful!", description: "You have successfully registered for this event." });
+              toast({
+                title: "Payment Successful!",
+                description: "You have successfully registered for this event.",
+              });
               setRegistrationOpen(false);
               fetchEvents();
             } else {
-              toast({ title: "Payment Failed", description: "Payment verification failed. Please contact support.", variant: "destructive" });
+              toast({
+                title: "Payment Failed",
+                description:
+                  "Payment verification failed. Please contact support.",
+                variant: "destructive",
+              });
             }
           },
           modal: {
             ondismiss: () => {
-              toast({ title: "Cancelled", description: "Payment was cancelled" });
+              toast({
+                title: "Cancelled",
+                description: "Payment was cancelled",
+              });
             },
           },
         });
       }
     } catch (error) {
       console.error("Registration error:", error);
-      toast({ 
-        title: "Error", 
-        description: error instanceof Error ? error.message : "Registration failed", 
-        variant: "destructive" 
+      toast({
+        title: "Error",
+        description:
+          error instanceof Error ? error.message : "Registration failed",
+        variant: "destructive",
       });
     } finally {
       setRegistering(false);
     }
   };
 
+  const eventTypes = ["All", "Workshop", "Training", "Webinar", "Conference"];
+
   return (
     <>
-      <SEO title="Events & Training | VFRA" description="Upcoming events, workshops and training programs by VFRA." />
+      <SEO
+        title="Upcoming Events & Forensic Programmes | VFRA Nagpur"
+        description="Upcoming workshops, forensic training programmes, webinars, and institutional sessions by Vigilant Forensic Research & Analysis."
+      />
       <div className="bg-background">
-      {/* Hero Section */}
-      <section className="relative py-10 md:py-20 lg:py-28 bg-gradient-to-br from-background via-background to-primary/10 overflow-hidden">
-        <div className="absolute inset-0 grid-overlay opacity-30" />
-        <div className="container relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <p className="text-sm font-medium text-primary mb-2 uppercase tracking-wider font-mono">Events & Training</p>
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 font-display">
-              Learn from the Experts
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              Join our workshops, webinars, and certification programs to enhance your 
-              skills in digital forensics and cybersecurity.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Upcoming Events */}
-      <section className="py-10 md:py-20 lg:py-28">
-        <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-[28px] md:text-4xl font-bold text-foreground mb-4">
-              Upcoming Events
-            </h2>
-            <p className="text-muted-foreground">
-              Register now for our upcoming training programs and workshops.
-            </p>
-          </div>
-
-          {loading ? (
-            <div className="flex justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-          ) : events.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">No upcoming events at the moment. Check back soon!</p>
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 gap-6">
-              {events.map((event) => (
-                <Card key={event.id} className="bg-card border-border/50 hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <div className="flex items-center justify-between mb-2">
-                      <Badge variant={event.mode === "Online" ? "secondary" : "default"}>
-                        {event.event_type}
-                      </Badge>
-                      <Badge variant="outline">{event.mode || "Offline"}</Badge>
-                    </div>
-                    <CardTitle className="text-xl">{event.title}</CardTitle>
-                    <CardDescription>{event.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3 mb-6">
-                      <div className="flex items-center gap-3 text-sm">
-                        <Calendar className="h-4 w-4 text-primary" />
-                        <span className="text-foreground">
-                          {new Date(event.event_date).toLocaleDateString("en-IN", {
-                            weekday: "long",
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })}
-                        </span>
-                      </div>
-                      {event.event_time && (
-                        <div className="flex items-center gap-3 text-sm">
-                          <Clock className="h-4 w-4 text-primary" />
-                          <span className="text-foreground">{event.event_time}</span>
-                        </div>
-                      )}
-                      <div className="flex items-center gap-3 text-sm">
-                        <MapPin className="h-4 w-4 text-primary" />
-                        <span className="text-foreground">{event.location || "TBA"}</span>
-                      </div>
-                      {event.seats_available !== null && (
-                        <div className="flex items-center gap-3 text-sm">
-                          <Users className="h-4 w-4 text-primary" />
-                          <span className="text-foreground">
-                            {event.seats_available > 0 ? `${event.seats_available} seats left` : "Sold Out"}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-2xl font-bold text-foreground">
-                          {event.price || "Free"}
-                        </span>
-                        {event.price && event.price.toLowerCase() !== "free" && (
-                          <span className="text-sm text-muted-foreground ml-1">+ GST</span>
-                        )}
-                      </div>
-                      <Button 
-                        className="gap-2"
-                        onClick={() => handleRegisterClick(event)}
-                        disabled={event.seats_available !== null && event.seats_available <= 0}
-                      >
-                        {event.seats_available !== null && event.seats_available <= 0 ? "Sold Out" : "Register Now"}
-                        <ArrowRight className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Training Programs */}
-      <section className="py-10 md:py-20 lg:py-28 bg-muted">
-        <div className="container">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <p className="text-sm font-medium text-primary mb-2 uppercase tracking-wider">Training Programs</p>
-              <h2 className="text-[28px] md:text-4xl font-bold text-foreground mb-6">
-                Custom Training for Your Organization
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                We offer customized training programs tailored to the needs of law enforcement agencies, 
-                government organizations, and corporate security teams.
+        {/* Hero Header */}
+        <section className="pt-28 pb-16 md:pt-36 md:pb-20 border-b border-border">
+          <div className="container">
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.65, ease: APPLE_EASE }}
+              className="max-w-3xl"
+            >
+              <span className="section-eyebrow">
+                01 / Academic & Institutional Calendar
+              </span>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-[-0.03em] text-foreground leading-[1.06] mb-6">
+                Forensic Workshops &{" "}
+                <span className="text-muted-foreground font-normal">
+                  Upcoming Events.
+                </span>
+              </h1>
+              <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl">
+                Participate in hands-on digital forensics training, law enforcement
+                briefings, and certified technical workshops hosted by VFRA.
               </p>
-              
-              <div className="space-y-4 mb-8">
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
-                    <span className="text-primary text-sm font-bold">1</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-foreground">Needs Assessment</h4>
-                    <p className="text-sm text-muted-foreground">We analyze your team's skill gaps and training requirements</p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Controls Bar: Upcoming vs Past + Event Type Filter */}
+        <section className="sticky top-16 z-30 bg-background/90 backdrop-blur-md border-b border-border">
+          <div className="container py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="inline-flex items-center p-1 bg-secondary border border-border rounded-lg self-start">
+              <button
+                onClick={() => setActiveTab("upcoming")}
+                className={`px-4 py-1.5 rounded-md font-mono text-xs uppercase tracking-[0.12em] transition-all ${
+                  activeTab === "upcoming"
+                    ? "bg-background text-foreground shadow-sm font-medium"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Upcoming ({allEvents.filter((e) => e.event_date >= todayIso).length})
+              </button>
+              <button
+                onClick={() => setActiveTab("past")}
+                className={`px-4 py-1.5 rounded-md font-mono text-xs uppercase tracking-[0.12em] transition-all ${
+                  activeTab === "past"
+                    ? "bg-background text-foreground shadow-sm font-medium"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Past Archive (
+                {pastDatabaseEvents.length +
+                  (extendedContent.pastEvents?.length || 0)}
+                )
+              </button>
+            </div>
+
+            {activeTab === "upcoming" && (
+              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+                {eventTypes.map((type) => {
+                  const active = typeFilter === type;
+                  return (
+                    <button
+                      key={type}
+                      onClick={() => setTypeFilter(type)}
+                      className={`px-3.5 py-1.5 rounded-md font-mono text-[11px] uppercase tracking-[0.12em] whitespace-nowrap transition-all ${
+                        active
+                          ? "bg-foreground text-background"
+                          : "bg-secondary text-muted-foreground hover:text-foreground border border-border"
+                      }`}
+                    >
+                      {type}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Events Display */}
+        <section className="py-16 md:py-24">
+          <div className="container">
+            {loading ? (
+              <div className="flex justify-center py-20">
+                <Loader2 className="h-6 w-6 animate-spin text-foreground" />
+              </div>
+            ) : activeTab === "upcoming" ? (
+              upcomingEvents.length === 0 ? (
+                <div className="border border-border rounded-xl p-12 text-center bg-secondary/30 max-w-2xl mx-auto">
+                  <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground mb-2">
+                    STATUS / SCHEDULE UPDATING
+                  </p>
+                  <h3 className="text-xl font-semibold text-foreground mb-2">
+                    No Upcoming Programmes Matching Filter
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-6">
+                    New workshops and training cohorts are scheduled regularly. Check
+                    our Past Archive or request a custom institutional training session.
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-3">
+                    {typeFilter !== "All" && (
+                      <button
+                        onClick={() => setTypeFilter("All")}
+                        className="btn-outline-gold text-xs py-2.5 px-5"
+                      >
+                        Reset Filter
+                      </button>
+                    )}
+                    <Link
+                      to="/contact"
+                      className="btn-gold inline-flex items-center gap-2 text-xs py-2.5 px-5"
+                    >
+                      Request Institutional Training
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
-                    <span className="text-primary text-sm font-bold">2</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-foreground">Custom Curriculum</h4>
-                    <p className="text-sm text-muted-foreground">Tailored content with relevant case studies and exercises</p>
-                  </div>
+              ) : (
+                <div className="grid md:grid-cols-2 gap-6">
+                  {upcomingEvents.map((event, index) => {
+                    const extraMeta =
+                      extendedContent.mediaByEventId?.[event.id] || {};
+                    const isSoldOut =
+                      event.seats_available !== null && event.seats_available <= 0;
+
+                    return (
+                      <motion.div
+                        key={event.id}
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{
+                          duration: 0.5,
+                          delay: index * 0.06,
+                          ease: APPLE_EASE,
+                        }}
+                        className="premium-card overflow-hidden flex flex-col justify-between group"
+                      >
+                        <div>
+                          {extraMeta.banner_url && (
+                            <div className="aspect-[16/9] w-full overflow-hidden border-b border-border bg-secondary relative">
+                              <img
+                                src={extraMeta.banner_url}
+                                alt={event.title}
+                                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                              />
+                              <div className="absolute top-3 left-3 flex items-center gap-2">
+                                <span className="font-mono text-[10px] uppercase tracking-[0.14em] px-2.5 py-1 rounded bg-background/90 backdrop-blur-md text-foreground border border-border">
+                                  {event.event_type}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          <div className="p-7 md:p-8">
+                            <div className="flex items-center justify-between gap-2 mb-5 pb-4 border-b border-border">
+                              <div className="flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                                <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-foreground font-medium">
+                                  UPCOMING · {event.event_type}
+                                </span>
+                              </div>
+                              <span className="font-mono text-[11px] uppercase tracking-[0.12em] px-2.5 py-1 rounded border border-border text-muted-foreground">
+                                {event.mode || "Offline"}
+                              </span>
+                            </div>
+
+                            <h3 className="text-xl md:text-2xl font-bold text-foreground tracking-tight mb-3 leading-snug">
+                              {event.title}
+                            </h3>
+                            {event.description && (
+                              <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+                                {event.description}
+                              </p>
+                            )}
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 py-4 border-y border-border text-xs">
+                              <div className="flex items-center gap-2.5 text-muted-foreground">
+                                <Calendar className="h-3.5 w-3.5 text-foreground shrink-0" />
+                                <span className="font-mono">
+                                  {new Date(event.event_date).toLocaleDateString(
+                                    "en-IN",
+                                    {
+                                      day: "2-digit",
+                                      month: "short",
+                                      year: "numeric",
+                                    }
+                                  )}
+                                </span>
+                              </div>
+                              {event.event_time && (
+                                <div className="flex items-center gap-2.5 text-muted-foreground">
+                                  <Clock className="h-3.5 w-3.5 text-foreground shrink-0" />
+                                  <span className="font-mono">{event.event_time}</span>
+                                </div>
+                              )}
+                              <div className="flex items-center gap-2.5 text-muted-foreground">
+                                <MapPin className="h-3.5 w-3.5 text-foreground shrink-0" />
+                                <span className="truncate">
+                                  {event.location || "TBA"}
+                                </span>
+                              </div>
+                              {event.seats_available !== null && (
+                                <div className="flex items-center gap-2.5 text-muted-foreground">
+                                  <Users className="h-3.5 w-3.5 text-foreground shrink-0" />
+                                  <span className="font-mono">
+                                    {event.seats_available > 0
+                                      ? `${event.seats_available} SEATS AVAILABLE`
+                                      : "SOLD OUT"}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="px-7 pb-7 md:px-8 md:pb-8 flex items-center justify-between gap-4">
+                          <div>
+                            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground block">
+                              REGISTRATION FEE
+                            </span>
+                            <div className="flex items-baseline gap-1">
+                              <span className="text-2xl font-bold text-foreground tracking-tight">
+                                {event.price || "Free"}
+                              </span>
+                              {event.price &&
+                                event.price.toLowerCase() !== "free" && (
+                                  <span className="font-mono text-[11px] text-muted-foreground">
+                                    + GST
+                                  </span>
+                                )}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            {extraMeta.registration_url && (
+                              <a
+                                href={extraMeta.registration_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn-outline-gold inline-flex items-center gap-1.5 text-xs py-2.5 px-4"
+                              >
+                                Details
+                                <ArrowUpRight className="h-3.5 w-3.5" />
+                              </a>
+                            )}
+                            <button
+                              onClick={() => handleRegisterClick(event)}
+                              disabled={isSoldOut}
+                              className="btn-gold inline-flex items-center gap-2 text-xs py-2.5 px-5 disabled:opacity-40"
+                            >
+                              {isSoldOut ? "Sold Out" : "Register Now"}
+                              <ArrowRight className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
                 </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
-                    <span className="text-primary text-sm font-bold">3</span>
+              )
+            ) : (
+              /* Past Events Tab */
+              <div className="space-y-8">
+                {pastDatabaseEvents.length > 0 && (
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {pastDatabaseEvents.map((event) => {
+                      const extraMeta =
+                        extendedContent.mediaByEventId?.[event.id] || {};
+                      return (
+                        <div
+                          key={event.id}
+                          className="premium-card overflow-hidden p-7 flex flex-col justify-between opacity-90"
+                        >
+                          <div>
+                            {extraMeta.banner_url && (
+                              <div className="aspect-[16/9] w-full overflow-hidden rounded-lg mb-5 border border-border bg-secondary">
+                                <img
+                                  src={extraMeta.banner_url}
+                                  alt={event.title}
+                                  className="w-full h-full object-cover grayscale"
+                                />
+                              </div>
+                            )}
+                            <div className="flex items-center justify-between mb-3">
+                              <span className="font-mono text-[10px] uppercase tracking-[0.14em] px-2.5 py-1 rounded bg-secondary text-muted-foreground border border-border">
+                                CONCLUDED · {event.event_type}
+                              </span>
+                              <span className="font-mono text-xs text-muted-foreground">
+                                {new Date(event.event_date).toLocaleDateString(
+                                  "en-IN",
+                                  {
+                                    month: "short",
+                                    year: "numeric",
+                                  }
+                                )}
+                              </span>
+                            </div>
+                            <h3 className="text-lg font-bold text-foreground mb-2">
+                              {event.title}
+                            </h3>
+                            {event.description && (
+                              <p className="text-sm text-muted-foreground mb-4">
+                                {event.description}
+                              </p>
+                            )}
+                          </div>
+                          <div className="pt-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground font-mono">
+                            <span>{event.location || "Nagpur"}</span>
+                            <span>{event.mode || "Offline"}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-foreground">Hands-on Labs</h4>
-                    <p className="text-sm text-muted-foreground">Practical exercises with industry-standard tools</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
-                    <span className="text-primary text-sm font-bold">4</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-foreground">Certification</h4>
-                    <p className="text-sm text-muted-foreground">Participants receive verified completion certificates</p>
-                  </div>
+                )}
+
+                <div className="grid md:grid-cols-3 gap-6">
+                  {(extendedContent.pastEvents || []).map((item, idx) => (
+                    <motion.div
+                      key={item.id || idx}
+                      initial={{ opacity: 0, y: 16 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{
+                        duration: 0.45,
+                        delay: idx * 0.06,
+                        ease: APPLE_EASE,
+                      }}
+                      className="premium-card overflow-hidden flex flex-col justify-between"
+                    >
+                      <div>
+                        {item.banner_url && (
+                          <div className="aspect-[16/10] w-full overflow-hidden border-b border-border bg-secondary">
+                            <img
+                              src={item.banner_url}
+                              alt={item.title}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        )}
+                        <div className="p-6">
+                          <div className="flex items-center justify-between mb-3">
+                            <span className="font-mono text-[10px] uppercase tracking-[0.14em] px-2.5 py-0.5 rounded bg-secondary text-muted-foreground border border-border">
+                              ARCHIVE RECORD
+                            </span>
+                            <span className="font-mono text-xs text-muted-foreground">
+                              {item.date}
+                            </span>
+                          </div>
+                          <h4 className="text-lg font-semibold text-foreground tracking-tight mb-2 leading-snug">
+                            {item.title}
+                          </h4>
+                          {item.summary && (
+                            <p className="text-xs text-muted-foreground leading-relaxed mb-4">
+                              {item.summary}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="px-6 pb-6 pt-3 border-t border-border text-xs space-y-1">
+                        <div className="font-mono text-foreground font-medium">
+                          {item.participants}
+                        </div>
+                        <div className="text-muted-foreground">{item.location}</div>
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
               </div>
+            )}
+          </div>
+        </section>
 
-              <Link to="/contact">
-                <Button size="lg" className="gap-2">
-                  Request Training Quote
+        {/* Institutional Custom Training Section */}
+        <section className="py-20 md:py-28 bg-secondary/50 border-t border-border">
+          <div className="container">
+            <div className="grid lg:grid-cols-12 gap-12 items-start">
+              <div className="lg:col-span-6">
+                <span className="section-eyebrow">02 / Institutional Programmes</span>
+                <h2 className="text-3xl md:text-4xl font-bold text-foreground tracking-[-0.03em] mb-4">
+                  Custom Forensic Training for Your Organization.
+                </h2>
+                <p className="text-muted-foreground text-sm md:text-base leading-relaxed mb-8">
+                  We design bespoke curriculum modules for law enforcement units,
+                  government departments, universities, and corporate incident
+                  response teams.
+                </p>
+                <Link
+                  to="/contact"
+                  className="btn-gold inline-flex items-center gap-2 text-sm"
+                >
+                  Request Institutional Proposal
                   <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
+                </Link>
+              </div>
 
-            {/* Past Events */}
-            <div>
-              <h3 className="text-xl font-semibold text-foreground mb-6">Recent Training Programs</h3>
-              <div className="space-y-4">
-                {pastEvents.map((event, index) => (
-                  <Card key={index} className="bg-card border-border/50">
-                    <CardContent className="py-4">
-                      <h4 className="font-semibold text-foreground">{event.title}</h4>
-                      <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
-                        <span>{event.date}</span>
-                        <span>•</span>
-                        <span>{event.participants}</span>
-                      </div>
-                      <p className="text-sm text-primary mt-1">{event.location}</p>
-                    </CardContent>
-                  </Card>
+              <div className="lg:col-span-6 grid sm:grid-cols-2 gap-px bg-border border border-border rounded-xl overflow-hidden">
+                {[
+                  {
+                    step: "01",
+                    title: "Needs Assessment",
+                    desc: "Analysis of operational skill gaps and evidentiary requirements.",
+                  },
+                  {
+                    step: "02",
+                    title: "Custom Curriculum",
+                    desc: "Tailored syllabus built around real forensic case studies.",
+                  },
+                  {
+                    step: "03",
+                    title: "Hands-On Lab Drills",
+                    desc: "Practical investigation exercises with industry-grade tools.",
+                  },
+                  {
+                    step: "04",
+                    title: "Verified Certification",
+                    desc: "Tamper-evident digital credentials verifiable on the VFRA registry.",
+                  },
+                ].map((item) => (
+                  <div key={item.step} className="bg-background p-6">
+                    <span className="font-mono text-xs text-muted-foreground block mb-3">
+                      PHASE / {item.step}
+                    </span>
+                    <h4 className="text-base font-semibold text-foreground mb-1.5">
+                      {item.title}
+                    </h4>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
                 ))}
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Certificate Verification CTA */}
-      <section className="py-10 md:py-20 lg:py-28">
-        <div className="container">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-[28px] md:text-4xl font-bold text-foreground mb-6">
-              Verify Your Certificate
-            </h2>
-            <p className="text-muted-foreground mb-8">
-              Already completed a training program? Verify your certificate authenticity 
-              using our online verification system.
-            </p>
-            <Link to="/verify">
-              <Button size="lg" variant="outline" className="gap-2">
+        {/* Certificate Verification CTA */}
+        <section className="py-16 md:py-20 border-t border-border">
+          <div className="container">
+            <div className="premium-card p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+              <div>
+                <span className="section-eyebrow">03 / Credential Registry</span>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight mb-2">
+                  Verify Your Event or Training Certificate
+                </h2>
+                <p className="text-sm text-muted-foreground max-w-xl">
+                  Completed a VFRA workshop or training cohort? Validate your
+                  certificate ID instantly via our public verification ledger.
+                </p>
+              </div>
+              <Link
+                to="/verify"
+                className="btn-outline-gold inline-flex items-center gap-2 text-sm shrink-0"
+              >
                 Verify Certificate
                 <ExternalLink className="h-4 w-4" />
-              </Button>
-            </Link>
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Registration Dialog */}
-      <Dialog open={registrationOpen} onOpenChange={setRegistrationOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Register for Event</DialogTitle>
-            <DialogDescription>
-              {selectedEvent?.title}
-              {selectedEvent?.price && selectedEvent.price.toLowerCase() !== "free" && (
-                <span className="block mt-1 text-primary font-medium">
-                  Fee: {selectedEvent.price} + GST
-                </span>
-              )}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div>
-              <Label htmlFor="name">Full Name *</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Enter your full name"
-              />
+        {/* Registration Dialog */}
+        <Dialog open={registrationOpen} onOpenChange={setRegistrationOpen}>
+          <DialogContent className="sm:max-w-md border-border">
+            <DialogHeader>
+              <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground mb-1">
+                PROGRAMME REGISTRATION
+              </div>
+              <DialogTitle className="text-xl font-bold tracking-tight">
+                {selectedEvent?.title}
+              </DialogTitle>
+              <DialogDescription className="pt-1">
+                {selectedEvent?.price &&
+                selectedEvent.price.toLowerCase() !== "free" ? (
+                  <span className="font-mono text-xs text-foreground font-medium">
+                    Fee: {selectedEvent.price} + GST
+                  </span>
+                ) : (
+                  <span className="font-mono text-xs text-muted-foreground">
+                    Complimentary Registration (Free)
+                  </span>
+                )}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-3">
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="name"
+                  className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
+                >
+                  Full Name *
+                </Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  placeholder="Enter your full name"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="email"
+                  className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
+                >
+                  Email Address *
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  placeholder="name@institution.org"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="phone"
+                  className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
+                >
+                  Phone Number
+                </Label>
+                <Input
+                  id="phone"
+                  value={formData.phone}
+                  onChange={(e) =>
+                    setFormData({ ...formData, phone: e.target.value })
+                  }
+                  placeholder="+91 XXXXX XXXXX"
+                />
+              </div>
+              <button
+                onClick={handleRegistration}
+                className="btn-gold w-full py-3 text-sm flex items-center justify-center gap-2 mt-2"
+                disabled={registering || paymentLoading}
+              >
+                {registering || paymentLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Processing...
+                  </>
+                ) : parsePrice(selectedEvent?.price || null) === 0 ? (
+                  "Confirm Registration (Free)"
+                ) : (
+                  `Pay ${selectedEvent?.price} & Register`
+                )}
+              </button>
             </div>
-            <div>
-              <Label htmlFor="email">Email *</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="Enter your email"
-              />
-            </div>
-            <div>
-              <Label htmlFor="phone">Phone Number</Label>
-              <Input
-                id="phone"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                placeholder="Enter your phone number"
-              />
-            </div>
-            <Button 
-              onClick={handleRegistration} 
-              className="w-full" 
-              disabled={registering || paymentLoading}
-            >
-              {registering || paymentLoading ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Processing...
-                </>
-              ) : parsePrice(selectedEvent?.price || null) === 0 ? (
-                "Register (Free)"
-              ) : (
-                `Pay ${selectedEvent?.price} & Register`
-              )}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </div>
-  </>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </>
   );
 };
 

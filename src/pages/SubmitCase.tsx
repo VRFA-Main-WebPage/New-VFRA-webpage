@@ -2,7 +2,6 @@ import { SEO } from "@/components/SEO";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Shield, ArrowRight, CheckCircle, Copy, Lock, FileText, User } from "lucide-react";
+import { Shield, ArrowRight, CheckCircle, Copy, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
@@ -88,219 +87,219 @@ const SubmitCase = () => {
 
   if (submittedCaseId) {
     return (
-    <>
-      <SEO title="Register a Case | VFRA" description="Submit a new case for digital forensic investigation." />
-      <div className="min-h-screen bg-background flex items-center justify-center py-24 px-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="max-w-lg w-full"
-        >
-          <Card className="premium-card text-center border-primary/20">
-            <CardContent className="pt-10 pb-10">
-              <div className="w-16 h-16 rounded-full bg-success/15 border border-success/30 flex items-center justify-center mx-auto mb-6">
-                <CheckCircle className="h-8 w-8 text-success" />
+      <>
+        <SEO title="Case Registered | VFRA Nagpur" description="Your case has been registered with VFRA." />
+        <div className="min-h-screen bg-[#F7F7F5] flex items-center justify-center py-20 px-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="max-w-lg w-full"
+          >
+            <div className="premium-card p-8 md:p-10 bg-white text-center">
+              <div className="w-12 h-12 rounded-md bg-[#F7F7F5] border border-[#E5E5E3] flex items-center justify-center mx-auto mb-6">
+                <CheckCircle className="h-6 w-6 text-emerald-700" />
               </div>
-              <h2 className="font-heading text-2xl font-bold text-foreground mb-2">
-                Case Registered Successfully
+              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#555555]">
+                INTAKE CONFIRMATION
+              </span>
+              <h2 className="font-heading text-2xl font-bold text-[#111111] mt-1 mb-2">
+                Case Logged Successfully
               </h2>
-              <p className="text-muted-foreground text-sm mb-8">
-                Your matter has been logged. Store your Case ID securely — you will need it to track status.
+              <p className="text-sm text-[#555555] mb-8">
+                Store your unique Case ID securely. You will require this identifier to monitor investigation progress.
               </p>
 
-              <div className="bg-panel border-2 border-primary/30 rounded-xl p-6 mb-6">
-                <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Your Case ID</p>
+              <div className="bg-[#F7F7F5] border border-[#111111] rounded-md p-6 mb-6">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-[#555555] mb-2">
+                  ASSIGNED CASE IDENTIFIER
+                </p>
                 <div className="flex items-center justify-center gap-2">
-                  <span className="font-mono text-[24px] md:text-3xl font-bold text-primary tracking-wide">
+                  <span className="font-mono text-2xl md:text-3xl font-bold text-[#111111] tracking-tight">
                     {submittedCaseId}
                   </span>
                   <Button variant="ghost" size="icon" onClick={copyToClipboard} aria-label="Copy Case ID">
-                    <Copy className="h-5 w-5" />
+                    <Copy className="h-4 w-4 text-[#111111]" />
                   </Button>
                 </div>
               </div>
 
-              <p className="text-xs text-muted-foreground mb-8 leading-relaxed">
-                VFRA will review your submission and respond based on scope, authorization, and engagement terms.
-                Submission does not guarantee acceptance or specific outcomes.
-              </p>
-
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2.5">
                 <Link to="/track-case">
-                  <Button className="w-full btn-gold gap-2">
+                  <Button className="w-full h-11 bg-[#111111] text-white hover:bg-[#2A2A2A] font-mono text-xs uppercase tracking-[0.1em] gap-2">
                     Track Your Case
-                    <ArrowRight className="h-4 w-4" />
+                    <ArrowRight className="h-3.5 w-3.5" />
                   </Button>
                 </Link>
                 <Link to="/">
-                  <Button variant="outline" className="w-full btn-outline-gold">
-                    Back to Home
+                  <Button variant="outline" className="w-full h-11 border-[#D4D4D0] text-[#111111] font-mono text-xs uppercase tracking-[0.1em]">
+                    Return to Home
                   </Button>
                 </Link>
               </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-    </>
+            </div>
+          </motion.div>
+        </div>
+      </>
     );
   }
 
   return (
     <>
-      <SEO title="Register a Case | VFRA" description="Submit a new case for digital forensic investigation." />
-      <div className="min-h-screen bg-background">
-        <section className="bg-gradient-hero py-10 md:py-20 lg:py-28 relative border-b border-border overflow-hidden">
-          <div className="absolute inset-0 grid-overlay opacity-30" />
-          <div className="container relative z-10">
-            <div className="max-w-3xl mx-auto text-center">
-              <div className="inline-flex items-center gap-2 border border-border bg-card/50 rounded-full px-4 py-1.5 mb-6 text-sm text-muted-foreground">
-                <Lock className="h-4 w-4 text-primary" />
-                Secure case intake
-              </div>
-              <h1 className="font-heading text-4xl md:text-5xl font-bold text-foreground mb-5">
-                Register a Case
-              </h1>
-              <p className="text-lg text-muted-foreground">
-                Submit your matter for professional review. All information is handled confidentially under
-                our engagement and privacy protocols.
-              </p>
+      <SEO title="Register a Case | VFRA Nagpur" description="Submit a new case for digital forensic investigation." />
+      <div className="min-h-screen bg-white">
+        {/* Hero */}
+        <section className="py-16 md:py-24 bg-[#F7F7F5] border-b border-[#E5E5E3]">
+          <div className="container max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-white border border-[#E5E5E3] mb-4">
+              <Lock className="h-3.5 w-3.5 text-[#111111]" />
+              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#111111]">
+                CONFIDENTIAL CASE INTAKE
+              </span>
             </div>
+            <h1 className="font-heading text-4xl md:text-5xl font-semibold text-[#111111] tracking-[-0.035em] mb-4">
+              Register a Case.
+            </h1>
+            <p className="text-base text-[#555555] leading-relaxed">
+              Submit your matter for technical review. All information is handled strictly under chain-of-custody and non-disclosure protocols.
+            </p>
           </div>
         </section>
 
-        <section className="py-16 lg:py-20">
+        {/* Form */}
+        <section className="py-16 md:py-24">
           <div className="container max-w-2xl">
             <form onSubmit={handleSubmit} className="space-y-8">
-              <Card className="premium-card">
-                <CardHeader className="pb-4">
-                  <div className="flex items-center gap-3">
-                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary text-sm font-bold border border-primary/20">
-                      1
-                    </span>
-                    <div>
-                      <CardTitle className="font-heading flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-primary" />
-                        Case Information
-                      </CardTitle>
-                      <CardDescription>Describe the matter you need assistance with</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
+              {/* Step 1 */}
+              <div className="premium-card p-6 md:p-8 bg-white">
+                <div className="flex items-center justify-between pb-4 mb-6 border-b border-[#E5E5E3]">
+                  <span className="font-mono text-xs font-semibold text-[#111111]">
+                    01 // MATTER SPECIFICATION
+                  </span>
+                  <span className="font-mono text-[10px] text-[#555555] uppercase">REQUIRED</span>
+                </div>
+
+                <div className="space-y-5">
                   <div>
-                    <Label htmlFor="title">Case Title *</Label>
+                    <Label htmlFor="title" className="font-mono text-xs uppercase tracking-wider">
+                      Case Title / Subject *
+                    </Label>
                     <Input
                       id="title"
                       value={formData.title}
                       onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                      placeholder="Brief summary of your matter"
+                      placeholder="Brief summary of the incident or examination needed"
                       required
-                      className="mt-1.5"
+                      className="mt-2 h-11 bg-[#F7F7F5]/50"
                     />
                   </div>
+
                   <div>
-                    <Label htmlFor="description">Detailed Description</Label>
-                    <Textarea
-                      id="description"
-                      value={formData.description}
-                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      placeholder="Include relevant dates, context, and any evidence references..."
-                      rows={5}
-                      className="mt-1.5"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="category">Case Category</Label>
+                    <Label htmlFor="category" className="font-mono text-xs uppercase tracking-wider">
+                      Classification
+                    </Label>
                     <Select
                       value={formData.category}
                       onValueChange={(v) => setFormData({ ...formData, category: v })}
                     >
-                      <SelectTrigger id="category" className="mt-1.5">
+                      <SelectTrigger id="category" className="mt-2 h-11 bg-[#F7F7F5]/50">
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="individual">Individual / Personal</SelectItem>
-                        <SelectItem value="corporate">Corporate / Business</SelectItem>
-                        <SelectItem value="legal">Legal Matter</SelectItem>
+                        <SelectItem value="corporate">Corporate / Enterprise</SelectItem>
+                        <SelectItem value="legal">Legal / Advocate Counsel</SelectItem>
                         <SelectItem value="government">Government / Law Enforcement</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
-                </CardContent>
-              </Card>
 
-              <Card className="premium-card">
-                <CardHeader className="pb-4">
-                  <div className="flex items-center gap-3">
-                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary text-sm font-bold border border-primary/20">
-                      2
-                    </span>
-                    <div>
-                      <CardTitle className="font-heading flex items-center gap-2">
-                        <User className="h-4 w-4 text-primary" />
-                        Contact Details
-                      </CardTitle>
-                      <CardDescription>How we may reach you regarding this matter</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
                   <div>
-                    <Label htmlFor="client_name">Full Name *</Label>
+                    <Label htmlFor="description" className="font-mono text-xs uppercase tracking-wider">
+                      Detailed Description
+                    </Label>
+                    <Textarea
+                      id="description"
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      placeholder="Include relevant dates, device types, and context..."
+                      rows={5}
+                      className="mt-2 bg-[#F7F7F5]/50"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 2 */}
+              <div className="premium-card p-6 md:p-8 bg-white">
+                <div className="flex items-center justify-between pb-4 mb-6 border-b border-[#E5E5E3]">
+                  <span className="font-mono text-xs font-semibold text-[#111111]">
+                    02 // POINT OF CONTACT
+                  </span>
+                  <span className="font-mono text-[10px] text-[#555555] uppercase">CONFIDENTIAL</span>
+                </div>
+
+                <div className="space-y-5">
+                  <div>
+                    <Label htmlFor="client_name" className="font-mono text-xs uppercase tracking-wider">
+                      Full Name *
+                    </Label>
                     <Input
                       id="client_name"
                       value={formData.client_name}
                       onChange={(e) => setFormData({ ...formData, client_name: e.target.value })}
                       placeholder="Your full name"
                       required
-                      className="mt-1.5"
+                      className="mt-2 h-11 bg-[#F7F7F5]/50"
                     />
                   </div>
+
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="client_email">Email</Label>
+                      <Label htmlFor="client_email" className="font-mono text-xs uppercase tracking-wider">
+                        Email Address
+                      </Label>
                       <Input
                         id="client_email"
                         type="email"
                         value={formData.client_email}
                         onChange={(e) => setFormData({ ...formData, client_email: e.target.value })}
-                        placeholder="you@example.com"
-                        className="mt-1.5"
+                        placeholder="name@example.com"
+                        className="mt-2 h-11 bg-[#F7F7F5]/50"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="client_phone">Phone</Label>
+                      <Label htmlFor="client_phone" className="font-mono text-xs uppercase tracking-wider">
+                        Phone Number
+                      </Label>
                       <Input
                         id="client_phone"
                         value={formData.client_phone}
                         onChange={(e) => setFormData({ ...formData, client_phone: e.target.value })}
                         placeholder="+91"
-                        className="mt-1.5"
+                        className="mt-2 h-11 bg-[#F7F7F5]/50"
                       />
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
 
-              <div className="rounded-xl border border-border bg-panel/50 p-5 text-sm text-muted-foreground space-y-2">
-                <p className="flex items-start gap-2">
-                  <Shield className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <span>
-                    <strong className="text-foreground">Trust & confidentiality:</strong> Information submitted
-                    is used solely for case assessment and communication. VFRA does not guarantee specific
-                    investigation outcomes.
-                  </span>
+              <div className="p-5 rounded-md border border-[#E5E5E3] bg-[#F7F7F5] text-xs text-[#555555] space-y-2">
+                <p className="flex items-start gap-2.5 text-[#111111] font-medium">
+                  <Shield className="h-4 w-4 shrink-0 mt-0.5" />
+                  <span>Evidentiary &amp; Lawful Authority Declaration</span>
                 </p>
-                <p className="text-xs">
-                  By submitting, you confirm that you have lawful authority to request assistance for this
-                  matter and that information provided is accurate to the best of your knowledge.
+                <p className="leading-relaxed">
+                  By submitting this intake form, you confirm that you possess lawful authority to request forensic examination for this matter.
                 </p>
               </div>
 
-              <Button type="submit" className="w-full btn-gold gap-2 py-6 text-base" disabled={isSubmitting}>
-                {isSubmitting ? "Submitting..." : "Submit Case Securely"}
+              <Button
+                type="submit"
+                className="w-full h-12 bg-[#111111] text-white hover:bg-[#2A2A2A] font-mono text-xs uppercase tracking-[0.12em] gap-2"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Generating Case ID..." : "Submit Case Intake"}
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </form>
