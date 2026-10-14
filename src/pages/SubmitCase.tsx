@@ -63,8 +63,8 @@ const SubmitCase = () => {
 
       setSubmittedCaseId(data.case_id);
       toast({
-        title: "Case submitted successfully",
-        description: "Save your Case ID to track progress.",
+        title: "Enquiry submitted successfully",
+        description: "Our team will review your submission and contact you shortly.",
       });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Submission failed";
@@ -88,7 +88,7 @@ const SubmitCase = () => {
   if (submittedCaseId) {
     return (
       <>
-        <SEO title="Case Registered | VFRA Nagpur" description="Your case has been registered with VFRA." />
+        <SEO title="Enquiry Submitted | VFRA Nagpur" description="Your enquiry has been submitted to VFRA." />
         <div className="min-h-screen bg-[#F7F7F5] flex items-center justify-center py-20 px-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
@@ -100,28 +100,14 @@ const SubmitCase = () => {
                 <CheckCircle className="h-6 w-6 text-emerald-700" />
               </div>
               <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#555555]">
-                INTAKE CONFIRMATION
+                ENQUIRY CONFIRMATION
               </span>
-              <h2 className="font-heading text-2xl font-bold text-[#111111] mt-1 mb-2">
-                Case Logged Successfully
+              <h2 className="font-heading text-2xl font-bold text-[#111111] mt-1 mb-3">
+                Enquiry Submitted Successfully
               </h2>
-              <p className="text-sm text-[#555555] mb-8">
-                Store your unique Case ID securely. You will require this identifier to monitor investigation progress.
+              <p className="text-sm text-[#555555] mb-8 leading-relaxed">
+                Thank you for contacting Vigilant Forensic Research & Analytics. Our technical team has received your enquiry details and will reach out to you shortly.
               </p>
-
-              <div className="bg-[#F7F7F5] border border-[#111111] rounded-md p-6 mb-6">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-[#555555] mb-2">
-                  ASSIGNED CASE IDENTIFIER
-                </p>
-                <div className="flex items-center justify-center gap-2">
-                  <span className="font-mono text-2xl md:text-3xl font-bold text-[#111111] tracking-tight">
-                    {submittedCaseId}
-                  </span>
-                  <Button variant="ghost" size="icon" onClick={copyToClipboard} aria-label="Copy Case ID">
-                    <Copy className="h-4 w-4 text-[#111111]" />
-                  </Button>
-                </div>
-              </div>
 
               <div className="flex flex-col gap-2.5">
                 <Link to="/">
