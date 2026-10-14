@@ -31,8 +31,7 @@ const footerLinks = {
   ],
   operations: [
     { title: "Register a Case", href: "/submit-case" },
-    { title: "Track Investigation", href: "/track-case" },
-    { title: "Verify Certificate", href: "/verify" },
+    { title: "Institutional Proposals", href: "/contact" },
     { title: "Admin Portal", href: "/admin" },
   ],
 };
@@ -96,7 +95,7 @@ export function Footer() {
                 ["01 / Capabilities", footerLinks.services],
                 ["02 / Platforms", footerLinks.platforms],
                 ["03 / Institution", footerLinks.institution],
-                ["04 / Verification", footerLinks.operations],
+                ["04 / Engagement", footerLinks.operations],
               ] as const
             ).map(([title, links]) => (
               <div key={title}>

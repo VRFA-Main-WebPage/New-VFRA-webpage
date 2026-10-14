@@ -668,30 +668,6 @@ const Events = () => {
           </div>
         </section>
 
-        {/* Certificate Verification CTA */}
-        <section className="py-16 md:py-20 border-t border-border">
-          <div className="container">
-            <div className="premium-card p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-              <div>
-                <span className="section-eyebrow">03 / Credential Registry</span>
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight mb-2">
-                  Verify Your Event or Training Certificate
-                </h2>
-                <p className="text-sm text-muted-foreground max-w-xl">
-                  Completed a VFRA workshop or training cohort? Validate your
-                  certificate ID instantly via our public verification ledger.
-                </p>
-              </div>
-              <Link
-                to="/verify"
-                className="btn-outline-gold inline-flex items-center gap-2 text-sm shrink-0"
-              >
-                Verify Certificate
-                <ExternalLink className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </section>
 
         {/* Registration Dialog */}
         <Dialog open={registrationOpen} onOpenChange={setRegistrationOpen}>

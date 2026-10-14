@@ -5,7 +5,6 @@ import { ProductsSection } from "@/components/home/ProductsSection";
 import { ServicesSection } from "@/components/home/ServicesSection";
 import { WhyVFRASection } from "@/components/home/WhyVFRASection";
 import { ProcessTimelineSection } from "@/components/home/ProcessTimelineSection";
-import { CertificateCTASection } from "@/components/home/CertificateCTASection";
 import { EventsPreviewSection } from "@/components/home/EventsPreviewSection";
 import { GalleryPreviewSection } from "@/components/home/GalleryPreviewSection";
 import { TrustSection } from "@/components/home/TrustSection";
@@ -24,7 +23,7 @@ const Index = () => {
       <ServicesSection />
       <WhyVFRASection />
       <ProcessTimelineSection />
-      <CertificateCTASection />
+      {/* Note: CertificateCTASection (Track Case & Verify Certificate portal) is preserved in src/components/home/CertificateCTASection.tsx for quick re-enabling */}
       <EventsPreviewSection />
       <GalleryPreviewSection />
       <TrustSection />

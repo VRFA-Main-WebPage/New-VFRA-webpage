@@ -124,15 +124,10 @@ const SubmitCase = () => {
               </div>
 
               <div className="flex flex-col gap-2.5">
-                <Link to="/track-case">
-                  <Button className="w-full h-11 bg-[#111111] text-white hover:bg-[#2A2A2A] font-mono text-xs uppercase tracking-[0.1em] gap-2">
-                    Track Your Case
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Button>
-                </Link>
                 <Link to="/">
-                  <Button variant="outline" className="w-full h-11 border-[#D4D4D0] text-[#111111] font-mono text-xs uppercase tracking-[0.1em]">
+                  <Button className="w-full h-11 bg-[#111111] text-white hover:bg-[#2A2A2A] font-mono text-xs uppercase tracking-[0.1em] gap-2">
                     Return to Home
+                    <ArrowRight className="h-3.5 w-3.5" />
                   </Button>
                 </Link>
               </div>

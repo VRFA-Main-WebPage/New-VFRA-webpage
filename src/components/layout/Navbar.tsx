@@ -14,7 +14,6 @@ const navLinks = [
   { title: "Gallery", href: "/gallery" },
   { title: "Upcoming Events", href: "/events" },
   { title: "Insights", href: "/blog" },
-  { title: "Verify", href: "/verify" },
   { title: "Contact", href: "/contact" },
 ];
 
@@ -38,35 +37,38 @@ export function Navbar() {
       className={cn(
         "fixed top-0 z-50 w-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
         scrolled
-          ? "bg-white/85 backdrop-blur-xl border-b border-[#E5E5E3]"
-          : "bg-white/75 backdrop-blur-md border-b border-[#E5E5E3]/70"
+          ? "bg-white/90 backdrop-blur-xl border-b border-[#E5E5E3] shadow-[0_1px_3px_rgba(0,0,0,0.02)]"
+          : "bg-white/80 backdrop-blur-md border-b border-[#E5E5E3]/80"
       )}
     >
-      <div className="container flex h-16 items-center justify-between gap-4">
+      <div className="container flex h-20 items-center justify-between gap-6">
         {/* Brand Identity */}
         <Link
           to="/"
-          className="flex items-center gap-3 min-w-0 shrink-0 group focus:outline-none"
+          className="flex items-center gap-3.5 min-w-0 shrink-0 group focus:outline-none"
         >
-          <div className="h-9 w-9 rounded-md border border-[#E5E5E3] bg-[#F7F7F5] p-1 flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-[1.02]">
+          <div className="h-11 w-11 rounded-lg border border-[#E5E5E3] bg-[#F7F7F5] p-1.5 flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-[1.03] shadow-sm">
             <img
               src={vfraLogo}
               alt="VFRA"
               className="h-full w-full object-contain"
             />
           </div>
-          <div className="flex flex-col leading-none">
-            <span className="font-heading font-bold text-[13px] sm:text-sm tracking-[-0.02em] text-[#111111]">
+          <div className="flex flex-col leading-tight">
+            <span className="font-heading font-bold text-base sm:text-[17px] tracking-[-0.02em] text-[#111111]">
               VIGILANT FORENSIC
             </span>
-            <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-[#555555] mt-1">
+            <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-[#555555] mt-0.5">
               Research &amp; Analytics · Nagpur
             </span>
           </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden xl:flex items-center gap-1" aria-label="Primary Navigation">
+        <nav
+          className="hidden xl:flex items-center gap-1.5"
+          aria-label="Primary Navigation"
+        >
           {navLinks.map((link) => (
             <NavLink
               key={link.href}
@@ -74,10 +76,10 @@ export function Navbar() {
               end={link.href === "/"}
               className={({ isActive }) =>
                 cn(
-                  "relative px-3 py-1.5 text-[13px] font-medium tracking-[-0.01em] transition-colors duration-300 rounded-md",
+                  "relative px-4 py-2 text-[15px] font-medium tracking-[-0.01em] transition-colors duration-300 rounded-md",
                   isActive
                     ? "text-[#111111] bg-[#F7F7F5]"
-                    : "text-[#555555] hover:text-[#111111] hover:bg-[#F7F7F5]/60"
+                    : "text-[#555555] hover:text-[#111111] hover:bg-[#F7F7F5]/70"
                 )
               }
             >
@@ -86,24 +88,14 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Action Buttons */}
-        <div className="hidden lg:flex items-center gap-2.5 shrink-0">
-          <Link to="/track-case">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-9 px-3.5 text-[12px] font-mono uppercase tracking-[0.08em] text-[#555555] hover:text-[#111111] hover:bg-[#F7F7F5]"
-            >
-              Track Case
-            </Button>
-          </Link>
+        {/* Action Button: Register Case */}
+        <div className="hidden lg:flex items-center gap-3 shrink-0">
           <Link to="/submit-case">
             <Button
-              size="sm"
-              className="h-9 px-4 bg-[#111111] text-white hover:bg-[#2A2A2A] text-[12px] font-medium tracking-[-0.01em] rounded-md gap-1.5 transition-all duration-300"
+              className="h-11 px-5 bg-[#111111] text-white hover:bg-[#2A2A2A] text-sm font-medium tracking-[-0.01em] rounded-md gap-2 transition-all duration-300 shadow-sm"
             >
               Register Case
-              <ArrowUpRight className="h-3.5 w-3.5" />
+              <ArrowUpRight className="h-4 w-4" />
             </Button>
           </Link>
         </div>
@@ -111,11 +103,11 @@ export function Navbar() {
         {/* Mobile Menu Trigger */}
         <button
           type="button"
-          className="xl:hidden p-2 text-[#111111] hover:bg-[#F7F7F5] rounded-md transition-colors ml-auto lg:ml-0"
+          className="xl:hidden p-2.5 text-[#111111] hover:bg-[#F7F7F5] rounded-md transition-colors ml-auto lg:ml-0"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle navigation menu"
         >
-          {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>
 
@@ -138,7 +130,7 @@ export function Navbar() {
                   onClick={() => setIsOpen(false)}
                   className={({ isActive }) =>
                     cn(
-                      "flex items-center justify-between py-3 px-3 rounded-md text-sm font-medium border-b border-[#E5E5E3]/50 last:border-b-0 transition-colors",
+                      "flex items-center justify-between py-3.5 px-3.5 rounded-md text-base font-medium border-b border-[#E5E5E3]/50 last:border-b-0 transition-colors",
                       isActive
                         ? "text-[#111111] bg-[#F7F7F5] font-semibold"
                         : "text-[#555555] hover:text-[#111111]"
@@ -146,23 +138,16 @@ export function Navbar() {
                   }
                 >
                   <span>{link.title}</span>
-                  <span className="font-mono text-[10px] text-[#71717A]">
+                  <span className="font-mono text-xs text-[#71717A]">
                     0{idx + 1}
                   </span>
                 </NavLink>
               ))}
-              <div className="pt-4 mt-2 grid grid-cols-2 gap-3 border-t border-[#E5E5E3]">
-                <Link to="/track-case" onClick={() => setIsOpen(false)}>
-                  <Button
-                    variant="outline"
-                    className="w-full h-11 border-[#D4D4D0] text-[#111111] font-mono text-xs uppercase tracking-wider"
-                  >
-                    Track Case
-                  </Button>
-                </Link>
+              <div className="pt-4 mt-2 border-t border-[#E5E5E3]">
                 <Link to="/submit-case" onClick={() => setIsOpen(false)}>
-                  <Button className="w-full h-11 bg-[#111111] text-white hover:bg-[#2A2A2A] text-xs font-medium">
+                  <Button className="w-full h-12 bg-[#111111] text-white hover:bg-[#2A2A2A] text-sm font-medium gap-2">
                     Register Case
+                    <ArrowUpRight className="h-4 w-4" />
                   </Button>
                 </Link>
               </div>
