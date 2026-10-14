@@ -388,13 +388,21 @@ export function useWebsiteContent<T>(sectionKey: SectionKey, defaultContent: T) 
         .eq("section_key", sectionKey)
         .maybeSingle();
 
-      if (error) throw error;
+      if (error) {
+        // If table doesn't exist in Supabase yet (PGRST205 / 404), gracefully use local defaultContent
+        if ((error as any)?.code === "PGRST205" || (error as any)?.status === 404) {
+          setContent(defaultContent);
+          return;
+        }
+        throw error;
+      }
 
       if (data?.content) {
         setContent({ ...defaultContent, ...(data.content as T) });
       }
     } catch (err) {
-      console.error(`Error fetching ${sectionKey} content:`, err);
+      // Graceful fallback to defaultContent on any network or schema error
+      setContent(defaultContent);
       setError(err instanceof Error ? err.message : "Failed to fetch content");
     } finally {
       setLoading(false);
