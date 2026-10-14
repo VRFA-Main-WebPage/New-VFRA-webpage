@@ -59,7 +59,7 @@ export function Navbar() {
               VIGILANT FORENSIC
             </span>
             <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-[#555555] mt-0.5">
-              Research &amp; Analytics · Nagpur
+              Research &amp; Analytics
             </span>
           </div>
         </Link>

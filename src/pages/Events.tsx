@@ -231,7 +231,7 @@ const Events = () => {
         title="Upcoming Events & Forensic Programmes | VFRA Nagpur"
         description="Upcoming workshops, forensic training programmes, webinars, and institutional sessions by Vigilant Forensic Research & Analysis."
       />
-      <div className="bg-background">
+      <div className="bg-background overflow-x-hidden">
         {/* Hero Header */}
         <section className="pt-28 pb-16 md:pt-36 md:pb-20 border-b border-border">
           <div className="container">
@@ -260,7 +260,7 @@ const Events = () => {
 
         {/* Controls Bar: Upcoming vs Past + Event Type Filter */}
         <section className="sticky top-16 z-30 bg-background/90 backdrop-blur-md border-b border-border">
-          <div className="container py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="container py-4 flex flex-col gap-3">
             <div className="inline-flex items-center p-1 bg-secondary border border-border rounded-lg self-start">
               <button
                 onClick={() => setActiveTab("upcoming")}
@@ -288,7 +288,7 @@ const Events = () => {
             </div>
 
             {activeTab === "upcoming" && (
-              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+              <div className="flex items-center gap-2 flex-wrap">
                 {eventTypes.map((type) => {
                   const active = typeFilter === type;
                   return (
@@ -447,7 +447,7 @@ const Events = () => {
                           </div>
                         </div>
 
-                        <div className="px-7 pb-7 md:px-8 md:pb-8 flex items-center justify-between gap-4">
+                        <div className="px-7 pb-7 md:px-8 md:pb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                           <div>
                             <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground block">
                               REGISTRATION FEE
@@ -465,7 +465,7 @@ const Events = () => {
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             {extraMeta.registration_url && (
                               <a
                                 href={extraMeta.registration_url}
