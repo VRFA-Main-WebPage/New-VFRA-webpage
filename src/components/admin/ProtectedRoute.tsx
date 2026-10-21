@@ -1,6 +1,7 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Loader2 } from "lucide-react";
+import { is2FASessionVerified } from "@/lib/adminSecurity";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -39,6 +40,11 @@ export const ProtectedRoute = ({
         </div>
       </div>
     );
+  }
+
+  // 2FA Security Enforcement: Ensure 2FA PIN has been verified for this active session
+  if (!is2FASessionVerified(user.id)) {
+    return <Navigate to="/admin" state={{ require2FA: true, from: location }} replace />;
   }
 
   return <>{children}</>;

@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { clear2FASession } from "@/lib/adminSecurity";
 
 console.log("Supabase URL initialized:", import.meta.env.VITE_SUPABASE_URL);
 
@@ -119,6 +120,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
+    clear2FASession();
     await supabase.auth.signOut();
     setRoles([]);
   };

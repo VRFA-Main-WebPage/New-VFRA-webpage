@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import {
   Mail,
   Lock,
@@ -7,11 +7,9 @@ import {
   EyeOff,
   ArrowLeft,
   ShieldCheck,
-  Smartphone,
-  QrCode,
   KeyRound,
   Loader2,
-  CheckCircle2,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,16 +23,22 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { mapAuthErrorToUserMessage } from "@/lib/errorHandler";
+import {
+  verifyAdminSecurityPin,
+  is2FASessionVerified,
+  getSecurityStatus,
+} from "@/lib/adminSecurity";
 import logo from "@/assets/vfra-logo.png";
 import { motion, AnimatePresence } from "framer-motion";
 import { APPLE_EASE } from "@/lib/motion";
 
-type AuthStep = "credentials" | "2fa-verify" | "2fa-enroll";
+type AuthStep = "credentials" | "2fa-pin";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
-  const { signIn, user, isLoading: authLoading } = useAuth();
+  const { signIn, signOut, user, isLoading: authLoading } = useAuth();
 
   const [step, setStep] = useState<AuthStep>("credentials");
   const [showPassword, setShowPassword] = useState(false);
@@ -42,43 +46,28 @@ const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // 2FA state
-  const [otpCode, setOtpCode] = useState("");
-  const [factorId, setFactorId] = useState<string | null>(null);
-  const [enrollData, setEnrollData] = useState<{
-    qrCodeUrl: string;
-    secret: string;
-    factorId: string;
-  } | null>(null);
-  const [verifyingOtp, setVerifyingOtp] = useState(false);
+  // 2FA PIN state
+  const [pinCode, setPinCode] = useState("");
+  const [verifyingPin, setVerifyingPin] = useState(false);
+  const [securityStatus, setSecurityStatus] = useState({
+    isLocked: false,
+    remainingAttempts: 5,
+    lockoutRemainingMs: 0,
+  });
 
   useEffect(() => {
-    // Only auto-redirect if already on dashboard or already verified
-    if (user && !authLoading && step === "credentials") {
-      checkExistingMfaStatus();
+    // When user session is detected (e.g. from Google OAuth or active session)
+    if (user && !authLoading) {
+      if (is2FASessionVerified(user.id)) {
+        // Both primary auth and 2FA PIN are already verified
+        navigate("/admin/dashboard");
+      } else {
+        // Primary auth succeeded, now enforce 2FA PIN verification
+        setStep("2fa-pin");
+        setSecurityStatus(getSecurityStatus(user.id));
+      }
     }
   }, [user, authLoading]);
-
-  const checkExistingMfaStatus = async () => {
-    try {
-      const { data: aalData } =
-        await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-      if (aalData && aalData.nextLevel === "aal2" && aalData.currentLevel !== "aal2") {
-        // 2FA is enrolled and required
-        const { data: factors } = await supabase.auth.mfa.listFactors();
-        const totp = factors?.totp?.find((f) => f.status === "verified");
-        if (totp) {
-          setFactorId(totp.id);
-          setStep("2fa-verify");
-          return;
-        }
-      }
-      // If already at AAL2 or no 2FA enforced, navigate
-      navigate("/admin/dashboard");
-    } catch {
-      navigate("/admin/dashboard");
-    }
-  };
 
   const handleCredentialsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,87 +85,51 @@ const AdminLogin = () => {
       return;
     }
 
-    // Credentials passed! Now check 2FA status
-    try {
-      const { data: aalData } =
-        await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-      const { data: factors } = await supabase.auth.mfa.listFactors();
-      const verifiedTotp = factors?.totp?.find((f) => f.status === "verified");
-
-      if (verifiedTotp) {
-        // Case A: User already has 2FA set up -> ask for 6-digit code
-        setFactorId(verifiedTotp.id);
-        setStep("2fa-verify");
-        toast({
-          title: "Two-Factor Verification Required",
-          description: "Enter the 6-digit code from your Authenticator app.",
-        });
-      } else {
-        // Case B: Prompt to enroll in 2FA (TOTP)
-        const { data: enroll, error: enrollErr } =
-          await supabase.auth.mfa.enroll({
-            factorType: "totp",
-            issuer: "VFRA Forensic Admin",
-          });
-
-        if (enroll && !enrollErr) {
-          setEnrollData({
-            qrCodeUrl: enroll.totp.qr_code,
-            secret: enroll.totp.secret,
-            factorId: enroll.id,
-          });
-          setFactorId(enroll.id);
-          setStep("2fa-enroll");
-          toast({
-            title: "2FA Setup Required",
-            description: "Scan the QR code with Google Authenticator or Microsoft Authenticator.",
-          });
-        } else {
-          // Fallback if MFA cannot be enrolled: proceed to dashboard
-          navigate("/admin/dashboard");
-        }
-      }
-    } catch (err) {
-      console.warn("2FA check fallback:", err);
-      navigate("/admin/dashboard");
-    } finally {
-      setIsLoading(false);
-    }
+    // Primary credentials passed! Transition to 2FA PIN step
+    setIsLoading(false);
+    setStep("2fa-pin");
+    toast({
+      title: "Primary Verification Passed",
+      description: "Please enter your 6-digit Forensic Security PIN to complete sign-in.",
+    });
   };
 
-  const handleVerifyOtp = async (codeToVerify?: string) => {
-    const code = codeToVerify || otpCode;
-    if (!code || code.length < 6 || !factorId) return;
+  const handleVerifyPin = async (codeToVerify?: string) => {
+    const code = codeToVerify || pinCode;
+    if (!code || code.length < 6 || !user) return;
 
-    setVerifyingOtp(true);
+    setVerifyingPin(true);
+
     try {
-      const challenge = await supabase.auth.mfa.challenge({
-        factorId,
-      });
+      const isValid = verifyAdminSecurityPin(user.id, code);
 
-      if (challenge.error) throw challenge.error;
+      if (isValid) {
+        toast({
+          title: "Two-Factor Verification Successful",
+          description: "Forensic security identity confirmed. Opening Admin Console...",
+        });
+        navigate("/admin/dashboard");
+      } else {
+        const currentStatus = getSecurityStatus(user.id);
+        setSecurityStatus(currentStatus);
 
-      const verify = await supabase.auth.mfa.verify({
-        factorId,
-        challengeId: challenge.data.id,
-        code,
-      });
-
-      if (verify.error) throw verify.error;
-
-      toast({
-        title: "Authentication Verified",
-        description: "Two-factor verification successful. Opening Admin Console...",
-      });
-      navigate("/admin/dashboard");
-    } catch (err: any) {
-      toast({
-        title: "Invalid Verification Code",
-        description: err?.message || "Please check the 6-digit code in your app and try again.",
-        variant: "destructive",
-      });
+        if (currentStatus.isLocked) {
+          toast({
+            title: "Account Temporarily Locked",
+            description: "Too many failed attempts. Security lockout active for 15 minutes.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Invalid Security PIN",
+            description: `Incorrect PIN entered. ${currentStatus.remainingAttempts} attempts remaining before temporary lockout.`,
+            variant: "destructive",
+          });
+        }
+        setPinCode("");
+      }
     } finally {
-      setVerifyingOtp(false);
+      setVerifyingPin(false);
     }
   };
 
@@ -198,6 +151,14 @@ const AdminLogin = () => {
       });
       setIsLoading(false);
     }
+  };
+
+  const handleSwitchAccount = async () => {
+    await signOut();
+    setStep("credentials");
+    setPinCode("");
+    setEmail("");
+    setPassword("");
   };
 
   if (authLoading) {
@@ -237,7 +198,7 @@ const AdminLogin = () => {
 
         <AnimatePresence mode="wait">
           {step === "credentials" ? (
-            /* STEP 1: CREDENTIALS */
+            /* STEP 1: CREDENTIALS OR GOOGLE OAUTH */
             <motion.div
               key="step-credentials"
               initial={{ opacity: 0, x: -12 }}
@@ -249,7 +210,7 @@ const AdminLogin = () => {
                 Administrator Sign In
               </h1>
               <p className="text-xs text-[#555555] mb-6">
-                Enter your credentials to initiate dual-factor verification.
+                Sign in with your credentials or Google account to initiate 2FA verification.
               </p>
 
               <form onSubmit={handleCredentialsSubmit} className="space-y-4">
@@ -261,7 +222,7 @@ const AdminLogin = () => {
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#555555]" />
                     <Input
                       type="email"
-                      placeholder="admin@vigilantforensics.com"
+                      placeholder="admin@vigilantforensic.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="pl-10 h-11 bg-[#F7F7F5]/60 text-sm"
@@ -310,7 +271,7 @@ const AdminLogin = () => {
                       Verifying Credentials...
                     </>
                   ) : (
-                    "Continue to 2FA Verification →"
+                    "Continue to 2FA PIN →"
                   )}
                 </Button>
               </form>
@@ -356,176 +317,90 @@ const AdminLogin = () => {
                 Continue with Google OAuth 2.0
               </Button>
             </motion.div>
-          ) : step === "2fa-verify" ? (
-            /* STEP 2A: 2FA CODE VERIFICATION (EXISTING TOTP) */
+          ) : (
+            /* STEP 2: 2FA ADMIN SECURITY PIN VERIFICATION */
             <motion.div
-              key="step-2fa-verify"
+              key="step-2fa-pin"
               initial={{ opacity: 0, x: 12 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -12 }}
               transition={{ duration: 0.35, ease: APPLE_EASE }}
               className="text-center"
             >
-              <div className="w-12 h-12 rounded-full bg-[#111111] text-white flex items-center justify-center mx-auto mb-4">
-                <ShieldCheck className="h-6 w-6" />
+              <div className="w-12 h-12 rounded-full bg-[#111111] text-white flex items-center justify-center mx-auto mb-4 shadow-sm">
+                <ShieldCheck className="h-6 w-6 text-emerald-400" />
               </div>
 
               <h2 className="font-heading text-xl font-bold text-[#111111] mb-1">
-                Two-Factor Authentication
+                Forensic Security PIN
               </h2>
-              <p className="text-xs text-[#555555] mb-6 max-w-xs mx-auto">
-                Open <span className="font-medium text-[#111111]">Google Authenticator</span> or your TOTP app and enter the 6-digit code for VFRA.
+
+              <p className="text-xs text-[#555555] mb-2 max-w-xs mx-auto">
+                Primary authentication verified for:
               </p>
-
-              <div className="flex justify-center mb-6">
-                <InputOTP
-                  maxLength={6}
-                  value={otpCode}
-                  onChange={(val) => {
-                    setOtpCode(val);
-                    if (val.length === 6) {
-                      handleVerifyOtp(val);
-                    }
-                  }}
-                >
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
-                    <InputOTPSlot index={4} />
-                    <InputOTPSlot index={5} />
-                  </InputOTPGroup>
-                </InputOTP>
+              <div className="font-mono text-xs font-semibold text-[#111111] bg-[#F7F7F5] border border-[#E5E5E3] px-3 py-1.5 rounded-md inline-block mb-5">
+                {user?.email}
               </div>
 
-              <Button
-                onClick={() => handleVerifyOtp()}
-                className="w-full h-11 bg-[#111111] text-white hover:bg-[#2A2A2A] font-mono text-xs uppercase tracking-[0.12em] gap-2 mb-3"
-                disabled={otpCode.length < 6 || verifyingOtp}
-              >
-                {verifyingOtp ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Validating TOTP Token...
-                  </>
-                ) : (
-                  "Verify & Access Dashboard"
-                )}
-              </Button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setStep("credentials");
-                  setOtpCode("");
-                }}
-                className="text-xs font-mono text-[#555555] hover:text-[#111111] underline"
-              >
-                ← Back to credentials
-              </button>
-            </motion.div>
-          ) : (
-            /* STEP 2B: 2FA SETUP / ENROLLMENT (SCAN QR CODE) */
-            <motion.div
-              key="step-2fa-enroll"
-              initial={{ opacity: 0, x: 12 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -12 }}
-              transition={{ duration: 0.35, ease: APPLE_EASE }}
-              className="text-center"
-            >
-              <div className="w-10 h-10 rounded-full bg-[#111111] text-white flex items-center justify-center mx-auto mb-3">
-                <Smartphone className="h-5 w-5" />
-              </div>
-
-              <h2 className="font-heading text-lg font-bold text-[#111111] mb-1">
-                Set Up Two-Factor Authentication
-              </h2>
               <p className="text-xs text-[#555555] mb-4">
-                Scan this QR code using Google Authenticator or Microsoft Authenticator:
+                Enter your authorized 6-digit Admin Security PIN to complete two-factor authentication:
               </p>
 
-              {enrollData?.qrCodeUrl && (
-                <div className="p-3 bg-white border border-[#E5E5E3] rounded-lg inline-block mb-3 shadow-sm">
-                  <img
-                    src={enrollData.qrCodeUrl}
-                    alt="2FA QR Code"
-                    className="w-40 h-40 object-contain mx-auto"
-                  />
+              {securityStatus.isLocked ? (
+                <div className="p-4 mb-4 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 shrink-0" />
+                  <span>Account locked due to consecutive failed attempts. Please wait 15 minutes.</span>
+                </div>
+              ) : (
+                <div className="flex justify-center mb-6">
+                  <InputOTP
+                    maxLength={6}
+                    value={pinCode}
+                    onChange={(val) => {
+                      setPinCode(val);
+                      if (val.length === 6) {
+                        handleVerifyPin(val);
+                      }
+                    }}
+                  >
+                    <InputOTPGroup>
+                      <InputOTPSlot index={0} />
+                      <InputOTPSlot index={1} />
+                      <InputOTPSlot index={2} />
+                      <InputOTPSlot index={3} />
+                      <InputOTPSlot index={4} />
+                      <InputOTPSlot index={5} />
+                    </InputOTPGroup>
+                  </InputOTP>
                 </div>
               )}
-
-              {enrollData?.secret && (
-                <div className="mb-4 text-left p-2.5 rounded bg-[#F7F7F5] border border-[#E5E5E3]">
-                  <span className="font-mono text-[9px] uppercase tracking-wider text-[#71717A] block mb-0.5">
-                    Manual Entry Key:
-                  </span>
-                  <code className="font-mono text-xs text-[#111111] select-all break-all">
-                    {enrollData.secret}
-                  </code>
-                </div>
-              )}
-
-              <p className="text-xs text-[#555555] mb-2 font-mono">
-                Enter the 6-digit code generated by your app:
-              </p>
-
-              <div className="flex justify-center mb-5">
-                <InputOTP
-                  maxLength={6}
-                  value={otpCode}
-                  onChange={(val) => {
-                    setOtpCode(val);
-                    if (val.length === 6) {
-                      handleVerifyOtp(val);
-                    }
-                  }}
-                >
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
-                    <InputOTPSlot index={4} />
-                    <InputOTPSlot index={5} />
-                  </InputOTPGroup>
-                </InputOTP>
-              </div>
 
               <Button
-                onClick={() => handleVerifyOtp()}
-                className="w-full h-11 bg-[#111111] text-white hover:bg-[#2A2A2A] font-mono text-xs uppercase tracking-[0.12em] gap-2 mb-2"
-                disabled={otpCode.length < 6 || verifyingOtp}
+                onClick={() => handleVerifyPin()}
+                className="w-full h-11 bg-[#111111] text-white hover:bg-[#2A2A2A] font-mono text-xs uppercase tracking-[0.12em] gap-2 mb-3"
+                disabled={pinCode.length < 6 || verifyingPin || securityStatus.isLocked}
               >
-                {verifyingOtp ? (
+                {verifyingPin ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Confirming 2FA...
+                    Validating Security PIN...
                   </>
                 ) : (
-                  "Confirm & Complete Sign In"
+                  "Verify & Unlock Dashboard"
                 )}
               </Button>
 
               <div className="flex items-center justify-between pt-2">
                 <button
                   type="button"
-                  onClick={() => {
-                    setStep("credentials");
-                    setOtpCode("");
-                  }}
+                  onClick={handleSwitchAccount}
                   className="text-xs font-mono text-[#555555] hover:text-[#111111]"
                 >
-                  ← Back
+                  ← Sign in as different user
                 </button>
-                <button
-                  type="button"
-                  onClick={() => navigate("/admin/dashboard")}
-                  className="text-xs font-mono text-[#71717A] hover:text-[#111111] underline"
-                >
-                  Skip for now
-                </button>
+                <span className="text-[10px] font-mono text-[#71717A]">
+                  Attempts left: {securityStatus.remainingAttempts}
+                </span>
               </div>
             </motion.div>
           )}
