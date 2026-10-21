@@ -117,7 +117,7 @@ const TrackCase = () => {
   return (
     <>
       <SEO
-        title="Track Case Status | VFRA Nagpur"
+        title="Track Case Status | VFRA"
         description="Track the status of your ongoing digital forensic case investigation."
       />
       <div className="min-h-screen bg-white">

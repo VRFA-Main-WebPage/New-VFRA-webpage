@@ -228,7 +228,7 @@ const Events = () => {
   return (
     <>
       <SEO
-        title="Upcoming Events & Forensic Programmes | VFRA Nagpur"
+        title="Upcoming Events & Forensic Programmes | VFRA"
         description="Upcoming workshops, forensic training programmes, webinars, and institutional sessions by Vigilant Forensic Research & Analysis."
       />
       <div className="bg-background overflow-x-hidden">
@@ -539,7 +539,7 @@ const Events = () => {
                             )}
                           </div>
                           <div className="pt-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground font-mono">
-                            <span>{event.location || "Nagpur"}</span>
+                            <span>{event.location || "Central Facility"}</span>
                             <span>{event.mode || "Offline"}</span>
                           </div>
                         </div>

@@ -1,17 +1,17 @@
 import { SEO } from "@/components/SEO";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Users, Check, Target, Eye, ArrowRight, Terminal } from "lucide-react";
+import { Users, Check, Target, Eye, ArrowRight, Terminal, Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useWebsiteContent, defaultAboutContent, AboutContent } from "@/hooks/useWebsiteContent";
 import { fadeUp, staggerContainer } from "@/lib/motion";
-import tanishPhoto from "@/assets/team/tanish.jpg";
-import omPhoto from "@/assets/team/om.jpg";
-import jafarPhoto from "@/assets/team/jafar.jpg";
-import ShouryaPhoto from "@/assets/team/Shourya.jpg";
-import labSetupImg from "@/assets/services/Labsetup.jpg";
+import tanishPhoto from "@/assets/team/tanishq.webp";
+import omPhoto from "@/assets/team/om.webp";
+import ameyaPhoto from "@/assets/team/ameya.webp";
+import jafarPhoto from "@/assets/team/jafar.webp";
+import labSetupImg from "@/assets/services/Labsetup.webp";
 
 interface TeamMember {
   id: string;
@@ -19,6 +19,7 @@ interface TeamMember {
   role: string;
   credentials: string | null;
   photo_url: string | null;
+  linkedin_url?: string | null;
   sort_order: number;
 }
 
@@ -30,33 +31,37 @@ const fallbackTeamMembers: TeamMember[] = [
     credentials:
       "Digital Forensics & Cybercrime Investigation Leader | Specialized in EnCase, Cellebrite, X-Ways, FTK & Autopsy | Incident Response & Advanced Evidence Analysis | Legally Defensible Forensic Reporting",
     photo_url: tanishPhoto,
+    linkedin_url: "https://linkedin.com/in/tanishchouhan",
     sort_order: 0,
   },
   {
-    id: "3",
+    id: "2",
     name: "Mr. Om Gatlewar",
-    role: "Mobile Forensics & Cyber Investigation",
+    role: "Chief of Operations",
     credentials:
-      "Mobile Device Forensics Specialist | Cellebrite & Advanced Mobile Extraction Workflows | Cybercrime Investigation & Digital Evidence Handling",
+      "Operations Lead & Mobile Forensics Specialist | Cellebrite & Advanced Mobile Extraction Workflows | Cybercrime Investigation & Digital Evidence Handling",
     photo_url: omPhoto,
+    linkedin_url: "https://linkedin.com/in/omgatlewar",
     sort_order: 1,
+  },
+  {
+    id: "3",
+    name: "Mr. Ameya Gadhikar",
+    role: "Head of Tech & Strategic Growth",
+    credentials:
+      "Cybersecurity Specialist | Linux, Python & Bash | AWS & Cloud Infrastructure | Network Security & Monitoring | Technical Problem-Solving & Team Collaboration",
+    photo_url: ameyaPhoto,
+    linkedin_url: "https://linkedin.com/in/ameya-gadhikar-8b9540275",
+    sort_order: 2,
   },
   {
     id: "4",
     name: "Mr. Jafar Naqvi",
     role: "Cybercrime Investigation & Incident Response",
     credentials:
-      "Cybercrime Investigation & Incident Analysis | Digital Evidence Collection & Case Documentation | Assisted in Cybercrime Case Analysis with Cyber Cell, Nagpur",
+      "Cybercrime Investigation & Incident Analysis | Digital Evidence Collection & Case Documentation | Advanced Threat Intelligence & Legal Evidence Handling",
     photo_url: jafarPhoto,
-    sort_order: 2,
-  },
-  {
-    id: "2",
-    name: "Mr. Shourya Bhagat",
-    role: "Blockchain & Cryptocurrency Forensic Analyst",
-    credentials:
-      "Blockchain Transaction Analysis | Cryptocurrency Tracing & Wallet Attribution | Digital Asset Investigation | On-Chain Intelligence & Fraud Tracking",
-    photo_url: ShouryaPhoto,
+    linkedin_url: "https://www.linkedin.com/company/vigilant-forensic-research-and-analytics-pvt-ltd/",
     sort_order: 3,
   },
 ];
@@ -84,8 +89,8 @@ const About = () => {
   return (
     <>
       <SEO
-        title="About Us | VFRA Nagpur"
-        description="Learn about Vigilant Forensic Research and Analytics Pvt. Ltd. (Nagpur) and our mission in digital forensics and cybercrime investigations."
+        title="About Us | VFRA"
+        description="Learn about Vigilant Forensic Research and Analytics Pvt. Ltd. (VFRA) and our national mission in digital forensics, cybercrime investigations, and lawful threat intelligence."
       />
       <div className="bg-white min-h-screen">
         {/* Hero Header */}
@@ -99,7 +104,7 @@ const About = () => {
               className="max-w-3xl"
             >
               <motion.span variants={fadeUp} className="section-eyebrow">
-                INSTITUTIONAL PROFILE // VFRA NAGPUR
+                INSTITUTIONAL PROFILE // NATIONAL FORENSIC MISSION
               </motion.span>
               <motion.h1
                 variants={fadeUp}
@@ -112,51 +117,75 @@ const About = () => {
                 className="text-base md:text-lg text-[#555555] leading-relaxed"
               >
                 {content.heroDescription ||
-                  "Founded in 2025 in Nagpur, Maharashtra, Vigilant Forensic Research and Analytics Pvt. Ltd. specializes in scientifically sound digital evidence examination, cybercrime intelligence, and court-admissible technical reporting."}
+                  "Founded in 2025, Vigilant Forensic Research and Analytics Pvt. Ltd. (VFRA) specializes in scientifically sound digital evidence examination, cybercrime intelligence, and court-admissible technical reporting across India."}
               </motion.p>
             </motion.div>
           </div>
         </section>
 
-        {/* Mission & Vision Specification Grid */}
-        <section className="py-16 md:py-24 border-b border-[#E5E5E3]">
+        {/* Mission & Vision Section */}
+        <section className="py-16 md:py-24 bg-white border-b border-[#E5E5E3]">
           <div className="container">
-            <div className="grid lg:grid-cols-2 gap-8">
-              <div className="premium-card p-8 md:p-10 bg-[#F7F7F5]/60">
-                <div className="flex items-center justify-between pb-4 mb-6 border-b border-[#E5E5E3]">
-                  <span className="font-mono text-xs uppercase tracking-[0.14em] text-[#555555]">
-                    01 // MANDATE &amp; MISSION
-                  </span>
-                  <Target className="h-4 w-4 text-[#111111]" />
+            <div className="grid lg:grid-cols-2 gap-12 items-stretch">
+              {/* Mission Card */}
+              <div className="premium-card p-8 md:p-10 flex flex-col justify-between bg-[#F7F7F5]/50">
+                <div>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 rounded-md bg-[#111111] text-white flex items-center justify-center">
+                      <Target className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <span className="font-mono text-[10px] uppercase tracking-wider text-[#555555] block">
+                        Core Directive
+                      </span>
+                      <h2 className="font-heading font-bold text-xl text-[#111111]">
+                        Our Mission
+                      </h2>
+                    </div>
+                  </div>
+                  <p className="text-sm md:text-base text-[#555555] leading-relaxed mb-6">
+                    {content.mission ||
+                      "To provide law enforcement agencies, judiciary, corporate enterprises, and institutions with forensically sound, scientifically verifiable, and legally defensible digital evidence solutions."}
+                  </p>
                 </div>
-                <h2 className="font-heading text-2xl font-bold text-[#111111] mb-4">
-                  Our Mission
-                </h2>
-                <p className="text-sm md:text-base text-[#555555] leading-relaxed">
-                  {content.mission}
-                </p>
+                <div className="pt-6 border-t border-[#E5E5E3] font-mono text-xs text-[#111111] flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  STANDARDIZED UNDER BHARATIYA SAKSHYA ADHINIYAM (BSA)
+                </div>
               </div>
 
-              <div className="premium-card p-8 md:p-10 bg-[#F7F7F5]/60">
-                <div className="flex items-center justify-between pb-4 mb-6 border-b border-[#E5E5E3]">
-                  <span className="font-mono text-xs uppercase tracking-[0.14em] text-[#555555]">
-                    02 // LONG-TERM VISION
-                  </span>
-                  <Eye className="h-4 w-4 text-[#111111]" />
+              {/* Vision Card */}
+              <div className="premium-card p-8 md:p-10 flex flex-col justify-between bg-[#F7F7F5]/50">
+                <div>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 rounded-md bg-[#111111] text-white flex items-center justify-center">
+                      <Eye className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <span className="font-mono text-[10px] uppercase tracking-wider text-[#555555] block">
+                        Strategic Objective
+                      </span>
+                      <h2 className="font-heading font-bold text-xl text-[#111111]">
+                        Our Vision
+                      </h2>
+                    </div>
+                  </div>
+                  <p className="text-sm md:text-base text-[#555555] leading-relaxed mb-6">
+                    {content.vision ||
+                      "To be recognized as India's benchmark independent digital forensics institute, pioneering advanced OSINT, telecom analytics, and AI-powered investigation technologies that safeguard the nation's cyberspace."}
+                  </p>
                 </div>
-                <h2 className="font-heading text-2xl font-bold text-[#111111] mb-4">
-                  Our Vision
-                </h2>
-                <p className="text-sm md:text-base text-[#555555] leading-relaxed">
-                  {content.vision}
-                </p>
+                <div className="pt-6 border-t border-[#E5E5E3] font-mono text-xs text-[#111111] flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  NATIONAL DEFENSE & CYBERCRIME CAPACITY BUILDING
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Leadership & Forensic Specialists */}
-        <section className="py-16 md:py-24 bg-[#F7F7F5] border-b border-[#E5E5E3]">
+        {/* Directorate & Specialists Team Section */}
+        <section className="py-16 md:py-24 bg-[#F7F7F5]/40 border-b border-[#E5E5E3]">
           <div className="container">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 mb-12 border-b border-[#E5E5E3]">
               <div>
@@ -164,7 +193,7 @@ const About = () => {
                 <h2 className="section-heading">Meet Our Experts.</h2>
               </div>
               <p className="text-sm text-[#555555] max-w-md">
-                Specialists trained in industry-standard forensic suites, mobile extraction, on-chain tracing, and incident response.
+                Specialists trained in industry-standard forensic suites, mobile extraction, cloud infrastructure, and national incident response.
               </p>
             </div>
 
@@ -190,12 +219,25 @@ const About = () => {
                       <span className="absolute top-3 left-3 font-mono text-[10px] px-2 py-0.5 bg-white/90 backdrop-blur-sm border border-[#E5E5E3] text-[#111111]">
                         EXP-0{index + 1}
                       </span>
+                      {member.linkedin_url && (
+                        <a
+                          href={member.linkedin_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="absolute top-3 right-3 p-1.5 rounded-md bg-white/90 backdrop-blur-sm border border-[#E5E5E3] text-[#111111] hover:text-[#0A66C2] hover:bg-white transition-colors"
+                          title={`View ${member.name}'s LinkedIn Profile`}
+                        >
+                          <Linkedin className="h-3.5 w-3.5" />
+                        </a>
+                      )}
                     </div>
 
                     <div className="p-5">
-                      <h3 className="font-heading font-bold text-base text-[#111111]">
-                        {member.name}
-                      </h3>
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="font-heading font-bold text-base text-[#111111]">
+                          {member.name}
+                        </h3>
+                      </div>
                       <p className="font-mono text-[11px] uppercase tracking-wider text-[#555555] mt-1 pb-3 mb-3 border-b border-[#E5E5E3]">
                         {member.role}
                       </p>
@@ -222,7 +264,7 @@ const About = () => {
                   Forensic Workstation &amp; Acquisition Suite.
                 </h2>
                 <p className="text-sm md:text-base text-[#555555] leading-relaxed mb-8">
-                  Our Nagpur facility is equipped with industry-standard forensic extraction hardware, write-blocked imaging systems, and chain-of-custody evidence vaults.
+                  Our state-of-the-art forensic facility is equipped with industry-standard hardware extraction tools, write-blocked imaging systems, and chain-of-custody evidence vaults.
                 </p>
 
                 <div className="space-y-3 mb-8">
@@ -262,7 +304,7 @@ const About = () => {
                   <div className="px-4 py-3 border-b border-[#E5E5E3] bg-white flex items-center justify-between font-mono text-[11px] text-[#555555]">
                     <span className="inline-flex items-center gap-2 text-[#111111] font-semibold">
                       <Terminal className="h-3.5 w-3.5" />
-                      FACILITY // NAGPUR HQ
+                      CENTRAL FORENSIC FACILITY
                     </span>
                     <span>ISO-READY WORKFLOW</span>
                   </div>

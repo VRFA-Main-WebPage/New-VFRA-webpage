@@ -2,12 +2,20 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Json } from "@/integrations/supabase/types";
 
-import labSetupImg from "@/assets/services/Labsetup.jpg";
-import trainingImg from "@/assets/services/trainingandworkshops.jpeg";
+import labSetupImg from "@/assets/services/Labsetup.webp";
+import trainingImg from "@/assets/services/trainingandworkshops.webp";
 import digitalForensicsImg from "@/assets/services/digitalforensics.webp";
-import cyberInvestigationImg from "@/assets/services/cybercrimeinvestigation.jpg";
-import incidentResponseImg from "@/assets/services/incidenceresponse.jpg";
-import expertWitnessImg from "@/assets/services/expertwitness.jpg";
+import cyberInvestigationImg from "@/assets/services/cybercrimeinvestigation.webp";
+import incidentResponseImg from "@/assets/services/incidenceresponse.webp";
+import expertWitnessImg from "@/assets/services/expertwitness.webp";
+
+import adgMaharashtraImg from "@/assets/gallery/adg-maharashtra.webp";
+import cyberWorkshopImg from "@/assets/gallery/cyber-security-workshop.webp";
+import raisoniImg from "@/assets/gallery/raisoni.webp";
+import ihubGujaratImg from "@/assets/gallery/ihub-gujarat.webp";
+import bhonsalaSchoolImg from "@/assets/gallery/bhonsala-military-school.webp";
+import jayaswalNecoImg from "@/assets/gallery/cybersecurity-awareness-jayaswal.webp";
+import ipsMahakSwamiImg from "@/assets/gallery/ips-mahak-swami.webp";
 
 export interface HeroContent {
   companyName: string;
@@ -245,78 +253,90 @@ export const defaultAboutContent: AboutContent = {
 export const defaultGalleryContent: GalleryContent = {
   heading: "Forensic Operations & Field Archive",
   subheading:
-    "Documented moments from our Nagpur forensic laboratory, law enforcement capacity-building programmes, and institutional workshops.",
+    "Documented milestones from our forensic casework, high-level law enforcement briefings, institutional training cohorts, and national innovation showcases.",
   items: [
     {
       id: "gal-01",
       code: "ARC-01",
-      title: "Forensic Workstation & Write-Blocked Imaging Bay",
+      title: "Executive Briefing with ADG Dr. Ravinder Singal, IPS",
       caption:
-        "Dedicated digital evidence acquisition environment equipped with hardware write-blockers and bit-stream verification systems at VFRA Nagpur.",
-      category: "Lab Infrastructure",
-      image_url: labSetupImg,
-      date: "2026-02",
-      location: "VFRA Laboratory, Nagpur",
+        "High-level strategic briefing with Dr. Ravinder Singal Ph.D, IPS, Additional Director General of Police, discussing VFRA's APK mobile forensics infrastructure, foundational milestones, and collaborative digital evidence frameworks for law enforcement.",
+      category: "Law Enforcement",
+      image_url: adgMaharashtraImg,
+      date: "2026-04",
+      location: "Police Headquarters",
       featured: true,
     },
     {
       id: "gal-02",
       code: "ARC-02",
-      title: "Law Enforcement Capacity Building & Cybercrime Workshop",
+      title: "Advanced Cybercrime Investigation Police Workshop",
       caption:
-        "Hands-on investigative training session on CDR/IPDR analysis, digital evidence preservation, and Section 65B / BSA compliance.",
+        "Advanced hands-on investigative workshop conducted for police officers, Crime Detection Branch (CDB), Economic Offences Wing (EOW), and Cyber Crime Department covering cryptocurrency tracing, IPDR correlation, and BSA Section 63 court-ready evidence reporting.",
       category: "Workshops & Training",
-      image_url: trainingImg,
-      date: "2026-01",
-      location: "Nagpur, Maharashtra",
+      image_url: cyberWorkshopImg,
+      date: "2026-06",
+      location: "Police Training Center",
       featured: true,
     },
     {
       id: "gal-03",
       code: "ARC-03",
-      title: "Mobile & Storage Media Extraction Protocol",
+      title: "National Showcase at KANAD Shield — i-Hub Gujarat",
       caption:
-        "Logical and physical extraction workflows for mobile devices and solid-state storage under strict chain-of-custody documentation.",
-      category: "Lab Infrastructure",
-      image_url: digitalForensicsImg,
-      date: "2025-12",
-      location: "VFRA Lab Unit 02",
-      featured: false,
+        "VFRA leadership presenting proprietary cybercrime intelligence platforms to institutional venture capital investors and distinguished dignitaries from ISRO, Indian Army RACD Wing, and the National Forensic Sciences University (NFSU).",
+      category: "Conferences",
+      image_url: ihubGujaratImg,
+      date: "2026-05",
+      location: "i-Hub, Gujarat",
+      featured: true,
     },
     {
       id: "gal-04",
       code: "ARC-04",
-      title: "Cybercrime Intelligence & Network Attribution Analysis",
+      title: "Strategic Case Review with IPS Mahak Swami, DCP EOW",
       caption:
-        "Multi-layered OSINT, financial fund-flow reconstruction, and threat actor network mapping for complex cyber fraud investigations.",
-      category: "Field Research",
-      image_url: cyberInvestigationImg,
+        "High-impact case consultation with IPS Mahak Swami, Deputy Commissioner of Police (Economic Offences Wing), focusing on financial cybercrime mitigation, digital forensic frameworks, and national investigative tooling.",
+      category: "Law Enforcement",
+      image_url: ipsMahakSwamiImg,
       date: "2025-11",
-      location: "Nagpur Cyber Operations",
-      featured: false,
+      location: "Economic Offences Wing Headquarters",
+      featured: true,
     },
     {
       id: "gal-05",
       code: "ARC-05",
-      title: "Enterprise Incident Response & Triage Exercise",
+      title: "Cadet Cyber Defense & Hygiene — Bhonsala Military School",
       caption:
-        "Rapid containment, volatile memory capture, and root-cause forensic reconstruction during simulated enterprise breach scenarios.",
-      category: "Law Enforcement",
-      image_url: incidentResponseImg,
-      date: "2025-10",
-      location: "Institutional Briefing Room",
+        "Interactive cyber resilience and digital hygiene program conducted for students and cadets of Bhonsala Military School, covering social engineering defenses, online privacy, gaming safety, and fraud prevention.",
+      category: "Workshops & Training",
+      image_url: bhonsalaSchoolImg,
+      date: "2026-03",
+      location: "Bhonsala Military School",
       featured: false,
     },
     {
       id: "gal-06",
       code: "ARC-06",
-      title: "Evidentiary Documentation & Courtroom Reporting Review",
+      title: "Corporate Cyber Risk & Incident Mitigation — Jayaswal Neco",
       caption:
-        "Verification of cryptographic hash logs and structured technical testimony dossiers prepared for judicial review.",
-      category: "Conferences",
-      image_url: expertWitnessImg,
-      date: "2025-09",
-      location: "Legal & Forensic Division, Nagpur",
+        "Executive cyber risk mitigation and fraud prevention session for corporate professionals at Jayaswal Neco Industries Ltd, covering phishing vector defense, corporate data security, and social engineering countermeasures.",
+      category: "Field Research",
+      image_url: jayaswalNecoImg,
+      date: "2026-02",
+      location: "Jayaswal Neco Corporate Center",
+      featured: false,
+    },
+    {
+      id: "gal-07",
+      code: "ARC-07",
+      title: "Cybercrime Awareness & Hands-on Lab — GH Raisoni University",
+      caption:
+        "Interactive student workshop and live demonstration at GH Raisoni Skilltech University analyzing common cyber attack surfaces, real-world fraud vectors, and digital forensic defense practices.",
+      category: "Workshops & Training",
+      image_url: raisoniImg,
+      date: "2026-01",
+      location: "GH Raisoni Skilltech University",
       featured: false,
     },
   ],
@@ -327,33 +347,33 @@ export const defaultEventsExtendedContent: EventsExtendedContent = {
   pastEvents: [
     {
       id: "past-1",
-      title: "Dark Web Investigation & Digital Forensics Workshop",
+      title: "Advanced Cybercrime Investigation Workshop for Police Officers",
       date: "2026",
-      participants: "200+ Students & Faculty",
-      location: "Ramdeobaba College of Engineering & Management, Nagpur",
-      category: "Academic Workshop",
-      banner_url: trainingImg,
-      summary: "Intensive workshop covering darknet architecture, OSINT trace methodologies, and evidentiary handling.",
+      participants: "Police Officers & Investigating Personnel",
+      location: "Police Training Center",
+      category: "LEA Capacity Building",
+      banner_url: cyberWorkshopImg,
+      summary: "Advanced hands-on investigative workshop on cryptocurrency tracing, IPDR log correlation, mobile application forensics, and BSA Section 63 compliant digital evidence.",
     },
     {
       id: "past-2",
-      title: "Cybersecurity Awareness & Digital Fraud Prevention Session",
+      title: "National Showcase & Technology Pitch — i-Hub Gujarat (KANAD Shield)",
       date: "2026",
-      participants: "500+ Officers & Staff",
-      location: "Life Insurance Corporation of India (LIC)",
-      category: "Institutional Seminar",
-      banner_url: cyberInvestigationImg,
-      summary: "Executive and operational training on financial fraud vectors, phishing forensics, and institutional safeguards.",
+      participants: "Venture Capitalists, ISRO & NFSU Dignitaries",
+      location: "i-Hub, Gujarat",
+      category: "National Conference",
+      banner_url: ihubGujaratImg,
+      summary: "Showcasing VFRA's proprietary investigation platforms (InvestiGate & TTI) to enterprise funds, armed forces capability wings, and forensic institutions.",
     },
     {
       id: "past-3",
-      title: "Cybercrime Investigation & Digital Evidence Techniques Training",
-      date: "2025",
-      participants: "1000+ Law Enforcement Personnel",
-      location: "Regional Law Enforcement Unit, Maharashtra",
-      category: "LEA Capacity Building",
-      banner_url: labSetupImg,
-      summary: "Standardized field training on mobile extraction, CDR/IPDR correlation, and BSA 2023 electronic evidence certification.",
+      title: "Cadet Cyber Resilience & Online Safety Initiative",
+      date: "2026",
+      participants: "Cadets, Students & Camp Participants",
+      location: "Bhonsala Military School",
+      category: "Institutional Workshop",
+      banner_url: bhonsalaSchoolImg,
+      summary: "Comprehensive cyber safety training covering social engineering defense, privacy settings, gaming security, and digital scam recognition.",
     },
   ],
 };

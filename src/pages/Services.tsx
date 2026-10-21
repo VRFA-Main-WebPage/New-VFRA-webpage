@@ -1,6 +1,6 @@
 import { SEO } from "@/components/SEO";
 import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { ArrowRight, AlertTriangle, Search, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -30,8 +30,9 @@ function AudienceBadge({ audience }: { audience: string }) {
 }
 
 const Services = () => {
+  const [searchParams] = useSearchParams();
   const [activeCategory, setActiveCategory] = useState<ServiceCategory | "all">("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get("q") || searchParams.get("search") || "");
 
   const filtered = useMemo(() => {
     let result = VFRA_SERVICES;
@@ -41,13 +42,16 @@ const Services = () => {
     }
 
     if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      result = result.filter(
-        (s) =>
-          s.title.toLowerCase().includes(query) ||
-          s.description.toLowerCase().includes(query) ||
-          s.capabilities.some((cap) => cap.toLowerCase().includes(query))
-      );
+      const raw = searchQuery.trim().toLowerCase();
+      const tokens = raw.replace(/[&/\\+]/g, " ").split(/\s+/).filter(Boolean);
+
+      result = result.filter((s) => {
+        const full = `${s.title} ${s.description} ${s.capabilities.join(" ")} srv-${String(s.number).padStart(2, "0")}`.toLowerCase();
+        if (full.includes(raw)) return true;
+        if (tokens.length > 1 && tokens.every((t) => full.includes(t))) return true;
+        if (tokens.some((t) => s.title.toLowerCase().includes(t))) return true;
+        return false;
+      });
     }
 
     return result;
@@ -56,7 +60,7 @@ const Services = () => {
   return (
     <>
       <SEO
-        title="Forensic Services Catalogue | VFRA Nagpur"
+        title="Forensic Services Catalogue | VFRA"
         description="Explore all 26 digital forensic services, OSINT workflows, and cybercrime investigation capabilities by VFRA."
       />
       <div className="bg-white min-h-screen">

@@ -10,7 +10,7 @@ export function PublicLayout() {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground overflow-x-hidden">
       <Navbar />
-      <main className="flex-1 pt-16">
+      <main className="flex-1 pt-20">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={location.pathname}

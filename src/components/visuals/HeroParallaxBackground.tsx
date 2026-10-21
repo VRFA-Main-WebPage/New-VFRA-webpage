@@ -32,7 +32,7 @@ export function HeroParallaxBackground() {
       <div
         className="hidden md:block absolute inset-[-15%] opacity-40 blur-[4px] scale-[1.42] animate-[forensicHeroBack_14s_ease-in-out_infinite_alternate]"
         style={{
-          backgroundImage: "url('/forensic-network-bg.png')",
+          backgroundImage: "url('/forensic-network-bg.webp')",
           backgroundSize: "cover",
           backgroundPosition: "72% center",
           transformOrigin: "68% 47%",
@@ -44,7 +44,7 @@ export function HeroParallaxBackground() {
       <div
         className="absolute inset-[-10%] opacity-100 scale-[1.08] md:scale-[1.16] md:animate-[forensicHeroFront_10s_ease-in-out_infinite_alternate] bg-center md:bg-[72%_center]"
         style={{
-          backgroundImage: "url('/forensic-network-bg.png')",
+          backgroundImage: "url('/forensic-network-bg.webp')",
           backgroundSize: "cover",
           transformOrigin: "68% 47%",
           willChange: "transform",

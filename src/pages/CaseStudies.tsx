@@ -74,7 +74,7 @@ const CaseStudies = () => {
   return (
     <>
       <SEO
-        title="Case Studies | VFRA Nagpur"
+        title="Case Studies | VFRA"
         description="Anonymized digital forensic investigations and documented outcomes by Vigilant Forensic Research and Analytics."
       />
       <div className="bg-white min-h-screen">

@@ -5,15 +5,16 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { APPLE_EASE } from "@/lib/motion";
-import vfraLogo from "@/assets/vfra-logo.png";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 const navLinks = [
   { title: "Home", href: "/" },
   { title: "About", href: "/about" },
   { title: "Services", href: "/services" },
+  { title: "Products", href: "/products" },
   { title: "Gallery", href: "/gallery" },
   { title: "Upcoming Events", href: "/events" },
-  { title: "Insights", href: "/blog" },
+  { title: "Blog", href: "/blog" },
   { title: "Contact", href: "/contact" },
 ];
 
@@ -45,23 +46,9 @@ export function Navbar() {
         {/* Brand Identity */}
         <Link
           to="/"
-          className="flex items-center gap-3.5 min-w-0 shrink-0 group focus:outline-none"
+          className="flex items-center min-w-0 shrink-0 group focus:outline-none"
         >
-          <div className="h-11 w-11 rounded-lg border border-[#E5E5E3] bg-[#F7F7F5] p-1.5 flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-[1.03] shadow-sm">
-            <img
-              src={vfraLogo}
-              alt="VFRA"
-              className="h-full w-full object-contain"
-            />
-          </div>
-          <div className="flex flex-col leading-tight">
-            <span className="font-heading font-bold text-base sm:text-[17px] tracking-[-0.02em] text-[#111111]">
-              VIGILANT FORENSIC
-            </span>
-            <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-[#555555] mt-0.5">
-              Research &amp; Analytics
-            </span>
-          </div>
+          <BrandLogo size="md" showText={true} interactive={true} />
         </Link>
 
         {/* Desktop Navigation */}

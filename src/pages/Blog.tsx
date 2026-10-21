@@ -37,19 +37,19 @@ export default function Blog() {
   return (
     <>
       <SEO
-        title="Forensic Insights & Research | VFRA Nagpur"
-        description="Read technical insights, digital forensics research, and cybercrime analysis from VFRA Nagpur."
+        title="Forensic Blog & Research | VFRA"
+        description="Read technical research, digital forensics analysis, and cybercrime investigation articles from VFRA."
       />
       <div className="min-h-screen bg-white">
         {/* Hero */}
         <section className="py-16 md:py-24 bg-[#F7F7F5] border-b border-[#E5E5E3]">
           <div className="container max-w-4xl">
-            <span className="section-eyebrow">PUBLICATIONS // RESEARCH &amp; INSIGHTS</span>
+            <span className="section-eyebrow">PUBLICATIONS // FORENSIC BLOG &amp; RESEARCH</span>
             <h1 className="font-heading text-4xl md:text-5xl font-semibold text-[#111111] tracking-[-0.035em] mb-4">
-              Forensic Insights &amp; Technical Briefs.
+              Forensic Blog &amp; Technical Briefs.
             </h1>
             <p className="text-base md:text-lg text-[#555555] max-w-2xl leading-relaxed">
-              Research notes, statutory analyses, and investigative methodologies from the VFRA Nagpur laboratory.
+              Research notes, statutory analyses, and investigative methodologies from the VFRA laboratory.
             </p>
           </div>
         </section>

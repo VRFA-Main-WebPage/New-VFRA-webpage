@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
-import vfraLogo from "@/assets/vfra-logo.png";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 import {
   useWebsiteContent,
   defaultFooterContent,
@@ -18,15 +18,15 @@ const footerLinks = {
     { title: "LEA & Corporate Training", href: "/services" },
   ],
   platforms: [
-    { title: "InvestiGate Platform", href: "/#platforms" },
-    { title: "VFRA-TTI Intelligence", href: "/#platforms" },
+    { title: "InvestiGate Platform", href: "/products" },
+    { title: "VFRA-TTI Intelligence", href: "/products" },
     { title: "Forensic Lab Archive", href: "/gallery" },
     { title: "Upcoming Events", href: "/events" },
   ],
   institution: [
-    { title: "About VFRA Nagpur", href: "/about" },
+    { title: "About VFRA", href: "/about" },
     { title: "Documented Case Studies", href: "/case-studies" },
-    { title: "Research & Insights", href: "/blog" },
+    { title: "Research & Blog", href: "/blog" },
     { title: "Contact Laboratory", href: "/contact" },
   ],
   operations: [
@@ -48,9 +48,7 @@ export function Footer() {
           {/* Column 1: Institutional Spec Block */}
           <div className="lg:col-span-4 space-y-6">
             <Link to="/" className="inline-flex items-center gap-3">
-              <div className="h-10 w-10 rounded-md border border-[#E5E5E3] bg-white p-1.5 flex items-center justify-center">
-                <img src={vfraLogo} alt="VFRA" className="h-full w-full object-contain" />
-              </div>
+              <BrandLogo size="sm" showText={false} interactive={false} />
               <div>
                 <p className="font-heading font-bold text-sm tracking-[-0.02em] text-[#111111]">
                   VIGILANT FORENSIC

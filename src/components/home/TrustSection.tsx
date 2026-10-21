@@ -2,8 +2,8 @@ import { Check, Building2, Scale, GraduationCap, Briefcase, LucideIcon } from "l
 import { motion } from "framer-motion";
 import { useWebsiteContent, defaultTrustContent, TrustContent } from "@/hooks/useWebsiteContent";
 import { fadeUp, staggerContainer, useInView } from "@/lib/motion";
-import maharashtraPoliceLogo from "@/assets/partners/maharashtra-police.jpg";
-import nagpurPoliceLogo from "@/assets/partners/nagpur-police.jpg";
+import maharashtraPoliceLogo from "@/assets/partners/maharashtra-police.webp";
+import nagpurPoliceLogo from "@/assets/partners/nagpur-police.webp";
 
 const iconMap: Record<string, LucideIcon> = {
   Scale,

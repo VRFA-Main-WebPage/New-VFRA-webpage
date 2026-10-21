@@ -139,12 +139,13 @@ export const VFRA_SERVICES: VFRAService[] = [
   },
   {
     number: 4,
-    title: "Chat & Messaging Recovery",
+    title: "Chat & Messaging Recovery (WhatsApp / Telegram)",
     category: "A",
     audience: "Both",
     description:
-      "Messaging artefact recovery and review from devices and lawful data sources.",
+      "Messaging artefact recovery, WhatsApp chat extraction, deleted conversations, and review from devices and lawful data sources.",
     capabilities: [
+      "WhatsApp & Telegram message recovery",
       "Chat timeline reconstruction",
       "Attachment and metadata review",
       "Export for case documentation",
@@ -229,12 +230,14 @@ export const VFRA_SERVICES: VFRAService[] = [
   },
   {
     number: 10,
-    title: "Phone Number & Subscriber Intelligence",
+    title: "Phone Number & Subscriber Intelligence (CDR Analysis)",
     category: "B",
     audience: "Both",
     description:
-      "Telecom-related intelligence support using lawfully obtained records and data.",
+      "Telecom and CDR (Call Detail Record) intelligence support using lawfully obtained subscriber records, call logs, and cell site data.",
     capabilities: [
+      "CDR & Call Detail Record analysis",
+      "Tower dump & cell site correlation",
       "Subscriber record correlation",
       "Call/SMS pattern analysis",
       "Documentation for legal review",
@@ -338,8 +341,9 @@ export const VFRA_SERVICES: VFRAService[] = [
     category: "D",
     audience: "Both",
     description:
-      "On-chain analysis support for cryptocurrency-related fraud investigations.",
+      "On-chain analysis support for cryptocurrency fraud tracking and blockchain asset investigations.",
     capabilities: [
+      "Crypto fraud tracking & transaction tracing",
       "Wallet and transaction tracing",
       "Exchange flow documentation",
       "Technical briefs for counsel",

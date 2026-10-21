@@ -81,8 +81,8 @@ export default function Gallery() {
   return (
     <>
       <SEO
-        title="Forensic Gallery & Operations Archive | VFRA Nagpur"
-        description="Explore the visual archive of Vigilant Forensic Research and Analytics Pvt. Ltd. (Nagpur) — laboratory workstations, law enforcement workshops, and field operations."
+        title="Forensic Gallery & Operations Archive | VFRA"
+        description="Explore the visual archive of Vigilant Forensic Research and Analytics Pvt. Ltd. (VFRA) — laboratory workstations, law enforcement workshops, and field operations."
       />
       <div className="min-h-screen bg-white">
         {/* Hero Header */}
@@ -96,7 +96,7 @@ export default function Gallery() {
               className="max-w-3xl"
             >
               <motion.span variants={fadeUp} className="section-eyebrow">
-                VISUAL EVIDENCE ARCHIVE // VFRA NAGPUR
+                VISUAL EVIDENCE ARCHIVE // VFRA
               </motion.span>
               <motion.h1
                 variants={fadeUp}
@@ -244,7 +244,7 @@ export default function Gallery() {
                         <div className="px-5 md:px-6 py-3.5 border-t border-[#E5E5E3] bg-[#F7F7F5]/60 flex items-center justify-between font-mono text-[11px] text-[#555555]">
                           <span className="inline-flex items-center gap-1.5 truncate">
                             <MapPin className="h-3 w-3 text-[#111111] shrink-0" />
-                            {item.location || "VFRA Nagpur"}
+                            {item.location || "VFRA Central Laboratory"}
                           </span>
                           <span className="inline-flex items-center gap-1 shrink-0">
                             <Calendar className="h-3 w-3 text-[#111111]" />
@@ -368,7 +368,7 @@ export default function Gallery() {
                     <div className="flex items-center justify-between">
                       <span className="text-[#71717A]">LOCATION</span>
                       <span className="text-[#111111] font-medium">
-                        {selectedItem.location || "VFRA Nagpur"}
+                        {selectedItem.location || "VFRA Central Laboratory"}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">

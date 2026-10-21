@@ -1,7 +1,7 @@
 import { SEO } from "@/components/SEO";
+import { SubNavSearchBar } from "@/components/home/SubNavSearchBar";
 import { HeroSection } from "@/components/home/HeroSection";
 import { RecognitionStrip } from "@/components/home/RecognitionStrip";
-import { ProductsSection } from "@/components/home/ProductsSection";
 import { ServicesSection } from "@/components/home/ServicesSection";
 import { WhyVFRASection } from "@/components/home/WhyVFRASection";
 import { ProcessTimelineSection } from "@/components/home/ProcessTimelineSection";
@@ -14,12 +14,13 @@ const Index = () => {
   return (
     <>
       <SEO
-        title="VFRA | Vigilant Forensic Research & Analytics Nagpur"
-        description="Vigilant Forensic Research and Analytics Pvt. Ltd. (Nagpur) provides digital forensics, cybercrime investigation support, forensic reporting, and intelligence workflows."
+        title="VFRA | Vigilant Forensic Research & Analytics"
+        description="Vigilant Forensic Research and Analytics Pvt. Ltd. provides national digital forensics, cybercrime investigation support, forensic reporting, and intelligence workflows."
       />
+      {/* Search Bar Strip directly below Navbar */}
+      <SubNavSearchBar />
       <HeroSection />
       <RecognitionStrip />
-      <ProductsSection />
       <ServicesSection />
       <WhyVFRASection />
       <ProcessTimelineSection />

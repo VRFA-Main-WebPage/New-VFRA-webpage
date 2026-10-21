@@ -38,19 +38,19 @@ const Contact = () => {
   return (
     <>
       <SEO
-        title="Contact Laboratory | VFRA Nagpur"
-        description="Get in touch with Vigilant Forensic Research and Analytics Pvt. Ltd. (Nagpur) for digital forensics and investigation support."
+        title="Contact Laboratory | VFRA"
+        description="Get in touch with Vigilant Forensic Research and Analytics Pvt. Ltd. (VFRA) for digital forensics and investigation support."
       />
       <div className="bg-white min-h-screen">
         {/* Hero */}
         <section className="py-16 md:py-24 bg-[#F7F7F5] border-b border-[#E5E5E3]">
           <div className="container max-w-3xl">
-            <span className="section-eyebrow">LABORATORY DISPATCH // NAGPUR HQ</span>
+            <span className="section-eyebrow">LABORATORY DISPATCH // HEADQUARTERS</span>
             <h1 className="font-heading text-4xl md:text-5xl font-semibold text-[#111111] tracking-[-0.035em] mb-4">
               Contact Our Forensic Desk.
             </h1>
             <p className="text-base md:text-lg text-[#555555] leading-relaxed">
-              Need an expert consultation, platform demonstration, or institutional training quote? Reach out to our Nagpur laboratory for confidential assistance.
+              Need an expert consultation, platform demonstration, or institutional training quote? Reach out to our laboratory for confidential assistance.
             </p>
           </div>
         </section>

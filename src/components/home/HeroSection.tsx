@@ -1,20 +1,81 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, ShieldCheck, FileCheck2, Lock, Terminal } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { fadeUp, staggerContainer, APPLE_EASE } from "@/lib/motion";
 import { useWebsiteContent, defaultHeroContent, HeroContent } from "@/hooks/useWebsiteContent";
-import labSetupImg from "@/assets/services/Labsetup.jpg";
+import labSetupImg from "@/assets/services/Labsetup.webp";
 
 export function HeroSection() {
   const { content } = useWebsiteContent<HeroContent>("hero", defaultHeroContent);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
 
   return (
-    <section className="relative overflow-hidden bg-[#F7F7F5] border-b border-[#E5E5E3]">
-      {/* Subtle Swiss Architectural Grid */}
-      <div className="absolute inset-0 grid-overlay pointer-events-none opacity-60" aria-hidden />
+    <section
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      className="relative overflow-hidden bg-[#F7F7F5] border-b border-[#E5E5E3]"
+    >
+      {/* 1. Base Square Grid: Gold by Default (Before Hover) */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-85 grid-overlay"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(212, 175, 55, 0.28) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(212, 175, 55, 0.28) 1px, transparent 1px)
+          `,
+        }}
+        aria-hidden
+      />
 
-      <div className="container relative z-10 py-14 md:py-24 lg:py-28">
+      {/* 2. Initial Ambient Gold Backlight behind headline */}
+      <div
+        className="absolute inset-0 pointer-events-none transition-opacity duration-500 ease-out"
+        style={{
+          opacity: 1,
+          background:
+            "radial-gradient(ellipse at 35% 45%, rgba(212, 175, 55, 0.22) 0%, rgba(212, 175, 55, 0.06) 55%, transparent 75%)",
+        }}
+        aria-hidden
+      />
+
+      {/* 3. Clean & Minimal Hover Spotlight: Soft Gold Ambient Illumination */}
+      <div
+        className="absolute inset-0 pointer-events-none transition-opacity duration-300 ease-out"
+        style={{
+          opacity: isHovering ? 1 : 0,
+          background: `radial-gradient(280px circle at ${mousePos.x}px ${mousePos.y}px, rgba(212, 175, 55, 0.20) 0%, rgba(212, 175, 55, 0.06) 45%, transparent 75%)`,
+        }}
+        aria-hidden
+      />
+
+      {/* 4. Subtle Gold Grid Line Illumination Under Cursor */}
+      <div
+        className="absolute inset-0 pointer-events-none transition-opacity duration-300 ease-out grid-overlay"
+        style={{
+          opacity: isHovering ? 1 : 0,
+          WebkitMaskImage: `radial-gradient(200px circle at ${mousePos.x}px ${mousePos.y}px, black 25%, transparent 75%)`,
+          maskImage: `radial-gradient(200px circle at ${mousePos.x}px ${mousePos.y}px, black 25%, transparent 75%)`,
+          backgroundImage: `
+            linear-gradient(to right, rgba(212, 175, 55, 0.65) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(212, 175, 55, 0.65) 1px, transparent 1px)
+          `,
+        }}
+        aria-hidden
+      />
+
+      <div className="container relative z-10 pt-6 md:pt-8 lg:pt-10 pb-14 md:pb-20 lg:pb-24">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-10 items-center">
           {/* Left Column: Editorial Headline & Actions */}
           <motion.div
@@ -30,7 +91,7 @@ export function HeroSection() {
             >
               <span className="h-1.5 w-1.5 rounded-full bg-[#111111]" />
               <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#111111] font-medium">
-                {content.companyName || "VFRA"} · NAGPUR LABORATORY
+                {content.companyName || "VFRA"} · DIGITAL FORENSIC LABORATORY
               </span>
               <span className="text-[#D4D4D0]">|</span>
               <span className="font-mono text-[11px] text-[#555555] hidden sm:inline">
@@ -130,7 +191,7 @@ export function HeroSection() {
                 <div className="flex items-center gap-2">
                   <Terminal className="h-3.5 w-3.5 text-[#111111]" />
                   <span className="font-mono text-[11px] uppercase tracking-[0.14em] font-semibold text-[#111111]">
-                    LAB SPECIFICATION // VFRA-NGP
+                    LAB SPECIFICATION // VFRA-HQ
                   </span>
                 </div>
                 <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-white border border-[#E5E5E3] text-[#555555]">
@@ -142,7 +203,7 @@ export function HeroSection() {
               <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#F0EFEA] border-b border-[#E5E5E3]">
                 <img
                   src={labSetupImg}
-                  alt="VFRA Digital Forensics Laboratory Nagpur"
+                  alt="VFRA Digital Forensics Laboratory"
                   className="w-full h-full object-cover object-center transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.03]"
                 />
                 <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between px-3 py-2 rounded bg-white/90 backdrop-blur-md border border-[#E5E5E3]">
@@ -161,7 +222,10 @@ export function HeroSection() {
                   <div className="flex items-start gap-3 pb-3 border-b border-[#E5E5E3]">
                     <ShieldCheck className="h-4 w-4 text-[#111111] shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-xs font-semibold text-[#111111] uppercase tracking-wider font-mono">
+                      <p
+                        className="text-xs font-semibold text-[#111111] uppercase tracking-wider font-serif"
+                        style={{ fontFamily: "'Times New Roman', Times, serif" }}
+                      >
                         Chain of Custody Integrity
                       </p>
                       <p className="text-xs text-[#555555] mt-0.5 leading-relaxed">
@@ -173,7 +237,10 @@ export function HeroSection() {
                   <div className="flex items-start gap-3 pb-3 border-b border-[#E5E5E3]">
                     <FileCheck2 className="h-4 w-4 text-[#111111] shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-xs font-semibold text-[#111111] uppercase tracking-wider font-mono">
+                      <p
+                        className="text-xs font-semibold text-[#111111] uppercase tracking-wider font-serif"
+                        style={{ fontFamily: "'Times New Roman', Times, serif" }}
+                      >
                         Section 65B / BSA 2023 Admissibility
                       </p>
                       <p className="text-xs text-[#555555] mt-0.5 leading-relaxed">
@@ -185,7 +252,10 @@ export function HeroSection() {
                   <div className="flex items-start gap-3">
                     <Lock className="h-4 w-4 text-[#111111] shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-xs font-semibold text-[#111111] uppercase tracking-wider font-mono">
+                      <p
+                        className="text-xs font-semibold text-[#111111] uppercase tracking-wider font-serif"
+                        style={{ fontFamily: "'Times New Roman', Times, serif" }}
+                      >
                         Authorized Engagement Protocol
                       </p>
                       <p className="text-xs text-[#555555] mt-0.5 leading-relaxed">

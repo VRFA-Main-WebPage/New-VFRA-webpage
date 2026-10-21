@@ -7,7 +7,7 @@ const RECOGNITIONS = [
     code: "REG-01",
     label: "DPIIT Recognized Startup",
     sublabel: "Department for Promotion of Industry and Internal Trade",
-    image: "/dpiit-logo.jpeg",
+    image: "/dpiit-logo.webp",
     alt: "DPIIT Recognition logo",
   },
   {
@@ -15,7 +15,7 @@ const RECOGNITIONS = [
     code: "REG-02",
     label: "MCA Incorporated",
     sublabel: "Ministry of Corporate Affairs, Government of India",
-    image: "/mca-logo.jpg",
+    image: "/mca-logo.webp",
     alt: "Ministry of Corporate Affairs logo",
   },
   {
@@ -23,7 +23,7 @@ const RECOGNITIONS = [
     code: "REG-03",
     label: "MSME Registered",
     sublabel: "Ministry of Micro, Small & Medium Enterprises",
-    image: "/msme-logo.jpeg",
+    image: "/msme-logo.webp",
     alt: "MSME Registration logo",
   },
 ];

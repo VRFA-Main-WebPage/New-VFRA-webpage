@@ -81,7 +81,7 @@ export function CertificateCTASection() {
                 Verify Certificate
               </h3>
               <p className="text-sm text-[#555555] leading-relaxed mb-6">
-                Confirm the authenticity and issuance record of training, internship, and workshop certificates issued by VFRA Nagpur.
+                Confirm the authenticity and issuance record of training, internship, and workshop certificates issued by VFRA.
               </p>
             </div>
             <Link to="/verify">

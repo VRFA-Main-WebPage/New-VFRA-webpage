@@ -34,7 +34,7 @@ export function GalleryPreviewSection() {
                 07 // FORENSIC ARCHIVE &amp; LABORATORY GALLERY
               </span>
               <h2 className="section-heading">
-                Inside VFRA Nagpur Operations.
+                Inside VFRA Operations &amp; Field Archive.
               </h2>
             </div>
             <Link to="/gallery">
@@ -93,7 +93,7 @@ export function GalleryPreviewSection() {
                       <div className="pt-3 border-t border-[#E5E5E3] flex items-center justify-between font-mono text-[11px] text-[#555555]">
                         <span className="inline-flex items-center gap-1.5 truncate">
                           <MapPin className="h-3 w-3 text-[#111111] shrink-0" />
-                          {item.location || "VFRA Nagpur"}
+                          {item.location || "VFRA Central Laboratory"}
                         </span>
                         <span>{item.date}</span>
                       </div>

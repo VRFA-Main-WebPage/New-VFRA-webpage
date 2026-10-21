@@ -111,7 +111,7 @@ export default function BlogDetail() {
                   Require Forensic Consultation?
                 </h3>
                 <p className="text-sm text-[#555555]">
-                  Connect with our Nagpur laboratory team for case intake or technical support.
+                  Connect with our forensic laboratory team for case intake or technical support.
                 </p>
               </div>
               <div className="flex gap-3 w-full sm:w-auto">

@@ -26,7 +26,7 @@ import {
   Sliders,
   ExternalLink,
 } from "lucide-react";
-import logo from "@/assets/vfra-logo.png";
+import logo from "@/assets/vfra-logo.webp";
 import { Button } from "@/components/ui/button";
 
 const navGroups = [

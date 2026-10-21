@@ -20,6 +20,7 @@ import { AdminLayout } from "@/components/layout/AdminLayout";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Services from "./pages/Services";
+import Products from "./pages/Products";
 import CaseStudies from "./pages/CaseStudies";
 import Events from "./pages/Events";
 import Gallery from "./pages/Gallery";
@@ -65,6 +66,7 @@ const App = () => (
                   <Route path="/about" element={<About />} />
                   <Route path="/services" element={<Services />} />
                   <Route path="/services/:serviceId" element={<Services />} />
+                  <Route path="/products" element={<Products />} />
                   <Route path="/case-studies" element={<CaseStudies />} />
                   <Route path="/gallery" element={<Gallery />} />
                   <Route path="/events" element={<Events />} />

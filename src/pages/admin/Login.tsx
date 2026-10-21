@@ -28,7 +28,7 @@ import {
   is2FASessionVerified,
   getSecurityStatus,
 } from "@/lib/adminSecurity";
-import logo from "@/assets/vfra-logo.png";
+import logo from "@/assets/vfra-logo.webp";
 import { motion, AnimatePresence } from "framer-motion";
 import { APPLE_EASE } from "@/lib/motion";
 
@@ -187,7 +187,7 @@ const AdminLogin = () => {
                 VFRA Admin
               </span>
               <span className="font-mono text-[10px] uppercase tracking-widest text-[#555555]">
-                NAGPUR LABORATORY
+                FORENSIC OPERATIONS
               </span>
             </div>
           </div>

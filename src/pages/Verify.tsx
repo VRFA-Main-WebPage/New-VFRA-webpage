@@ -90,7 +90,7 @@ const Verify = () => {
   return (
     <>
       <SEO
-        title="Verify Certificate | VFRA Nagpur"
+        title="Verify Certificate | VFRA"
         description="Verify the authenticity of certificates issued by Vigilant Forensic Research and Analytics Pvt. Ltd."
       />
       <div className="bg-white min-h-screen">
@@ -102,7 +102,7 @@ const Verify = () => {
               Certificate Verification.
             </h1>
             <p className="text-base text-[#555555]">
-              Confirm the authenticity of training, internship, and workshop credentials issued by VFRA Nagpur.
+              Confirm the authenticity of training, internship, and workshop credentials issued by VFRA.
             </p>
           </div>
         </section>

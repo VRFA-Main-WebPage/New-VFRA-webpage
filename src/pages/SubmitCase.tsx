@@ -88,7 +88,7 @@ const SubmitCase = () => {
   if (submittedCaseId) {
     return (
       <>
-        <SEO title="Enquiry Submitted | VFRA Nagpur" description="Your enquiry has been submitted to VFRA." />
+        <SEO title="Enquiry Submitted | VFRA" description="Your enquiry has been submitted to VFRA." />
         <div className="min-h-screen bg-[#F7F7F5] flex items-center justify-center py-20 px-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
@@ -126,7 +126,7 @@ const SubmitCase = () => {
 
   return (
     <>
-      <SEO title="Register a Case | VFRA Nagpur" description="Submit a new case for digital forensic investigation." />
+      <SEO title="Register a Case | VFRA" description="Submit a new case for digital forensic investigation." />
       <div className="min-h-screen bg-white">
         {/* Hero */}
         <section className="py-16 md:py-24 bg-[#F7F7F5] border-b border-[#E5E5E3]">
