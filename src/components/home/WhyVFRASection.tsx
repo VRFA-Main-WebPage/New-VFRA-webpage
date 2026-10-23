@@ -71,28 +71,40 @@ export function WhyVFRASection() {
           </motion.div>
 
           <div className="lg:col-span-7 grid sm:grid-cols-2 gap-5">
-            {reasons.map((reason) => {
+            {reasons.map((reason, index) => {
               const Icon = reason.icon;
               return (
                 <motion.div
                   key={reason.title}
                   variants={fadeUp}
-                  className="premium-card p-6 bg-[#F7F7F5]/60 hover:bg-white"
+                  className="forensic-thin-card group p-6"
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-9 h-9 rounded-md bg-white border border-[#E5E5E3] flex items-center justify-center">
-                      <Icon className="h-4 w-4 text-[#111111]" />
+                  {/* Thin Orbiting Laser Beam */}
+                  <div
+                    className="thin-border-beam"
+                    style={{ animationDelay: `${index * 1.05}s` }}
+                  />
+
+                  {/* Thin Structural Outline */}
+                  <div className="thin-card-outline" />
+
+                  {/* Card Content */}
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="w-9 h-9 rounded-md bg-white border border-[#E5E5E3] flex items-center justify-center group-hover:border-[#D4AF37] transition-colors">
+                        <Icon className="h-4 w-4 text-[#111111] group-hover:text-[#825816] transition-colors" />
+                      </div>
+                      <span className="font-mono text-[10px] uppercase tracking-widest text-[#71717A] group-hover:text-[#825816] transition-colors">
+                        {reason.code}
+                      </span>
                     </div>
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-[#71717A]">
-                      {reason.code}
-                    </span>
+                    <h3 className="font-heading font-semibold text-base text-[#111111] mb-2 group-hover:text-[#825816] transition-colors">
+                      {reason.title}
+                    </h3>
+                    <p className="text-sm text-[#555555] leading-relaxed">
+                      {reason.description}
+                    </p>
                   </div>
-                  <h3 className="font-heading font-semibold text-base text-[#111111] mb-2">
-                    {reason.title}
-                  </h3>
-                  <p className="text-sm text-[#555555] leading-relaxed">
-                    {reason.description}
-                  </p>
                 </motion.div>
               );
             })}

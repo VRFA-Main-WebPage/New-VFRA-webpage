@@ -54,22 +54,34 @@ export function TrustSection() {
                 <motion.div
                   key={index}
                   variants={fadeUp}
-                  className="premium-card p-6 bg-[#F7F7F5]/60 hover:bg-white"
+                  className="forensic-thin-card group p-6"
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-10 h-10 rounded-md bg-white border border-[#E5E5E3] flex items-center justify-center">
-                      <IconComponent className="h-5 w-5 text-[#111111]" />
+                  {/* Thin Orbiting Laser Beam */}
+                  <div
+                    className="thin-border-beam"
+                    style={{ animationDelay: `${index * 1.05}s` }}
+                  />
+
+                  {/* Thin Structural Outline */}
+                  <div className="thin-card-outline" />
+
+                  {/* Card Content */}
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="w-10 h-10 rounded-md bg-white border border-[#E5E5E3] flex items-center justify-center group-hover:border-[#D4AF37] transition-colors">
+                        <IconComponent className="h-5 w-5 text-[#111111] group-hover:text-[#825816] transition-colors" />
+                      </div>
+                      <span className="font-mono text-[10px] text-[#71717A] uppercase tracking-widest group-hover:text-[#825816] transition-colors">
+                        SECTOR 0{index + 1}
+                      </span>
                     </div>
-                    <span className="font-mono text-[10px] text-[#71717A] uppercase tracking-widest">
-                      SECTOR 0{index + 1}
-                    </span>
+                    <h3 className="font-heading font-semibold text-base text-[#111111] mb-1 group-hover:text-[#825816] transition-colors">
+                      {client.label}
+                    </h3>
+                    <p className="text-xs text-[#555555] leading-relaxed">
+                      {client.description}
+                    </p>
                   </div>
-                  <h3 className="font-heading font-semibold text-base text-[#111111] mb-1">
-                    {client.label}
-                  </h3>
-                  <p className="text-xs text-[#555555] leading-relaxed">
-                    {client.description}
-                  </p>
                 </motion.div>
               );
             })}

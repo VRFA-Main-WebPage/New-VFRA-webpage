@@ -62,12 +62,12 @@ export function ServicesSection() {
         isLeft,
         textX,
         textY,
-        startDelay: srv.pairIndex * 0.05,
+        startDelay: srv.pairIndex * 0.11,
       };
     });
   }, [sc]);
 
-  // Laser Pulse Animation Controller (Rapid Instant Ignition on View)
+  // Laser Pulse Animation Controller (Majestic Smooth Glide on View)
   const playPulse = () => {
     if (typeof window === "undefined") return;
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -84,7 +84,7 @@ export function ServicesSection() {
     paths.forEach((p, i) => {
       const len = p.getTotalLength();
       pathLengths[i] = len;
-      const seg = Math.min(180, len * 0.3);
+      const seg = Math.min(160, len * 0.28);
       p.style.strokeDasharray = `${seg} ${len + seg}`;
       p.style.strokeDashoffset = "-20";
     });
@@ -98,7 +98,7 @@ export function ServicesSection() {
     });
 
     const t0 = performance.now();
-    const T = 0.55; // Rapid 0.55s laser travel time
+    const T = 1.15; // Smooth, graceful, majestic 1.15s laser flight
     const E = (t: number) => (t < 0 ? 0 : t > 1 ? 1 : 1 - Math.pow(1 - t, 3));
 
     const frame = (now: number) => {
@@ -120,7 +120,7 @@ export function ServicesSection() {
         }
 
         const len = pathLengths[i * 2] || 600;
-        const seg = Math.min(180, len * 0.3);
+        const seg = Math.min(160, len * 0.28);
         const k = u;
         const pos = E(k / T) * (len + seg);
         const off = seg - pos;
@@ -135,9 +135,9 @@ export function ServicesSection() {
           }
         }
 
-        // Dot & label opacity illuminates rapidly as laser approaches the tip
-        if (u >= T * 0.45) {
-          const q = Math.min(1, (u - T * 0.45) / 0.22);
+        // Dot & label opacity illuminates smoothly as laser reaches the tip
+        if (u >= T * 0.7) {
+          const q = Math.min(1, (u - T * 0.7) / 0.35);
           if (dot) {
             dot.style.opacity = `${Math.min(1, q * 2)}`;
           }
@@ -147,7 +147,7 @@ export function ServicesSection() {
         }
       });
 
-      const last = 6 * 0.05 + T + 0.35;
+      const last = 6 * 0.11 + T + 0.5;
       if (t > last) {
         dots.forEach((dot) => {
           dot.style.opacity = "1";
