@@ -1,346 +1,463 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  :root {
-    /* Clinical Beminimalist + Apple Spatial Palette */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 7%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 7%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 7%;
-
-    --primary: 0 0% 7%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 60 9% 96.5%;
-    --secondary-foreground: 0 0% 7%;
-
-    --muted: 60 7% 95%;
-    --muted-foreground: 0 0% 35%;
-
-    --accent: 60 9% 96.5%;
-    --accent-foreground: 0 0% 7%;
-
-    --destructive: 0 72% 45%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 60 5% 89.5%;
-    --input: 60 5% 89.5%;
-    --ring: 0 0% 7%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 60 9% 97.5%;
-    --sidebar-foreground: 0 0% 7%;
-    --sidebar-primary: 0 0% 7%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 60 6% 93%;
-    --sidebar-accent-foreground: 0 0% 7%;
-    --sidebar-border: 60 5% 89.5%;
-    --sidebar-ring: 0 0% 7%;
-
-    --success: 150 60% 32%;
-    --success-foreground: 0 0% 100%;
-    --warning: 36 88% 44%;
-    --warning-foreground: 0 0% 100%;
-    --info: 212 65% 45%;
-    --info-foreground: 0 0% 100%;
-
-    --vfra-surface: 60 9% 96.5%;
-    --vfra-panel: 60 7% 94%;
-
-    --gradient-hero: linear-gradient(
-      180deg,
-      #F7F7F5 0%,
-      #FFFFFF 100%
-    );
-
-    --shadow-sm: 0 1px 2px 0 rgba(17, 17, 17, 0.03);
-    --shadow-md: 0 8px 24px -6px rgba(17, 17, 17, 0.06);
-    --shadow-lg: 0 20px 44px -12px rgba(17, 17, 17, 0.08);
-  }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Clinical Beminimalist + Apple Spatial Palette */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 7%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 7%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 7%;
+
+    --primary: 0 0% 7%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 60 9% 96.5%;
+    --secondary-foreground: 0 0% 7%;
+
+    --muted: 60 7% 95%;
+    --muted-foreground: 0 0% 35%;
+
+    --accent: 60 9% 96.5%;
+    --accent-foreground: 0 0% 7%;
+
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 60 5% 89.5%;
+    --input: 60 5% 89.5%;
+    --ring: 0 0% 7%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 60 9% 97.5%;
+    --sidebar-foreground: 0 0% 7%;
+    --sidebar-primary: 0 0% 7%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 60 6% 93%;
+    --sidebar-accent-foreground: 0 0% 7%;
+    --sidebar-border: 60 5% 89.5%;
+    --sidebar-ring: 0 0% 7%;
+
+    --success: 150 60% 32%;
+    --success-foreground: 0 0% 100%;
+    --warning: 36 88% 44%;
+    --warning-foreground: 0 0% 100%;
+    --info: 212 65% 45%;
+    --info-foreground: 0 0% 100%;
+
+    --vfra-surface: 60 9% 96.5%;
+    --vfra-panel: 60 7% 94%;
+
+    --gradient-hero: linear-gradient(
+      180deg,
+      #F7F7F5 0%,
+      #FFFFFF 100%
+    );
+
+    --shadow-sm: 0 1px 2px 0 rgba(17, 17, 17, 0.03);
+    --shadow-md: 0 8px 24px -6px rgba(17, 17, 17, 0.06);
+    --shadow-lg: 0 20px 44px -12px rgba(17, 17, 17, 0.08);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased font-body overflow-x-hidden selection:bg-foreground selection:text-background;
+    font-feature-settings: "rlig" 1, "calt" 1, "cv02" 1, "cv03" 1, "cv04" 1, "cv11" 1;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading font-semibold tracking-[-0.03em] text-foreground;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #F7F7F5;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #D4D4D0;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #9E9E98;
+  }
+}
+
+@layer components {
+  /* Apple Frosted Glass Navigation */
+  .glass-navbar {
+    background-color: rgba(255, 255, 255, 0.82);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid #E5E5E3;
+  }
+
+  .glass-card {
+    background-color: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(16px);
+    border: 1px solid #E5E5E3;
+    border-radius: var(--radius);
+  }
+
+  /* Beminimalist Clinical Spec Card with Apple Elevation Motion */
+  .premium-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E5E3;
+    border-radius: var(--radius);
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .premium-card:hover {
+    border-color: #111111;
+    box-shadow: 0 16px 36px -14px rgba(17, 17, 17, 0.07);
+  }
+
+  /* Primary Carbon Action Button (replaces legacy gold button cleanly) */
+  .btn-gold {
+    background-color: #111111;
+    color: #FFFFFF;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .btn-gold:hover {
+    background-color: #2A2A2A;
+    transform: translateY(-1px);
+  }
+
+  .btn-outline-gold {
+    border: 1px solid #D4D4D0;
+    color: #111111;
+    background-color: transparent;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .btn-outline-gold:hover {
+    border-color: #111111;
+    background-color: #F7F7F5;
+    color: #111111;
+  }
+
+  .section-eyebrow {
+    @apply font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground mb-3 block;
+  }
+
+  .section-heading {
+    @apply font-heading text-3xl md:text-4xl lg:text-[2.75rem] font-semibold tracking-[-0.03em] leading-[1.12] text-foreground;
+  }
+
+  .section-subtext {
+    @apply text-muted-foreground text-base md:text-lg leading-relaxed max-w-2xl font-normal;
+  }
+
+  .spec-pill {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono uppercase tracking-[0.12em] border border-border bg-[#F7F7F5] text-foreground;
+  }
+
+  .audience-badge {
+    @apply inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-medium uppercase tracking-[0.1em] border;
+  }
+
+  .audience-lea {
+    @apply audience-badge border-foreground/20 text-foreground bg-[#F7F7F5];
+  }
+
+  .audience-lawyers {
+    @apply audience-badge border-border text-muted-foreground bg-[#F7F7F5];
+  }
+
+  .audience-both {
+    @apply audience-badge border-border text-muted-foreground bg-secondary;
+  }
+}
+
+@layer utilities {
+  .bg-gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  /* Subtle Swiss architectural grid */
+  .grid-overlay { display: none !important; }
+
+  .text-gradient-gold {
+    color: #111111;
+  }
+
+  .border-subtle {
+    border-color: hsl(var(--border));
+  }
+
+  .bg-surface {
+    background-color: hsl(var(--vfra-surface));
+  }
+
+  .bg-panel {
+    background-color: hsl(var(--vfra-panel));
+  }
+
+  .apple-transition {
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+html, body {
+  overflow-x: hidden;
+}
+
+img, video, canvas, svg {
+  max-width: 100%;
+}
+
+
+/* --- VFRA Eagle Emblem Animations --- */
+@keyframes eagleBodyBreathe {
+  0% {
+    opacity: 0.35;
+    background: radial-gradient(circle at 62% 42%, rgba(212, 175, 55, 0.25) 0%, transparent 65%);
+  }
+  100% {
+    opacity: 0.7;
+    background: radial-gradient(circle at 62% 42%, rgba(212, 175, 55, 0.45) 0%, rgba(212, 175, 55, 0.12) 50%, transparent 75%);
+  }
+}
+
+@keyframes logoSheenSweep {
+  0%, 10% {
+    transform: translate(-120%, -120%);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  28% {
+    transform: translate(120%, 120%);
+    opacity: 1;
+  }
+  30%, 100% {
+    transform: translate(120%, 120%);
+    opacity: 0;
+  }
+}
+
+@keyframes logoSheenHover {
+  0% {
+    transform: translate(-120%, -120%);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(120%, 120%);
+    opacity: 0;
+  }
+}
+
+@keyframes eagleEyeGleamCycle {
+  0%, 72% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  76% {
+    opacity: 0.6;
+    transform: scale(0.85);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 10px rgba(251, 191, 36, 0.85));
+  }
+  84% {
+    opacity: 0.85;
+    transform: scale(1.05);
+  }
+  90% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+}
+
+@keyframes eagleEyeHoverGlint {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.3);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 1)) drop-shadow(0 0 14px rgba(251, 191, 36, 0.9));
+  }
+  70% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  html {
-    scroll-behavior: smooth;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  body {
-    @apply bg-background text-foreground antialiased font-body overflow-x-hidden selection:bg-foreground selection:text-background;
-    font-feature-settings: "rlig" 1, "calt" 1, "cv02" 1, "cv03" 1, "cv04" 1, "cv11" 1;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-heading font-semibold tracking-[-0.03em] text-foreground;
-  }
-
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: #F7F7F5;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #D4D4D0;
-    border-radius: 3px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #9E9E98;
-  }
-}
-
-@layer components {
-  /* Apple Frosted Glass Navigation */
-  .glass-navbar {
-    background-color: rgba(255, 255, 255, 0.82);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    border-bottom: 1px solid #E5E5E3;
-  }
-
-  .glass-card {
-    background-color: rgba(255, 255, 255, 0.88);
-    backdrop-filter: blur(16px);
-    border: 1px solid #E5E5E3;
-    border-radius: var(--radius);
-  }
-
-  /* Beminimalist Clinical Spec Card with Apple Elevation Motion */
-  .premium-card {
-    background-color: #FFFFFF;
-    border: 1px solid #E5E5E3;
-    border-radius: var(--radius);
-    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-                border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-                box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .premium-card:hover {
-    border-color: #111111;
-    box-shadow: 0 16px 36px -14px rgba(17, 17, 17, 0.07);
-  }
-
-  /* Primary Carbon Action Button (replaces legacy gold button cleanly) */
-  .btn-gold {
-    background-color: #111111;
-    color: #FFFFFF;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .btn-gold:hover {
-    background-color: #2A2A2A;
-    transform: translateY(-1px);
-  }
-
-  .btn-outline-gold {
-    border: 1px solid #D4D4D0;
-    color: #111111;
-    background-color: transparent;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .btn-outline-gold:hover {
-    border-color: #111111;
-    background-color: #F7F7F5;
-    color: #111111;
-  }
-
-  .section-eyebrow {
-    @apply font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground mb-3 block;
-  }
-
-  .section-heading {
-    @apply font-heading text-3xl md:text-4xl lg:text-[2.75rem] font-semibold tracking-[-0.03em] leading-[1.12] text-foreground;
-  }
-
-  .section-subtext {
-    @apply text-muted-foreground text-base md:text-lg leading-relaxed max-w-2xl font-normal;
-  }
-
-  .spec-pill {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono uppercase tracking-[0.12em] border border-border bg-[#F7F7F5] text-foreground;
-  }
-
-  .audience-badge {
-    @apply inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-medium uppercase tracking-[0.1em] border;
-  }
-
-  .audience-lea {
-    @apply audience-badge border-foreground/20 text-foreground bg-[#F7F7F5];
-  }
-
-  .audience-lawyers {
-    @apply audience-badge border-border text-muted-foreground bg-[#F7F7F5];
-  }
-
-  .audience-both {
-    @apply audience-badge border-border text-muted-foreground bg-secondary;
-  }
-}
-
-@layer utilities {
-  .bg-gradient-hero {
-    background: var(--gradient-hero);
-  }
-
-  /* Subtle Swiss architectural grid */
-  .grid-overlay {
-    background-size: 48px 48px;
-    background-image: 
-      linear-gradient(to right, rgba(17, 17, 17, 0.035) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(17, 17, 17, 0.035) 1px, transparent 1px);
-  }
-
-  .text-gradient-gold {
-    color: #111111;
-  }
-
-  .border-subtle {
-    border-color: hsl(var(--border));
-  }
-
-  .bg-surface {
-    background-color: hsl(var(--vfra-surface));
-  }
-
-  .bg-panel {
-    background-color: hsl(var(--vfra-panel));
-  }
-
-  .apple-transition {
-    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-}
-
-html, body {
-  overflow-x: hidden;
-}
-
-img, video, canvas, svg {
-  max-width: 100%;
-}
-
-
-/* --- VFRA Eagle Emblem Animations --- */
-@keyframes eagleBodyBreathe {
+/* --- VFRA Institutional Accreditation: No-Background Floating Cards & Orbiting Laser Beam --- */
+@keyframes borderBeamOrbit {
   0% {
-    opacity: 0.35;
-    background: radial-gradient(circle at 62% 42%, rgba(212, 175, 55, 0.25) 0%, transparent 65%);
+    transform: rotate(0deg);
   }
   100% {
-    opacity: 0.7;
-    background: radial-gradient(circle at 62% 42%, rgba(212, 175, 55, 0.45) 0%, rgba(212, 175, 55, 0.12) 50%, transparent 75%);
+    transform: rotate(360deg);
   }
 }
 
-@keyframes logoSheenSweep {
-  0%, 10% {
-    transform: translate(-120%, -120%);
-    opacity: 0;
-  }
-  15% {
-    opacity: 1;
-  }
-  28% {
-    transform: translate(120%, 120%);
-    opacity: 1;
-  }
-  30%, 100% {
-    transform: translate(120%, 120%);
-    opacity: 0;
-  }
+.accreditation-nobg-card {
+  position: relative;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  cursor: pointer;
+  background: transparent;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+  overflow: hidden;
 }
 
-@keyframes logoSheenHover {
-  0% {
-    transform: translate(-120%, -120%);
-    opacity: 0.8;
-  }
-  100% {
-    transform: translate(120%, 120%);
-    opacity: 0;
-  }
+.accreditation-nobg-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(212, 175, 55, 0.18);
 }
 
-@keyframes eagleEyeGleamCycle {
-  0%, 72% {
-    opacity: 0;
-    transform: scale(0.2);
-  }
-  76% {
-    opacity: 0.6;
-    transform: scale(0.85);
-  }
-  80% {
-    opacity: 1;
-    transform: scale(1.2);
-    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 10px rgba(251, 191, 36, 0.85));
-  }
-  84% {
-    opacity: 0.85;
-    transform: scale(1.05);
-  }
-  90% {
-    opacity: 0;
-    transform: scale(0.3);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.2);
-  }
+.accreditation-beam-mask {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.75rem;
+  padding: 1.5px;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
 }
 
-@keyframes eagleEyeHoverGlint {
-  0% {
-    opacity: 0;
-    transform: scale(0.3);
-  }
-  30% {
-    opacity: 1;
-    transform: scale(1.3);
-    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 1)) drop-shadow(0 0 14px rgba(251, 191, 36, 0.9));
-  }
-  70% {
-    opacity: 0.8;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.3);
-  }
+.accreditation-beam-mask::before {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -60%;
+  width: 220%;
+  height: 220%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 65%,
+    rgba(212, 175, 55, 0.35) 80%,
+    #D4AF37 92%,
+    #38BDF8 98%,
+    #FFFFFF 100%
+  );
+  animation: borderBeamOrbit 3.6s linear infinite;
+}
+
+.accreditation-card-outline {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  pointer-events: none;
+  transition: border-color 0.3s ease;
+  z-index: 1;
+}
+
+.accreditation-nobg-card:hover .accreditation-card-outline {
+  border-color: #D4AF37;
+}
+
+.accreditation-nobg-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -160%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(212, 175, 55, 0.16),
+    transparent
+  );
+  transform: skewX(-25deg);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.accreditation-nobg-card:hover::after {
+  left: 160%;
+  transition: left 0.75s ease-in-out;
+}
+
+.logo-box-transparent {
+  width: 6.5rem;
+  height: 4.625rem;
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 4;
+}
+
+.logo-box-transparent img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: contrast(1.05) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12));
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
+}
+
+.accreditation-nobg-card:hover .logo-box-transparent img {
+  transform: scale(1.10);
+  filter: contrast(1.10) drop-shadow(0 4px 14px rgba(212, 175, 55, 0.35));
 }

@@ -135,7 +135,7 @@ export function SubNavSearchBar() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onFocus={() => setIsFocused(true)}
-              placeholder="Search 26 forensic services..."
+              placeholder="Search forensic services..."
               className="h-11 sm:h-12 border-0 bg-transparent pl-4 pr-1 text-sm text-[#111111] placeholder:text-[#777777] focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none font-sans"
             />
 

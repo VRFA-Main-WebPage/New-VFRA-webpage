@@ -1,167 +1,332 @@
-import { Link } from "react-router-dom";
-import {
-  ArrowRight,
-  Smartphone,
-  Bitcoin,
-  Mic,
-  FileCheck,
-  GraduationCap,
-  Building2,
-} from "lucide-react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState, useMemo } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { ArrowRight, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { fadeUp, staggerContainer, useInView } from "@/lib/motion";
-
-const FEATURED_SERVICES = [
-  {
-    number: "01",
-    code: "SRV-01",
-    title: "Mobile Device Extraction & Unlocking",
-    category: "Digital Forensics",
-    description:
-      "Logical and physical mobile acquisition, deleted artifact recovery, and forensic examination for Android and iOS devices.",
-    icon: Smartphone,
-    link: "/services",
-  },
-  {
-    number: "02",
-    code: "SRV-17",
-    title: "Blockchain & Cryptocurrency Fraud Analysis",
-    category: "Financial Investigation",
-    description:
-      "On-chain transaction tracing, wallet attribution, fund-flow reconstruction, and virtual digital asset investigation.",
-    icon: Bitcoin,
-    link: "/services",
-  },
-  {
-    number: "03",
-    code: "SRV-19",
-    title: "Voice Recording Forensics & Transcription",
-    category: "Media Forensics",
-    description:
-      "Audio authenticity examination, spectral enhancement, speaker analysis support, and court-ready transcription.",
-    icon: Mic,
-    link: "/services",
-  },
-  {
-    number: "04",
-    code: "SRV-21",
-    title: "Section 65B / BSA 2023 Certification",
-    category: "Legal Support",
-    description:
-      "Legally compliant electronic evidence certification, hash verification logs, and technical documentation for court proceedings.",
-    icon: FileCheck,
-    link: "/services",
-  },
-  {
-    number: "05",
-    code: "SRV-24",
-    title: "Law Enforcement Training Programmes",
-    category: "Capacity Building",
-    description:
-      "Specialized practical workshops covering cybercrime investigation, CDR/IPDR analysis, OSINT, and evidence handling.",
-    icon: GraduationCap,
-    link: "/services",
-  },
-  {
-    number: "06",
-    code: "SRV-26",
-    title: "Corporate Digital Forensics & Incident Response",
-    category: "Enterprise Services",
-    description:
-      "Rapid breach containment, insider threat investigation, forensic imaging, and root-cause analysis for enterprises.",
-    icon: Building2,
-    link: "/services",
-  },
-];
+import { useTheme } from "@/hooks/useTheme";
+import { WING_SERVICES, type WingServiceItem } from "@/data/wingFeatherPaths";
 
 export function ServicesSection() {
-  const { ref, inView } = useInView();
+  const navigate = useNavigate();
+  const { theme } = useTheme();
+  const isDark = theme === "cyber";
+
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const [activeIdx, setActiveIdx] = useState<number | null>(null);
+
+  // SVG Dimension Constants
+  const SVG_W = 1920;
+  const SVG_H = 780;
+  const NW = 1330;
+  const NH = 998;
+  const S = 0.52;
+  const W = NW * S;
+  const H = NH * S;
+  const OX = SVG_W / 2 - W / 2;
+  const OY = 50;
+  const GAP = 55;
+
+  // Coordinate scaling function from native image (1330x998) to SVG canvas
+  const sc = useMemo(
+    () => (d: string) =>
+      d.replace(
+        /(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g,
+        (_, x, y) =>
+          (OX + parseFloat(x) * S).toFixed(1) +
+          "," +
+          (OY + parseFloat(y) * S).toFixed(1)
+      ),
+    [OX, OY, S]
+  );
+
+  // Pre-calculate scaled paths and endpoints
+  const scaledItems = useMemo(() => {
+    return WING_SERVICES.map((srv, index) => {
+      const scaledD = sc(srv.path);
+      const parts = scaledD.split(" ");
+      const lastCmd = parts[parts.length - 1];
+      const [endXStr, endYStr] = lastCmd.slice(1).split(",");
+      const endX = parseFloat(endXStr);
+      const endY = parseFloat(endYStr);
+      const isLeft = srv.side < 0;
+      const textX = endX + (isLeft ? -GAP : GAP);
+      const textY = endY + 6;
+
+      return {
+        ...srv,
+        index,
+        scaledD,
+        endX,
+        endY,
+        isLeft,
+        textX,
+        textY,
+        startDelay: 0.15 + srv.pairIndex * 0.16,
+      };
+    });
+  }, [sc]);
+
+  // Laser Pulse Animation Controller
+  const playPulse = () => {
+    if (typeof window === "undefined") return;
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+
+    const svg = svgRef.current;
+    if (!svg) return;
+
+    const paths = svg.querySelectorAll<SVGPathElement>(".wing-laser-path");
+    const dots = svg.querySelectorAll<SVGCircleElement>(".wing-feather-dot");
+    const labels = svg.querySelectorAll<SVGGElement>(".wing-service-label");
+
+    // Initialize paths
+    const pathLengths: number[] = [];
+    paths.forEach((p, i) => {
+      const len = p.getTotalLength();
+      pathLengths[i] = len;
+      const seg = Math.min(150, len * 0.25);
+      p.style.strokeDasharray = `${seg} ${len + seg}`;
+      p.style.strokeDashoffset = "-20";
+    });
+
+    dots.forEach((dot) => {
+      dot.style.opacity = "0";
+    });
+
+    labels.forEach((g) => {
+      g.style.opacity = "0";
+    });
+
+    const t0 = performance.now();
+    const T = 1.25;
+    const E = (t: number) => (t < 0 ? 0 : t > 1 ? 1 : 1 - Math.pow(1 - t, 3));
+
+    const frame = (now: number) => {
+      const t = (now - t0) / 1000;
+
+      scaledItems.forEach((item, i) => {
+        const u = t - item.startDelay;
+        const pGlow = paths[i * 2];
+        const pCore = paths[i * 2 + 1];
+        const dot = dots[i];
+        const g = labels[i];
+
+        if (u < 0) {
+          if (pGlow && pCore) {
+            pGlow.style.strokeDashoffset = "-20";
+            pCore.style.strokeDashoffset = "-20";
+          }
+          return;
+        }
+
+        const len = pathLengths[i * 2] || 600;
+        const seg = Math.min(150, len * 0.25);
+        const k = u;
+        const pos = E(k / T) * (len + seg);
+        const off = seg - pos;
+
+        if (pGlow && pCore) {
+          if (k < T) {
+            pGlow.style.strokeDashoffset = `${off}`;
+            pCore.style.strokeDashoffset = `${off}`;
+          } else {
+            pGlow.style.strokeDashoffset = "-20";
+            pCore.style.strokeDashoffset = "-20";
+          }
+        }
+
+        if (u >= T) {
+          const q = Math.min(1, (u - T) / 0.45);
+          if (dot) {
+            dot.style.opacity = `${Math.min(1, q * 2)}`;
+          }
+          if (g) {
+            g.style.opacity = `${Math.min(1, q * 2)}`;
+          }
+        }
+      });
+
+      const last = 0.15 + 6 * 0.16 + T + 0.5;
+      if (t > last + 0.8) return;
+      rafRef.current = requestAnimationFrame(frame);
+    };
+
+    rafRef.current = requestAnimationFrame(frame);
+  };
+
+  useEffect(() => {
+    playPulse();
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [scaledItems]);
+
+  const handleServiceClick = (srv: WingServiceItem) => {
+    navigate(`/services?q=${encodeURIComponent(srv.query)}`);
+  };
 
   return (
-    <section className="py-16 md:py-24 lg:py-28 bg-[#F7F7F5] border-b border-[#E5E5E3]">
-      <div className="container">
-        <motion.div
-          ref={ref}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          variants={staggerContainer}
-        >
-          {/* Header */}
-          <motion.div
-            variants={fadeUp}
-            className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 mb-12 border-b border-[#E5E5E3]"
-          >
-            <div>
-              <span className="section-eyebrow">03 // FORENSIC CATALOGUE</span>
-              <h2 className="section-heading">
-                Comprehensive Investigation Support.
-              </h2>
-            </div>
+    <section className="relative py-16 md:py-24 bg-[#F7F7F5] dark:bg-[#090B10] border-b border-[#E5E5E3] dark:border-white/10 overflow-hidden transition-colors duration-300">
+      <div className="container relative z-10">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 mb-10 border-b border-[#E5E5E3] dark:border-white/10">
+          <div>
+            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#825816] dark:text-[#D4AF37] font-semibold block mb-2">
+              03 // CLINICAL SERVICE INDEX • 14 CORE DIVISIONS
+            </span>
+            <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold text-[#111111] dark:text-white tracking-[-0.03em] leading-tight">
+              Comprehensive Investigation Support.
+            </h2>
+            <p className="text-[#555555] dark:text-[#94A3B8] text-sm md:text-base mt-2 max-w-2xl">
+              Digital forensics, cellular OSINT, cryptocurrency tracing, and statutory evidence certification, spreading outwards from one vigilant central wingspan.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3 shrink-0">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={playPulse}
+              className="gap-2 border-[#825816]/30 dark:border-[#D4AF37]/30 text-[#825816] dark:text-[#D4AF37] hover:bg-[#825816]/10 dark:hover:bg-[#D4AF37]/10 font-mono text-xs uppercase tracking-wider"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+              Replay Pulse
+            </Button>
             <Link to="/services">
-              <Button
-                variant="outline"
-                className="border-[#111111] text-[#111111] hover:bg-[#111111] hover:text-white font-mono text-xs uppercase tracking-[0.1em] h-11 px-6 gap-2"
-              >
-                View All 26 Services
+              <Button className="bg-[#111111] dark:bg-white text-white dark:text-[#111111] hover:bg-[#2A2A2A] dark:hover:bg-slate-200 text-xs font-mono uppercase tracking-[0.1em] gap-2">
+                All 26 Services
                 <ArrowRight className="h-3.5 w-3.5" />
               </Button>
             </Link>
-          </motion.div>
-
-          {/* 3-Column Bento Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {FEATURED_SERVICES.map((service) => {
-              const Icon = service.icon;
-              return (
-                <motion.article
-                  key={service.number}
-                  variants={fadeUp}
-                  className="group premium-card p-6 md:p-7 flex flex-col justify-between bg-white"
-                >
-                  <div>
-                    <div className="flex items-center justify-between gap-3 pb-4 mb-5 border-b border-[#E5E5E3]">
-                      <span className="font-mono text-[11px] font-semibold text-[#111111] px-2 py-0.5 bg-[#F7F7F5] border border-[#E5E5E3]">
-                        {service.code}
-                      </span>
-                      <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#555555]">
-                        {service.category}
-                      </span>
-                    </div>
-
-                    <div className="w-10 h-10 rounded-md bg-[#F7F7F5] border border-[#E5E5E3] flex items-center justify-center mb-4 group-hover:bg-[#111111] group-hover:text-white transition-colors duration-300">
-                      <Icon className="h-5 w-5" />
-                    </div>
-
-                    <h3 className="font-heading font-semibold text-lg text-[#111111] mb-2.5 tracking-[-0.02em]">
-                      {service.title}
-                    </h3>
-
-                    <p className="text-sm text-[#555555] leading-relaxed mb-6">
-                      {service.description}
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t border-[#E5E5E3] flex items-center justify-between gap-3">
-                    <Link
-                      to="/submit-case"
-                      className="font-mono text-[11px] uppercase tracking-[0.1em] font-semibold text-[#111111] hover:underline"
-                    >
-                      Register Case
-                    </Link>
-                    <Link
-                      to={service.link}
-                      className="inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-[0.1em] text-[#555555] group-hover:text-[#111111] transition-colors"
-                    >
-                      Specifications
-                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                    </Link>
-                  </div>
-                </motion.article>
-              );
-            })}
           </div>
-        </motion.div>
+        </div>
+
+        {/* The Symmetrical Wings SVG Animation Canvas */}
+        <div className="relative w-full overflow-x-auto hide-scrollbar flex justify-center">
+          <div className="min-w-[1000px] w-full max-w-[1920px]">
+            <svg
+              ref={svgRef}
+              viewBox={`0 0 ${SVG_W} ${SVG_H}`}
+              className="w-full h-auto block select-none"
+              role="img"
+              aria-label="Symmetrical wings illuminating fourteen forensic services at the flight feather tips"
+            >
+              <defs>
+                <filter id="wingLaserGlow" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="3.0" />
+                </filter>
+              </defs>
+
+              {/* Central Symmetrical Mirrored Pair of Wings */}
+              <image
+                href={isDark ? "/wings-pair-dark.png" : "/wings-pair-light.png"}
+                x={OX}
+                y={OY}
+                width={W}
+                height={H}
+                preserveAspectRatio="xMidYMid meet"
+              />
+
+              {/* Dynamic Laser Feather Trailing Glow Paths & Nodes */}
+              <g id="wingLaserFx">
+                {scaledItems.map((item, i) => {
+                  const isHovered = activeIdx === i;
+                  return (
+                    <g key={`fx-${i}`}>
+                      {/* Thicker Ambient Glow Beam */}
+                      <path
+                        d={item.scaledD}
+                        fill="none"
+                        stroke={isHovered ? "var(--wing-cyan, #0284c7)" : "var(--wing-beam, #d97706)"}
+                        strokeWidth={isHovered ? 7.5 : 6.5}
+                        strokeLinecap="round"
+                        filter="url(#wingLaserGlow)"
+                        opacity={isHovered ? 0.85 : 0.65}
+                        className="wing-laser-path transition-all duration-200 pointer-events-none"
+                        style={
+                          isHovered
+                            ? { strokeDasharray: "none", strokeDashoffset: "0" }
+                            : undefined
+                        }
+                      />
+
+                      {/* Sharp High-Intensity Core Laser Spine */}
+                      <path
+                        d={item.scaledD}
+                        fill="none"
+                        stroke={isHovered ? "var(--wing-cyan, #0284c7)" : "var(--wing-beam, #d97706)"}
+                        strokeWidth={isHovered ? 2.6 : 2.2}
+                        strokeLinecap="round"
+                        opacity={isHovered ? 1.0 : 0.95}
+                        className="wing-laser-path transition-all duration-200 pointer-events-none"
+                        style={
+                          isHovered
+                            ? { strokeDasharray: "none", strokeDashoffset: "0" }
+                            : undefined
+                        }
+                      />
+
+                      {/* Feather Tip Glowing Pip / Node */}
+                      <circle
+                        cx={item.endX}
+                        cy={item.endY}
+                        r={isHovered ? 6 : 4.5}
+                        fill={isHovered ? "#0284c7" : "#d97706"}
+                        className="wing-feather-dot cursor-pointer transition-all duration-200"
+                        onMouseEnter={() => setActiveIdx(i)}
+                        onMouseLeave={() => setActiveIdx(null)}
+                        onClick={() => handleServiceClick(item)}
+                      />
+                    </g>
+                  );
+                })}
+              </g>
+
+              {/* Interactive Service Titles (19px Bold, Single-Line, 55px Standoff Margin) */}
+              <g id="wingServiceLabels">
+                {scaledItems.map((item, i) => {
+                  const isHovered = activeIdx === i;
+                  return (
+                    <g
+                      key={`label-${i}`}
+                      className="wing-service-label cursor-pointer group transition-all duration-200"
+                      onMouseEnter={() => setActiveIdx(i)}
+                      onMouseLeave={() => setActiveIdx(null)}
+                      onClick={() => handleServiceClick(item)}
+                    >
+                      <text
+                        x={item.textX}
+                        y={item.textY}
+                        textAnchor={item.isLeft ? "end" : "start"}
+                        className="text-[19px] font-extrabold tracking-[-0.015em] transition-colors duration-200"
+                        fill={
+                          isHovered
+                            ? isDark
+                              ? "#38BDF8"
+                              : "#0284C7"
+                            : isDark
+                            ? "#FFFFFF"
+                            : "#0F172A"
+                        }
+                      >
+                        {item.title}
+                      </text>
+                    </g>
+                  );
+                })}
+              </g>
+
+              {/* Central Core Practice Label */}
+              <text
+                x={SVG_W / 2}
+                y={605}
+                textAnchor="middle"
+                className="font-mono text-[12.5px] font-bold tracking-[0.18em] fill-[#555555] dark:fill-[#94A3B8] opacity-80"
+              >
+                FULL FORENSIC PRACTICE // 14 DIVISIONS
+              </text>
+            </svg>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, ShieldCheck, FileCheck2, Lock, Terminal } from "lucide-react";
 import { motion } from "framer-motion";
@@ -6,74 +5,35 @@ import { Button } from "@/components/ui/button";
 import { fadeUp, staggerContainer, APPLE_EASE } from "@/lib/motion";
 import { useWebsiteContent, defaultHeroContent, HeroContent } from "@/hooks/useWebsiteContent";
 import labSetupImg from "@/assets/services/Labsetup.webp";
+import Waves from "@/components/animations/Waves";
 
 export function HeroSection() {
   const { content } = useWebsiteContent<HeroContent>("hero", defaultHeroContent);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
 
   return (
-    <section
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
-      className="relative overflow-hidden bg-[#F7F7F5] border-b border-[#E5E5E3]"
-    >
-      {/* 1. Base Square Grid: Gold by Default (Before Hover) */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-85 grid-overlay"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, rgba(212, 175, 55, 0.28) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(212, 175, 55, 0.28) 1px, transparent 1px)
-          `,
-        }}
-        aria-hidden
-      />
-
-      {/* 2. Initial Ambient Gold Backlight behind headline */}
-      <div
-        className="absolute inset-0 pointer-events-none transition-opacity duration-500 ease-out"
-        style={{
-          opacity: 1,
-          background:
-            "radial-gradient(ellipse at 35% 45%, rgba(212, 175, 55, 0.22) 0%, rgba(212, 175, 55, 0.06) 55%, transparent 75%)",
-        }}
-        aria-hidden
-      />
-
-      {/* 3. Clean & Minimal Hover Spotlight: Soft Gold Ambient Illumination */}
-      <div
-        className="absolute inset-0 pointer-events-none transition-opacity duration-300 ease-out"
-        style={{
-          opacity: isHovering ? 1 : 0,
-          background: `radial-gradient(280px circle at ${mousePos.x}px ${mousePos.y}px, rgba(212, 175, 55, 0.20) 0%, rgba(212, 175, 55, 0.06) 45%, transparent 75%)`,
-        }}
-        aria-hidden
-      />
-
-      {/* 4. Subtle Gold Grid Line Illumination Under Cursor */}
-      <div
-        className="absolute inset-0 pointer-events-none transition-opacity duration-300 ease-out grid-overlay"
-        style={{
-          opacity: isHovering ? 1 : 0,
-          WebkitMaskImage: `radial-gradient(200px circle at ${mousePos.x}px ${mousePos.y}px, black 25%, transparent 75%)`,
-          maskImage: `radial-gradient(200px circle at ${mousePos.x}px ${mousePos.y}px, black 25%, transparent 75%)`,
-          backgroundImage: `
-            linear-gradient(to right, rgba(212, 175, 55, 0.65) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(212, 175, 55, 0.65) 1px, transparent 1px)
-          `,
-        }}
-        aria-hidden
-      />
+    <section className="relative overflow-hidden bg-[#F7F7F5] border-b border-[#E5E5E3]">
+      {/* Subtle Faded Flowing Waves Background (Scoped exclusively to Hero) */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-50">
+        <Waves
+          lineColor="rgba(0, 0, 0, 0.035)"
+          accentColor="rgba(212, 175, 55, 0.16)"
+          backgroundColor="transparent"
+          waveSpeedX={0.012}
+          waveSpeedY={0.008}
+          waveAmpX={28}
+          waveAmpY={14}
+          spacing={13}
+          lineWidth={0.7}
+          amplitude={18}
+          speed={0.7}
+          mouseInteraction={true}
+          mouseRadius={175}
+          mouseStrength={0.8}
+          clickRipple={true}
+          lightMode={false}
+          opacity={0.45}
+        />
+      </div>
 
       <div className="container relative z-10 pt-6 md:pt-8 lg:pt-10 pb-14 md:pb-20 lg:pb-24">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-10 items-center">
@@ -141,7 +101,7 @@ export function HeroSection() {
                   variant="outline"
                   className="w-full sm:w-auto h-12 px-7 border-[#D4D4D0] bg-white text-[#111111] hover:bg-[#F0EFEA] hover:border-[#111111] rounded-md text-sm font-medium transition-all duration-300"
                 >
-                  Explore 26 Services
+                  Explore Services
                 </Button>
               </Link>
 
