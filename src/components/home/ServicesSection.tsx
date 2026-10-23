@@ -17,14 +17,14 @@ export function ServicesSection() {
 
   // SVG Dimension Constants
   const SVG_W = 1920;
-  const SVG_H = 780;
+  const SVG_H = 560;
   const NW = 1330;
   const NH = 998;
   const S = 0.52;
   const W = NW * S;
   const H = NH * S;
   const OX = SVG_W / 2 - W / 2;
-  const OY = 50;
+  const OY = 30;
   const GAP = 55;
 
   // Coordinate scaling function from native image (1330x998) to SVG canvas
@@ -62,12 +62,12 @@ export function ServicesSection() {
         isLeft,
         textX,
         textY,
-        startDelay: 0.15 + srv.pairIndex * 0.16,
+        startDelay: srv.pairIndex * 0.05,
       };
     });
   }, [sc]);
 
-  // Laser Pulse Animation Controller
+  // Laser Pulse Animation Controller (Rapid Instant Ignition on View)
   const playPulse = () => {
     if (typeof window === "undefined") return;
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -84,7 +84,7 @@ export function ServicesSection() {
     paths.forEach((p, i) => {
       const len = p.getTotalLength();
       pathLengths[i] = len;
-      const seg = Math.min(150, len * 0.25);
+      const seg = Math.min(180, len * 0.3);
       p.style.strokeDasharray = `${seg} ${len + seg}`;
       p.style.strokeDashoffset = "-20";
     });
@@ -98,7 +98,7 @@ export function ServicesSection() {
     });
 
     const t0 = performance.now();
-    const T = 1.25;
+    const T = 0.55; // Rapid 0.55s laser travel time
     const E = (t: number) => (t < 0 ? 0 : t > 1 ? 1 : 1 - Math.pow(1 - t, 3));
 
     const frame = (now: number) => {
@@ -120,7 +120,7 @@ export function ServicesSection() {
         }
 
         const len = pathLengths[i * 2] || 600;
-        const seg = Math.min(150, len * 0.25);
+        const seg = Math.min(180, len * 0.3);
         const k = u;
         const pos = E(k / T) * (len + seg);
         const off = seg - pos;
@@ -135,8 +135,9 @@ export function ServicesSection() {
           }
         }
 
-        if (u >= T) {
-          const q = Math.min(1, (u - T) / 0.45);
+        // Dot & label opacity illuminates rapidly as laser approaches the tip
+        if (u >= T * 0.45) {
+          const q = Math.min(1, (u - T * 0.45) / 0.22);
           if (dot) {
             dot.style.opacity = `${Math.min(1, q * 2)}`;
           }
@@ -146,8 +147,8 @@ export function ServicesSection() {
         }
       });
 
-      const last = 0.15 + 6 * 0.16 + T + 0.5;
-      if (t > last + 0.8) {
+      const last = 6 * 0.05 + T + 0.35;
+      if (t > last) {
         dots.forEach((dot) => {
           dot.style.opacity = "1";
         });
@@ -194,7 +195,7 @@ export function ServicesSection() {
       (entries) => {
         const entry = entries[0];
         if (entry.isIntersecting) {
-          // Trigger the animation on each view
+          // Trigger the animation on each view rapidly
           playPulse();
           hasEverIntersected = true;
         } else {
@@ -222,7 +223,8 @@ export function ServicesSection() {
         }
       },
       {
-        threshold: 0.15,
+        threshold: 0.02,
+        rootMargin: "60px 0px 60px 0px",
       }
     );
 
@@ -254,7 +256,7 @@ export function ServicesSection() {
   };
 
   return (
-    <section className="relative py-16 md:py-24 bg-[#F7F7F5] dark:bg-[#090B10] border-b border-[#E5E5E3] dark:border-white/10 overflow-hidden transition-colors duration-300">
+    <section className="relative pt-12 md:pt-16 pb-4 md:pb-6 bg-[#F7F7F5] dark:bg-[#090B10] border-b border-[#E5E5E3] dark:border-white/10 overflow-hidden transition-colors duration-300">
       <div className="container relative z-10">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 mb-10 border-b border-[#E5E5E3] dark:border-white/10">
