@@ -107,25 +107,44 @@ export function TrustSection() {
 
             <div className="flex flex-wrap items-center gap-6">
               {[
-                { logo: maharashtraPoliceLogo, name: "Maharashtra Police" },
-                { logo: nagpurPoliceLogo, name: "Nagpur City Police" },
-              ].map((partner) => (
+                { logo: "/maharashtra-police-transparent.webp", name: "Maharashtra Police" },
+                { logo: "/nagpur-police-transparent.webp", name: "Nagpur City Police" },
+              ].map((partner, index) => (
                 <div
                   key={partner.name}
-                  className="flex items-center gap-4 px-5 py-3 bg-[#F7F7F5] border border-[#E5E5E3] rounded-lg"
+                  className="accreditation-nobg-card group relative min-w-[270px] p-4 flex items-center gap-4 bg-transparent cursor-pointer overflow-hidden rounded-xl"
                 >
-                  <div className="h-12 w-12 bg-white border border-[#E5E5E3] rounded p-1.5 flex items-center justify-center">
+                  {/* Orbiting Laser Comet Beam */}
+                  <div
+                    className="accreditation-beam-mask"
+                    style={{ animationDelay: `${index * 1.5}s` }}
+                  />
+
+                  {/* Structural Border Outline */}
+                  <div className="accreditation-card-outline" />
+
+                  {/* 100% Transparent, Much Bigger Logo (No Bounding Box) */}
+                  <div className="logo-box-transparent w-16 h-16 sm:w-20 sm:h-16 flex items-center justify-center shrink-0">
                     <img
                       src={partner.logo}
                       alt={partner.name}
-                      className="h-full w-full object-contain"
+                      className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
+                      loading="lazy"
                     />
                   </div>
-                  <div>
-                    <p className="font-heading font-semibold text-xs text-[#111111]">
+
+                  {/* Text Details */}
+                  <div className="min-w-0 flex-grow relative z-10">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <span className="font-mono text-[9px] font-bold text-[#047857] bg-[#ECFDF5] border border-[#A7F3D0] px-1.5 py-0.5 rounded inline-flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
+                        ACTIVE
+                      </span>
+                    </div>
+                    <h4 className="font-heading font-semibold text-sm sm:text-[15px] text-[#111111] group-hover:text-[#825816] transition-colors leading-tight">
                       {partner.name}
-                    </p>
-                    <p className="font-mono text-[10px] text-[#555555] uppercase tracking-wider">
+                    </h4>
+                    <p className="font-mono text-[10px] text-[#555555] uppercase tracking-wider mt-0.5">
                       Law Enforcement
                     </p>
                   </div>
