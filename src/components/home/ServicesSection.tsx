@@ -11,6 +11,7 @@ export function ServicesSection() {
   const isDark = theme === "cyber";
 
   const svgRef = useRef<SVGSVGElement | null>(null);
+  const wingsContainerRef = useRef<HTMLDivElement | null>(null);
   const rafRef = useRef<number | null>(null);
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
 
@@ -146,17 +147,105 @@ export function ServicesSection() {
       });
 
       const last = 0.15 + 6 * 0.16 + T + 0.5;
-      if (t > last + 0.8) return;
+      if (t > last + 0.8) {
+        dots.forEach((dot) => {
+          dot.style.opacity = "1";
+        });
+        labels.forEach((g) => {
+          g.style.opacity = "1";
+        });
+        return;
+      }
       rafRef.current = requestAnimationFrame(frame);
     };
 
     rafRef.current = requestAnimationFrame(frame);
   };
 
+  // Trigger pulse on each view (scroll viewport entry)
   useEffect(() => {
-    playPulse();
+    const el = wingsContainerRef.current;
+    if (!el) return;
+
+    const svg = svgRef.current;
+    if (svg) {
+      const paths = svg.querySelectorAll<SVGPathElement>(".wing-laser-path");
+      const dots = svg.querySelectorAll<SVGCircleElement>(".wing-feather-dot");
+      const labels = svg.querySelectorAll<SVGGElement>(".wing-service-label");
+      paths.forEach((p) => {
+        p.style.strokeDashoffset = "-20";
+      });
+      dots.forEach((dot) => {
+        dot.style.opacity = "0";
+      });
+      labels.forEach((g) => {
+        g.style.opacity = "0";
+      });
+    }
+
+    if (typeof IntersectionObserver === "undefined") {
+      playPulse();
+      return;
+    }
+
+    let hasEverIntersected = false;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          // Trigger the animation on each view
+          playPulse();
+          hasEverIntersected = true;
+        } else {
+          // Scrolled out of view: cancel RAF and reset so next view triggers cleanly
+          if (hasEverIntersected) {
+            if (rafRef.current) {
+              cancelAnimationFrame(rafRef.current);
+              rafRef.current = null;
+            }
+            if (svgRef.current) {
+              const paths = svgRef.current.querySelectorAll<SVGPathElement>(".wing-laser-path");
+              const dots = svgRef.current.querySelectorAll<SVGCircleElement>(".wing-feather-dot");
+              const labels = svgRef.current.querySelectorAll<SVGGElement>(".wing-service-label");
+              paths.forEach((p) => {
+                p.style.strokeDashoffset = "-20";
+              });
+              dots.forEach((dot) => {
+                dot.style.opacity = "0";
+              });
+              labels.forEach((g) => {
+                g.style.opacity = "0";
+              });
+            }
+          }
+        }
+      },
+      {
+        threshold: 0.15,
+      }
+    );
+
+    observer.observe(el);
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible" && wingsContainerRef.current) {
+        const rect = wingsContainerRef.current.getBoundingClientRect();
+        const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+        if (isInViewport) {
+          playPulse();
+        }
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
     };
   }, [scaledItems]);
 
@@ -201,7 +290,10 @@ export function ServicesSection() {
         </div>
 
         {/* The Symmetrical Wings SVG Animation Canvas */}
-        <div className="relative w-full overflow-x-auto hide-scrollbar flex justify-center">
+        <div
+          ref={wingsContainerRef}
+          className="relative w-full overflow-x-auto hide-scrollbar flex justify-center"
+        >
           <div className="min-w-[1000px] w-full max-w-[1920px]">
             <svg
               ref={svgRef}
@@ -315,15 +407,7 @@ export function ServicesSection() {
                 })}
               </g>
 
-              {/* Central Core Practice Label */}
-              <text
-                x={SVG_W / 2}
-                y={605}
-                textAnchor="middle"
-                className="font-mono text-[12.5px] font-bold tracking-[0.18em] fill-[#555555] dark:fill-[#94A3B8] opacity-80"
-              >
-                FULL FORENSIC PRACTICE // 14 DIVISIONS
-              </text>
+
             </svg>
           </div>
         </div>

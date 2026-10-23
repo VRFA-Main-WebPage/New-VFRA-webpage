@@ -35,7 +35,7 @@ export function RecognitionStrip() {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-40px" }}
+          viewport={{ once: false, amount: 0.15 }}
           variants={staggerContainer}
           className="space-y-6"
         >

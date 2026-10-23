@@ -461,3 +461,53 @@ img, video, canvas, svg {
   transform: scale(1.10);
   filter: contrast(1.10) drop-shadow(0 4px 14px rgba(212, 175, 55, 0.35));
 }
+
+/* --- VFRA New Brand Logo: Forensic Magnifying Lens Radar Scanner --- */
+@keyframes radarScannerSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes forensicLensSheen {
+  0%, 15% {
+    transform: translate(-100%, -100%) rotate(45deg);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.8;
+  }
+  45%, 100% {
+    transform: translate(100%, 100%) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+/* --- Six-Step Forensic Workflow: Connecting Dot Pipeline Animations --- */
+@keyframes nodeRipplePulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.8);
+    opacity: 0.35;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+@keyframes activeStepPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(212, 175, 55, 0);
+  }
+}
+
