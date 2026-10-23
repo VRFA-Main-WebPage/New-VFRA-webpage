@@ -15,7 +15,6 @@ import raisoniImg from "@/assets/gallery/raisoni.webp";
 import ihubGujaratImg from "@/assets/gallery/ihub-gujarat.webp";
 import bhonsalaSchoolImg from "@/assets/gallery/bhonsala-military-school.webp";
 import jayaswalNecoImg from "@/assets/gallery/cybersecurity-awareness-jayaswal.webp";
-import ipsMahakSwamiImg from "@/assets/gallery/ips-mahak-swami.webp";
 
 export interface HeroContent {
   companyName: string;
@@ -168,7 +167,7 @@ export const defaultCTAContent: CTAContent = {
   primaryButtonText: "Schedule Consultation",
   phoneNumber: "+91 95119 57687",
   emergencyPhone: "+91 95119 57687",
-  emergencyEmail: "contact@vigilantforensics.com",
+  emergencyEmail: "contact@vigilantforensic.com",
 };
 
 export const defaultCaseSectionContent: CaseSectionContent = {
@@ -186,7 +185,7 @@ export const defaultCaseSectionContent: CaseSectionContent = {
 
 export const defaultContactContent: ContactContent = {
   phone: "+91 95119 57687",
-  email: "contact@vigilantforensics.com",
+  email: "contact@vigilantforensic.com",
   address: "Plot No. 5 Akhil Vishwa Bharti Co-Op. Society",
   addressLine2: "Opp. Prathamesh Towers, Besa Nagpur (M Corp.)",
   addressLine3: "Maharashtra – 440034",
@@ -264,7 +263,7 @@ export const defaultGalleryContent: GalleryContent = {
       category: "Law Enforcement",
       image_url: adgMaharashtraImg,
       date: "2026-04",
-      location: "Police Headquarters",
+      location: "Police Bhawan Nagpur",
       featured: true,
     },
     {
@@ -276,7 +275,7 @@ export const defaultGalleryContent: GalleryContent = {
       category: "Workshops & Training",
       image_url: cyberWorkshopImg,
       date: "2026-06",
-      location: "Police Training Center",
+      location: "Auditorium, Police Bhawan, Nagpur",
       featured: true,
     },
     {
@@ -289,18 +288,6 @@ export const defaultGalleryContent: GalleryContent = {
       image_url: ihubGujaratImg,
       date: "2026-05",
       location: "i-Hub, Gujarat",
-      featured: true,
-    },
-    {
-      id: "gal-04",
-      code: "ARC-04",
-      title: "Strategic Case Review with IPS Mahak Swami, DCP EOW",
-      caption:
-        "High-impact case consultation with IPS Mahak Swami, Deputy Commissioner of Police (Economic Offences Wing), focusing on financial cybercrime mitigation, digital forensic frameworks, and national investigative tooling.",
-      category: "Law Enforcement",
-      image_url: ipsMahakSwamiImg,
-      date: "2025-11",
-      location: "Economic Offences Wing Headquarters",
       featured: true,
     },
     {
@@ -350,7 +337,7 @@ export const defaultEventsExtendedContent: EventsExtendedContent = {
       title: "Advanced Cybercrime Investigation Workshop for Police Officers",
       date: "2026",
       participants: "Police Officers & Investigating Personnel",
-      location: "Police Training Center",
+      location: "Auditorium, Police Bhawan, Nagpur",
       category: "LEA Capacity Building",
       banner_url: cyberWorkshopImg,
       summary: "Advanced hands-on investigative workshop on cryptocurrency tracing, IPDR log correlation, mobile application forensics, and BSA Section 63 compliant digital evidence.",

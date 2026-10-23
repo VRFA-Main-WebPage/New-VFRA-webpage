@@ -11,7 +11,7 @@ import {
 
 const footerLinks = {
   services: [
-    { title: "All 26 Forensic Services", href: "/services" },
+    { title: "All Forensic Services", href: "/services" },
     { title: "Digital & Mobile Forensics", href: "/services" },
     { title: "OSINT & Threat Intelligence", href: "/services" },
     { title: "Section 65B / BSA Certification", href: "/services" },

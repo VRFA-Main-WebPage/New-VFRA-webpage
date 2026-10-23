@@ -61,7 +61,7 @@ const Services = () => {
     <>
       <SEO
         title="Forensic Services Catalogue | VFRA"
-        description="Explore all 26 digital forensic services, OSINT workflows, and cybercrime investigation capabilities by VFRA."
+        description="Explore all specialized digital forensic services, OSINT workflows, and cybercrime investigation capabilities by VFRA."
       />
       <div className="bg-white min-h-screen">
         {/* HERO SECTION */}
@@ -70,7 +70,7 @@ const Services = () => {
           <div className="container relative z-10">
             <div className="max-w-3xl">
               <span className="section-eyebrow">
-                CLINICAL SERVICE INDEX // 26 SPECIALIZED CAPABILITIES
+                CLINICAL SERVICE INDEX // SPECIALIZED CAPABILITIES
               </span>
               <h1 className="font-heading text-4xl md:text-5xl lg:text-[54px] font-semibold text-[#111111] tracking-[-0.035em] leading-[1.08] mb-6">
                 Digital Forensics &amp; Cyber Investigation Catalogue.
@@ -124,7 +124,7 @@ const Services = () => {
                     : "bg-white text-[#555555] border-[#E5E5E3] hover:border-[#111111] hover:text-[#111111]"
                 )}
               >
-                All (26)
+                All Services
               </button>
               {(Object.keys(SERVICE_CATEGORIES) as ServiceCategory[]).map((key) => (
                 <button
