@@ -10,7 +10,7 @@ export function CTASection() {
   const { ref, inView } = useInView();
 
   return (
-    <section className="relative py-16 md:py-24 lg:py-28 bg-[#111111] text-white overflow-hidden">
+    <section className="relative py-12 md:py-16 bg-[#111111] text-white overflow-hidden">
       <div className="container relative z-10">
         <motion.div
           ref={ref}

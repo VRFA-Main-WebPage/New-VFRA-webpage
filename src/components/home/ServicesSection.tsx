@@ -223,14 +223,11 @@ export function ServicesSection() {
   };
 
   return (
-    <section className="relative pt-12 md:pt-16 pb-12 md:pb-16 bg-[#F7F7F5] dark:bg-[#090B10] border-b border-[#E5E5E3] dark:border-white/10 overflow-hidden transition-colors duration-300">
+    <section className="relative pt-8 md:pt-12 pb-8 md:pb-12 bg-[#F7F7F5] dark:bg-[#090B10] border-b border-[#E5E5E3] dark:border-white/10 overflow-hidden transition-colors duration-300">
       <div className="container relative z-10">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 mb-8 md:mb-10 border-b border-[#E5E5E3] dark:border-white/10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-5 mb-5 md:mb-6 border-b border-[#E5E5E3] dark:border-white/10">
           <div>
-            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#825816] dark:text-[#D4AF37] font-semibold block mb-2">
-              CLINICAL SERVICE INDEX • 14 CORE DIVISIONS
-            </span>
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold text-[#111111] dark:text-white tracking-[-0.03em] leading-tight">
               Comprehensive Investigation Support.
             </h2>

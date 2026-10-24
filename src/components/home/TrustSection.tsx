@@ -17,21 +17,20 @@ export function TrustSection() {
   const { ref, inView } = useInView();
 
   return (
-    <section className="py-16 md:py-24 lg:py-28 bg-white border-b border-[#E5E5E3]">
+    <section className="py-10 md:py-14 bg-white border-b border-[#E5E5E3]">
       <div className="container">
         <motion.div
           ref={ref}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           variants={staggerContainer}
-          className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start"
+          className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-start"
         >
           <motion.div variants={fadeUp} className="lg:col-span-6">
-            <span className="section-eyebrow">INSTITUTIONAL TRUST</span>
-            <h2 className="section-heading mb-5">
+            <h2 className="section-heading mb-4">
               {content.heading}
             </h2>
-            <p className="text-base text-[#555555] leading-relaxed mb-8">
+            <p className="text-base text-[#555555] leading-relaxed mb-6">
               {content.description}
             </p>
 
@@ -93,64 +92,62 @@ export function TrustSection() {
           variants={fadeUp}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          className="mt-16 pt-12 border-t border-[#E5E5E3]"
+          className="mt-12 pt-8 border-t border-[#E5E5E3]"
         >
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#111111] font-semibold">
-                LAW ENFORCEMENT &amp; INSTITUTIONAL COLLABORATION
-              </p>
-              <p className="text-xs text-[#555555] mt-1">
-                Supporting authorized cybercrime units and investigative departments across Maharashtra.
-              </p>
-            </div>
+          <div className="flex flex-col items-center text-center max-w-2xl mx-auto mb-6">
+            <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#111111] font-semibold">
+              LAW ENFORCEMENT &amp; INSTITUTIONAL COLLABORATION
+            </p>
+            <p className="text-xs text-[#555555] mt-1.5 max-w-lg leading-relaxed">
+              Supporting authorized cybercrime units and investigative departments across Maharashtra.
+            </p>
+          </div>
 
-            <div className="flex flex-wrap items-center gap-6">
-              {[
-                { logo: "/maharashtra-police-transparent.webp", name: "Maharashtra Police" },
-                { logo: "/nagpur-police-transparent.webp", name: "Nagpur City Police" },
-              ].map((partner, index) => (
+          <div className="flex flex-wrap items-center justify-center gap-6">
+            {[
+              { logo: "/maharashtra-police-transparent.webp", name: "Maharashtra Police" },
+              { logo: "/nagpur-police-transparent.webp", name: "Nagpur City Police" },
+            ].map((partner, index) => (
+              <div
+                key={partner.name}
+                className="accreditation-nobg-card group relative min-w-[270px] p-4 flex items-center gap-4 bg-transparent cursor-pointer overflow-hidden rounded-xl"
+              >
+                {/* Orbiting Laser Comet Beam */}
                 <div
-                  key={partner.name}
-                  className="accreditation-nobg-card group relative min-w-[270px] p-4 flex items-center gap-4 bg-transparent cursor-pointer overflow-hidden rounded-xl"
-                >
-                  {/* Orbiting Laser Comet Beam */}
-                  <div
-                    className="accreditation-beam-mask"
-                    style={{ animationDelay: `${index * 1.5}s` }}
+                  className="accreditation-beam-mask"
+                  style={{ animationDelay: `${index * 1.5}s` }}
+                />
+
+                {/* Structural Border Outline */}
+                <div className="accreditation-card-outline" />
+
+                {/* 100% Transparent, Much Bigger Logo (No Bounding Box) */}
+                <div className="logo-box-transparent w-16 h-16 sm:w-20 sm:h-16 flex items-center justify-center shrink-0">
+                  <img
+                    src={partner.logo}
+                    alt={partner.name}
+                    className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
+                    loading="lazy"
                   />
-
-                  {/* Structural Border Outline */}
-                  <div className="accreditation-card-outline" />
-
-                  {/* 100% Transparent, Much Bigger Logo (No Bounding Box) */}
-                  <div className="logo-box-transparent w-16 h-16 sm:w-20 sm:h-16 flex items-center justify-center shrink-0">
-                    <img
-                      src={partner.logo}
-                      alt={partner.name}
-                      className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
-                      loading="lazy"
-                    />
-                  </div>
-
-                  {/* Text Details */}
-                  <div className="min-w-0 flex-grow relative z-10">
-                    <div className="flex items-center gap-1.5 mb-1">
-                      <span className="font-mono text-[9px] font-bold text-[#047857] bg-[#ECFDF5] border border-[#A7F3D0] px-1.5 py-0.5 rounded inline-flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
-                        ACTIVE
-                      </span>
-                    </div>
-                    <h4 className="font-heading font-semibold text-sm sm:text-[15px] text-[#111111] group-hover:text-[#825816] transition-colors leading-tight">
-                      {partner.name}
-                    </h4>
-                    <p className="font-mono text-[10px] text-[#555555] uppercase tracking-wider mt-0.5">
-                      Law Enforcement
-                    </p>
-                  </div>
                 </div>
-              ))}
-            </div>
+
+                {/* Text Details */}
+                <div className="min-w-0 flex-grow relative z-10 text-left">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className="font-mono text-[9px] font-bold text-[#047857] bg-[#ECFDF5] border border-[#A7F3D0] px-1.5 py-0.5 rounded inline-flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
+                      ACTIVE
+                    </span>
+                  </div>
+                  <h4 className="font-heading font-semibold text-sm sm:text-[15px] text-[#111111] group-hover:text-[#825816] transition-colors leading-tight">
+                    {partner.name}
+                  </h4>
+                  <p className="font-mono text-[10px] text-[#555555] uppercase tracking-wider mt-0.5">
+                    Law Enforcement
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </motion.div>
       </div>

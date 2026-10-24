@@ -30,29 +30,25 @@ const RECOGNITIONS = [
 
 export function RecognitionStrip() {
   return (
-    <section className="bg-white border-b border-[#E5E5E3] py-10 md:py-14 transition-colors">
+    <section className="bg-white border-b border-[#E5E5E3] py-6 md:py-8 transition-colors">
       <div className="container">
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: false, amount: 0.15 }}
           variants={staggerContainer}
-          className="space-y-6"
+          className="space-y-4"
         >
           <motion.div
             variants={fadeUp}
-            className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-[#E5E5E3]"
+            className="flex items-center justify-between pb-3 border-b border-[#E5E5E3]"
           >
-            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#111111] font-semibold flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
-              INSTITUTIONAL ACCREDITATION &amp; REGISTRATION
-            </span>
-            <span className="font-mono text-[11px] text-[#555555]">
+            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#71717A] font-semibold">
               GOVERNMENT OF INDIA RECOGNIZED ENTITY
             </span>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
             {RECOGNITIONS.map((item, index) => (
               <motion.div
                 key={item.id}

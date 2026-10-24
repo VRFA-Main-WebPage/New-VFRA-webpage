@@ -16,7 +16,7 @@ export function GalleryPreviewSection() {
   const previewItems = (content.items || defaultGalleryContent.items).slice(0, 4);
 
   return (
-    <section className="py-16 md:py-24 lg:py-28 bg-[#F7F7F5] border-b border-[#E5E5E3]">
+    <section className="py-10 md:py-14 bg-[#F7F7F5] border-b border-[#E5E5E3]">
       <div className="container">
         <motion.div
           ref={ref}
@@ -27,12 +27,9 @@ export function GalleryPreviewSection() {
           {/* Section Header */}
           <motion.div
             variants={fadeUp}
-            className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 mb-12 border-b border-[#E5E5E3]"
+            className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 mb-8 border-b border-[#E5E5E3]"
           >
             <div className="max-w-2xl">
-              <span className="section-eyebrow">
-                FORENSIC ARCHIVE &amp; LABORATORY GALLERY
-              </span>
               <h2 className="section-heading">
                 Inside VFRA Operations &amp; Field Archive.
               </h2>

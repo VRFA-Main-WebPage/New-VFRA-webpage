@@ -35,8 +35,8 @@ export function HeroSection() {
         />
       </div>
 
-      <div className="container relative z-10 pt-6 md:pt-8 lg:pt-10 pb-14 md:pb-20 lg:pb-24">
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-10 items-center">
+      <div className="container relative z-10 pt-5 md:pt-7 lg:pt-8 pb-6 md:pb-8 lg:pb-10">
+        <div className="grid lg:grid-cols-12 gap-10 lg:gap-8 items-center">
           {/* Left Column: Editorial Headline & Actions */}
           <motion.div
             variants={staggerContainer}
@@ -47,7 +47,7 @@ export function HeroSection() {
             {/* Primary Apple-scale Headline */}
             <motion.h1
               variants={fadeUp}
-              className="font-heading text-[34px] sm:text-[44px] md:text-[54px] lg:text-[60px] font-semibold text-[#111111] tracking-[-0.035em] leading-[1.06] mb-6"
+              className="font-heading text-[34px] sm:text-[44px] md:text-[54px] lg:text-[60px] font-semibold text-[#111111] tracking-[-0.035em] leading-[1.06] mb-5"
             >
               Digital Forensics,{" "}
               <span className="text-[#555555] font-normal">
@@ -59,7 +59,7 @@ export function HeroSection() {
             {/* Editorial Subtext */}
             <motion.p
               variants={fadeUp}
-              className="text-base sm:text-lg text-[#555555] leading-relaxed max-w-2xl mb-9 font-normal"
+              className="text-base sm:text-lg text-[#555555] leading-relaxed max-w-2xl mb-6 font-normal"
             >
               {content.description ||
                 "Vigilant Forensic Research and Analytics Pvt. Ltd. delivers structured digital evidence examination, cybercrime intelligence, and BSA 2023 / Section 65B compliant technical reporting for law enforcement, legal professionals, and enterprises."}
@@ -68,7 +68,7 @@ export function HeroSection() {
             {/* Primary & Secondary CTAs */}
             <motion.div
               variants={fadeUp}
-              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto mb-12"
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto mb-7"
             >
               <Link to="/submit-case" className="w-full sm:w-auto">
                 <Button

@@ -110,11 +110,11 @@ export function ProcessTimelineSection() {
   return (
     <section
       ref={sectionRef}
-      className="py-16 md:py-24 lg:py-28 bg-[#F7F7F5] border-b border-[#E5E5E3] overflow-hidden"
+      className="py-10 md:py-14 bg-[#F7F7F5] border-b border-[#E5E5E3] overflow-hidden"
     >
       <div className="container">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 mb-8 border-b border-[#E5E5E3]">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-5 mb-6 border-b border-[#E5E5E3]">
           <div>
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold text-[#111111] tracking-[-0.03em] leading-tight">
               Six-Step Forensic Workflow.

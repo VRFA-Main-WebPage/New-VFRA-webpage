@@ -37,18 +37,17 @@ export function WhyVFRASection() {
   const { ref, inView } = useInView();
 
   return (
-    <section className="py-16 md:py-24 lg:py-28 bg-white border-b border-[#E5E5E3]">
+    <section className="py-10 md:py-14 bg-white border-b border-[#E5E5E3]">
       <div className="container">
         <motion.div
           ref={ref}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           variants={staggerContainer}
-          className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start"
+          className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-start"
         >
           <motion.div variants={fadeUp} className="lg:col-span-5">
-            <span className="section-eyebrow">CLINICAL TRANSPARENCY</span>
-            <h2 className="section-heading mb-5">
+            <h2 className="section-heading mb-4">
               Uncompromising Forensic Discipline.
             </h2>
             <p className="text-base text-[#555555] leading-relaxed mb-8">
