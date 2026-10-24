@@ -122,14 +122,10 @@ export function SubNavSearchBar() {
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
 
-          {/* Expandable Search Tile: Expands Downward on Click */}
-          <motion.div
-            layout
-            transition={{
-              layout: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
-            }}
+          {/* Expandable Search Tile: Expands Downward on Click with Silky Smooth Pacing */}
+          <div
             className={cn(
-              "relative flex-1 max-w-xl w-full bg-white rounded-xl border border-[#D8D6CE] shadow-xs overflow-hidden",
+              "relative flex-1 max-w-xl w-full bg-white rounded-xl border border-[#D8D6CE] shadow-xs overflow-hidden transition-all duration-500 ease-out",
               isFocused
                 ? "border-[#111111] shadow-[0_16px_40px_-8px_rgba(0,0,0,0.14)] ring-2 ring-black/5"
                 : "hover:border-[#111111]/40"
@@ -174,7 +170,7 @@ export function SubNavSearchBar() {
               </div>
             </form>
 
-            {/* Seamless Downward Expansion inside the Main Tile (Fluid Apple Deceleration Ease) */}
+            {/* Seamless Downward Expansion inside the Main Tile (Silky 0.65s Fluid Pacing) */}
             <AnimatePresence initial={false}>
               {isFocused && (
                 <motion.div
@@ -184,16 +180,16 @@ export function SubNavSearchBar() {
                     height: "auto",
                     opacity: 1,
                     transition: {
-                      height: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
-                      opacity: { duration: 0.22, delay: 0.04 },
+                      height: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+                      opacity: { duration: 0.45, delay: 0.08, ease: "easeOut" },
                     },
                   }}
                   exit={{
                     height: 0,
                     opacity: 0,
                     transition: {
-                      height: { duration: 0.26, ease: [0.16, 1, 0.3, 1] },
-                      opacity: { duration: 0.15 },
+                      height: { duration: 0.48, ease: [0.22, 1, 0.36, 1] },
+                      opacity: { duration: 0.24, ease: "easeIn" },
                     },
                   }}
                   className="border-t border-[#E5E5E3] bg-white divide-y divide-[#F0EFEA] overflow-hidden"
@@ -346,7 +342,7 @@ export function SubNavSearchBar() {
                 </motion.div>
               )}
             </AnimatePresence>
-          </motion.div>
+          </div>
         </div>
       </div>
     </div>
