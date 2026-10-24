@@ -192,11 +192,11 @@ export function SubNavSearchBar() {
                       opacity: { duration: 0.24, ease: "easeIn" },
                     },
                   }}
-                  className="border-t border-[#E5E5E3] bg-white divide-y divide-[#F0EFEA] overflow-hidden"
+                  className="border-t border-[#E5E5E3] bg-[#FBFBFA] overflow-hidden"
                 >
                   {query.trim().length === 0 ? (
                     <>
-                      <div className="px-4 py-2 bg-[#FAF9F6] flex items-center justify-between text-xs font-mono text-[#555555]">
+                      <div className="px-4 py-2.5 bg-[#F4F3EE] border-b border-[#EBEAE5] flex items-center justify-between text-xs font-mono text-[#555555]">
                         <span className="flex items-center gap-1.5 font-semibold text-[#111111]">
                           <Flame className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
                           Key &amp; Widely Used Services
@@ -206,7 +206,7 @@ export function SubNavSearchBar() {
                         </span>
                       </div>
 
-                      <div className="max-h-[300px] overflow-y-auto divide-y divide-[#F0EFEA]">
+                      <div className="max-h-[340px] overflow-y-auto p-2.5 sm:p-3 space-y-2">
                         {displayedList.map((service) => {
                           const Icon = service.icon;
 
@@ -214,25 +214,27 @@ export function SubNavSearchBar() {
                             <div
                               key={service.number}
                               onClick={() => handleServiceClick(service)}
-                              className="p-3 hover:bg-[#FAF9F6] transition-colors cursor-pointer group flex items-center justify-between gap-3"
+                              className="group p-2.5 sm:p-3 rounded-xl bg-white hover:bg-[#FAF9F6] border border-[#E5E5E3] hover:border-[#111111] shadow-2xs hover:shadow-xs transition-all duration-200 cursor-pointer flex items-center justify-between gap-3 text-left"
                             >
                               <div className="flex items-center gap-3 min-w-0">
-                                <div className="h-7 w-7 rounded-md bg-[#F2F1ED] border border-[#E5E5E3] flex items-center justify-center shrink-0 group-hover:bg-[#111111] group-hover:text-white transition-colors">
-                                  <Icon className="h-3.5 w-3.5" />
+                                <div className="h-8 w-8 rounded-lg bg-[#F5F4F0] border border-[#E5E5E3] flex items-center justify-center shrink-0 group-hover:bg-[#111111] group-hover:text-white group-hover:border-[#111111] transition-all shadow-2xs">
+                                  <Icon className="h-4 w-4 text-[#111111] group-hover:text-white transition-colors" />
                                 </div>
-                                <h4 className="text-xs sm:text-sm font-semibold text-[#111111] group-hover:text-[#825816] transition-colors truncate">
-                                  {service.title}
-                                </h4>
+                                <div className="min-w-0">
+                                  <h4 className="text-xs sm:text-sm font-semibold text-[#111111] group-hover:text-[#825816] transition-colors truncate">
+                                    {service.title}
+                                  </h4>
+                                </div>
                               </div>
 
-                              <ChevronRight className="h-3.5 w-3.5 text-[#888888] group-hover:text-[#111111] group-hover:translate-x-0.5 transition-all shrink-0" />
+                              <ChevronRight className="h-4 w-4 text-[#999999] group-hover:text-[#111111] group-hover:translate-x-0.5 transition-all shrink-0" />
                             </div>
                           );
                         })}
                       </div>
 
                       {/* Expanded Tile Footer */}
-                      <div className="p-2.5 bg-[#FAF9F6] flex items-center justify-between gap-3">
+                      <div className="p-2.5 bg-[#F4F3EE] border-t border-[#EBEAE5] flex items-center justify-between gap-3">
                         <span className="text-xs text-[#666666] hidden sm:inline">
                           ISO/IEC &amp; Section 65B Compliant Forensic Catalogue
                         </span>
@@ -240,7 +242,7 @@ export function SubNavSearchBar() {
                           type="button"
                           size="sm"
                           onClick={() => handleSubmit()}
-                          className="h-7 px-3 text-xs bg-[#111111] hover:bg-black text-white rounded-md flex items-center gap-1.5 ml-auto"
+                          className="h-7 px-3 text-xs bg-[#111111] hover:bg-black text-white rounded-md flex items-center gap-1.5 ml-auto shadow-2xs"
                         >
                           <span>Explore All Services</span>
                           <ArrowRight className="h-3 w-3" />
@@ -249,7 +251,7 @@ export function SubNavSearchBar() {
                     </>
                   ) : matchedServices.length > 0 ? (
                     <>
-                      <div className="px-4 py-2 bg-[#FAF9F6] flex items-center justify-between text-xs font-mono text-[#555555]">
+                      <div className="px-4 py-2.5 bg-[#F4F3EE] border-b border-[#EBEAE5] flex items-center justify-between text-xs font-mono text-[#555555]">
                         <span>
                           Found {matchedServices.length}{" "}
                           {matchedServices.length === 1 ? "service" : "services"} for &ldquo;{query}&rdquo;
@@ -259,7 +261,7 @@ export function SubNavSearchBar() {
                         </span>
                       </div>
 
-                      <div className="max-h-[300px] overflow-y-auto divide-y divide-[#F0EFEA]">
+                      <div className="max-h-[340px] overflow-y-auto p-2.5 sm:p-3 space-y-2">
                         {matchedServices.slice(0, 6).map((service) => {
                           const Icon = service.icon;
 
@@ -267,11 +269,11 @@ export function SubNavSearchBar() {
                             <div
                               key={service.number}
                               onClick={() => handleServiceClick(service)}
-                              className="p-3 hover:bg-[#FAF9F6] transition-colors cursor-pointer group flex items-start justify-between gap-3"
+                              className="group p-2.5 sm:p-3 rounded-xl bg-white hover:bg-[#FAF9F6] border border-[#E5E5E3] hover:border-[#111111] shadow-2xs hover:shadow-xs transition-all duration-200 cursor-pointer flex items-start justify-between gap-3 text-left"
                             >
                               <div className="flex items-start gap-3 min-w-0">
-                                <div className="h-7 w-7 rounded-md bg-[#F2F1ED] border border-[#E5E5E3] flex items-center justify-center shrink-0 group-hover:bg-[#111111] group-hover:text-white transition-colors mt-0.5">
-                                  <Icon className="h-3.5 w-3.5" />
+                                <div className="h-8 w-8 rounded-lg bg-[#F5F4F0] border border-[#E5E5E3] flex items-center justify-center shrink-0 group-hover:bg-[#111111] group-hover:text-white group-hover:border-[#111111] transition-all mt-0.5 shadow-2xs">
+                                  <Icon className="h-4 w-4 text-[#111111] group-hover:text-white transition-colors" />
                                 </div>
 
                                 <div className="space-y-0.5 min-w-0">
@@ -296,13 +298,13 @@ export function SubNavSearchBar() {
                                 </div>
                               </div>
 
-                              <ChevronRight className="h-3.5 w-3.5 text-[#888888] group-hover:text-[#111111] group-hover:translate-x-0.5 transition-all shrink-0 mt-1" />
+                              <ChevronRight className="h-4 w-4 text-[#999999] group-hover:text-[#111111] group-hover:translate-x-0.5 transition-all shrink-0 mt-1" />
                             </div>
                           );
                         })}
                       </div>
 
-                      <div className="p-2.5 bg-[#FAF9F6] flex items-center justify-between gap-3">
+                      <div className="p-2.5 bg-[#F4F3EE] border-t border-[#EBEAE5] flex items-center justify-between gap-3">
                         <span className="text-xs text-[#666666] hidden sm:inline">
                           Official ISO/IEC &amp; Section 65B Compliant Laboratory
                         </span>
@@ -310,7 +312,7 @@ export function SubNavSearchBar() {
                           type="button"
                           size="sm"
                           onClick={() => handleSubmit()}
-                          className="h-7 px-3 text-xs bg-[#111111] hover:bg-black text-white rounded-md flex items-center gap-1.5 ml-auto"
+                          className="h-7 px-3 text-xs bg-[#111111] hover:bg-black text-white rounded-md flex items-center gap-1.5 ml-auto shadow-2xs"
                         >
                           <span>View All Results in Directory</span>
                           <ArrowRight className="h-3 w-3" />
