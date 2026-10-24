@@ -116,10 +116,6 @@ export function ProcessTimelineSection() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 mb-8 border-b border-[#E5E5E3]">
           <div>
-            <div className="flex items-center gap-2 mb-2 font-mono text-[11px] font-semibold tracking-[0.16em] text-[#825816] uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] shadow-[0_0_8px_#D4AF37]" />
-              05 // STANDARD OPERATING PROTOCOL
-            </div>
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold text-[#111111] tracking-[-0.03em] leading-tight">
               Six-Step Forensic Workflow.
             </h2>
@@ -333,23 +329,7 @@ export function ProcessTimelineSection() {
                   </p>
                 </div>
 
-                <div className="mt-6 pt-3 border-t border-[#E5E5E3] flex items-center justify-between font-mono text-[10px] text-[#71717A]">
-                  <span
-                    className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-bold transition-all duration-300 ${
-                      isActive
-                        ? "bg-[#ECFDF5] border border-[#A7F3D0] text-[#047857]"
-                        : "bg-transparent text-[#71717A]"
-                    }`}
-                  >
-                    <span
-                      className={`w-1.5 h-1.5 rounded-full ${
-                        isActive
-                          ? "bg-[#10B981] animate-pulse"
-                          : "bg-[#94A3B8]"
-                      }`}
-                    />
-                    VERIFIED
-                  </span>
+                <div className="mt-6 pt-3 border-t border-[#E5E5E3] flex items-center justify-end font-mono text-[10px] text-[#71717A]">
                   <span>STEP 0{item.step}/06</span>
                 </div>
               </div>

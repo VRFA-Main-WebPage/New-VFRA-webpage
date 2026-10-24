@@ -1,10 +1,11 @@
 // 14 Symmetrical Feather Outline Trajectories mapped directly to the pair of wings
-// 7 Left wing paths (f0..f6) and 7 mirrored Right wing paths (f0_r..f6_r)
+// Spreading across the entire wingspan from topmost pinnacle flight feathers down to the lowest feather tips
 
 export interface WingServiceItem {
   side: -1 | 1;
   path: string;
   title: string;
+  shortTitle: string;
   code: string;
   category: string;
   query: string;
@@ -25,15 +26,18 @@ export const WING_PATHS = {
   "f5": "M599.0,829.0 L601.7,822.2 L602.7,816.7 L600.8,813.8 L597.2,811.7 L593.8,807.4 L591.1,802.2 L587.9,799.4 L583.5,800.7 L578.3,802.9 L573.0,802.8 L569.1,799.2 L566.1,794.1 L562.5,791.2 L557.6,791.5 L552.6,790.9 L549.2,787.2 L548.2,781.4 L548.4,775.2 L547.7,770.6 L544.5,769.6 L539.8,771.4 L534.2,774.1 L528.2,775.2 L523.8,773.1 L522.4,768.0 L522.9,761.8 L524.4,755.3 L525.2,749.5 L523.1,745.9 L518.0,745.0 L511.8,745.1 L505.9,744.6 L502.8,741.6 L503.3,736.3 L505.9,730.2 L509.7,724.1 L514.2,718.1 L518.4,712.6 L519.5,708.4 L516.3,705.5 L511.8,702.6 L506.7,699.8 L500.6,698.2 L494.1,696.8 L488.8,694.4 L487.4,690.5 L489.5,686.0 L490.1,681.9 L486.9,679.2 L481.3,678.0 L474.8,677.6 L467.9,676.8 L461.6,675.4 L458.2,673.1 L459.6,670.1 L463.8,667.0 L468.9,663.5 L472.5,659.7 L472.1,656.5 L467.7,654.8 L461.7,654.1 L455.3,654.2 L449.0,655.8 L442.6,658.2 L435.9,660.7 L429.0,662.9 L422.0,664.9 L415.0,666.6 L408.0,668.2 L401.0,669.7 L394.0,670.9 L387.0,671.9 L380.0,672.6 L373.0,672.8 L366.0,672.5 L359.0,671.4 L352.0,669.4 L345.0,666.9 L338.0,664.8 L331.0,663.3 L324.0,662.4 L317.6,661.2 L313.9,659.0 L314.9,656.1 L319.3,653.4 L325.4,651.1 L330.9,648.8 L332.6,647.1 L329.2,646.3 L323.4,645.6 L316.8,644.5 L310.0,642.8 L303.3,640.6 L296.7,638.3 L289.9,636.2 L283.0,634.8 L276.0,634.2 L269.0,633.6 L262.0,632.5 L255.4,631.0 L250.3,629.7 L247.0,629.0",
   "f5_r": "M731.0,829.0 L728.3,822.2 L727.3,816.7 L729.2,813.8 L732.8,811.7 L736.2,807.4 L738.9,802.2 L742.1,799.4 L746.5,800.7 L751.7,802.9 L757.0,802.8 L760.9,799.2 L763.9,794.1 L767.5,791.2 L772.4,791.5 L777.4,790.9 L780.8,787.2 L781.8,781.4 L781.6,775.2 L782.3,770.6 L785.5,769.6 L790.2,771.4 L795.8,774.1 L801.8,775.2 L806.2,773.1 L807.6,768.0 L807.1,761.8 L805.6,755.3 L804.8,749.5 L806.9,745.9 L812.0,745.0 L818.2,745.1 L824.1,744.6 L827.2,741.6 L826.7,736.3 L824.1,730.2 L820.3,724.1 L815.8,718.1 L811.6,712.6 L810.5,708.4 L813.7,705.5 L818.2,702.6 L823.3,699.8 L829.4,698.2 L835.9,696.8 L841.2,694.4 L842.6,690.5 L840.5,686.0 L839.9,681.9 L843.1,679.2 L848.7,678.0 L855.2,677.6 L862.1,676.8 L868.4,675.4 L871.8,673.1 L870.4,670.1 L866.2,667.0 L861.1,663.5 L857.5,659.7 L857.9,656.5 L862.3,654.8 L868.3,654.1 L874.7,654.2 L881.0,655.8 L887.4,658.2 L894.1,660.7 L901.0,662.9 L908.0,664.9 L915.0,666.6 L922.0,668.2 L929.0,669.7 L936.0,670.9 L943.0,671.9 L950.0,672.6 L957.0,672.8 L964.0,672.5 L971.0,671.4 L978.0,669.4 L985.0,666.9 L992.0,664.8 L999.0,663.3 L1006.0,662.4 L1012.4,661.2 L1016.1,659.0 L1015.1,656.1 L1010.7,653.4 L1004.6,651.1 L999.1,648.8 L997.4,647.1 L1000.8,646.3 L1006.6,645.6 L1013.2,644.5 L1020.0,642.8 L1026.7,640.6 L1033.3,638.3 L1040.1,636.2 L1047.0,634.8 L1054.0,634.2 L1061.0,633.6 L1068.0,632.5 L1074.6,631.0 L1079.7,629.7 L1083.0,629.0",
   "f6": "M582.0,862.0 L585.3,856.0 L588.7,850.0 L591.9,843.9 L595.0,837.7 L597.9,831.2 L600.7,824.8 L602.8,818.7 L602.8,814.6 L599.7,812.8 L595.8,810.5 L592.6,805.9 L589.7,801.1 L586.1,799.6 L581.3,801.7 L576.0,803.3 L571.3,801.5 L568.0,797.1 L565.1,793.0 L560.8,791.8 L555.5,791.9 L550.9,789.9 L548.5,785.0 L548.2,778.7 L548.2,772.5 L546.4,769.2 L542.1,770.0 L536.7,772.8 L530.7,774.8 L525.4,774.1 L522.5,770.3 L522.3,764.5 L523.7,758.2 L525.4,752.1 L525.0,747.9 L521.6,747.2 L516.6,749.1 L510.9,752.4 L505.0,756.1 L499.0,760.0 L493.0,763.6 L487.0,766.9 L481.0,770.0 L474.9,773.0 L468.6,775.9 L461.9,778.6 L455.0,780.9 L448.0,782.9 L441.0,784.5 L434.0,785.5 L427.0,785.8 L420.0,785.5 L413.1,784.7 L406.3,783.2 L399.7,781.1 L392.9,779.2 L386.0,777.6 L379.1,775.9 L373.5,772.9 L371.7,769.1 L374.6,765.4 L379.5,762.1 L385.1,758.6 L391.0,754.9 L397.0,751.3 L402.5,747.8 L405.4,744.5 L403.9,742.3 L399.0,741.4 L392.7,740.7 L386.0,739.4 L379.3,737.4 L372.7,734.8 L365.9,731.9 L359.0,729.0",
-  "f6_r": "M748.0,862.0 L744.7,856.0 L741.3,850.0 L738.1,843.9 L735.0,837.7 L732.1,831.2 L729.3,824.8 L727.2,818.7 L727.2,814.6 L730.3,812.8 L734.2,810.5 L737.4,805.9 L740.3,801.1 L743.9,799.6 L748.7,801.7 L754.0,803.3 L758.7,801.5 L762.0,797.1 L764.9,793.0 L769.2,791.8 L774.5,791.9 L779.1,789.9 L781.5,785.0 L781.8,778.7 L781.8,772.5 L783.6,769.2 L787.9,770.0 L793.3,772.8 L799.3,774.8 L804.6,774.1 L807.5,770.3 L807.7,764.5 L806.3,758.2 L804.6,752.1 L805.0,747.9 L808.4,747.2 L813.4,749.1 L819.1,752.4 L825.0,756.1 L831.0,760.0 L837.0,763.6 L843.0,766.9 L849.0,770.0 L855.1,773.0 L861.4,775.9 L868.1,778.6 L875.0,780.9 L882.0,782.9 L889.0,784.5 L896.0,785.5 L903.0,785.8 L910.0,785.5 L916.9,784.7 L923.7,783.2 L930.3,781.1 L937.1,779.2 L944.0,777.6 L950.9,775.9 L956.5,772.9 L958.3,769.1 L955.4,765.4 L950.5,762.1 L944.9,758.6 L939.0,754.9 L933.0,751.3 L927.5,747.8 L924.6,744.5 L926.1,742.3 L931.0,741.4 L937.3,740.7 L944.0,739.4 L950.7,737.4 L957.3,734.8 L964.1,731.9 L971.0,729.0"
+  "f6_r": "M748.0,862.0 L744.7,856.0 L741.3,850.0 L738.1,843.9 L735.0,837.7 L732.1,831.2 L729.3,824.8 L727.2,818.7 L727.2,814.6 L730.3,812.8 L734.2,810.5 L737.4,805.9 L740.3,801.1 L743.9,799.6 L748.7,801.7 L754.0,803.3 L758.7,801.5 L762.0,797.1 L764.9,793.0 L769.2,791.8 L774.5,791.9 L779.1,789.9 L781.5,785.0 L781.8,778.7 L781.8,772.5 L783.6,769.2 L787.9,770.0 L793.3,772.8 L799.3,774.8 L804.6,774.1 L807.5,770.3 L807.7,764.5 L806.3,758.2 L804.6,752.1 L805.0,747.9 L808.4,747.2 L813.4,749.1 L819.1,752.4 L825.0,756.1 L831.0,760.0 L837.0,763.6 L843.0,766.9 L849.0,770.0 L855.1,773.0 L861.4,775.9 L868.1,778.6 L875.0,780.9 L882.0,782.9 L889.0,784.5 L896.0,785.5 L903.0,785.8 L910.0,785.5 L916.9,784.7 L923.7,783.2 L930.3,781.1 L937.1,779.2 L944.0,777.6 L950.9,775.9 L956.5,772.9 L958.3,769.1 L955.4,765.4 L950.5,762.1 L944.9,758.6 L939.0,754.9 L933.0,751.3 L927.5,747.8 L924.6,744.5 L926.1,742.3 L931.0,741.4 L937.3,740.7 L944.0,739.4 L950.7,737.4 L957.3,734.8 L964.1,731.9 L971.0,729.0",
+  "f7": "M570.0,875.0 L568.3,875.7 L566.6,876.5 L565.0,877.3 L563.3,878.1 L561.5,878.9 L559.8,879.7 L558.1,880.5 L556.3,881.4 L554.6,882.2 L552.8,883.1 L551.0,884.0 L549.3,884.9 L547.5,885.8 L545.7,886.8 L543.8,887.7 L542.0,888.7 L540.2,889.7 L538.3,890.7 L536.5,891.7 L534.6,892.7 L532.7,893.7 L530.8,894.8 L528.9,895.8 L527.0,896.9 L525.1,898.0 L523.2,899.1 L521.2,900.2 L519.3,901.4 L517.3,902.5 L515.4,903.7 L513.4,904.9 L511.4,906.1 L509.4,907.3 L507.4,908.5 L505.4,909.7 L503.3,911.0 L501.3,912.3 L499.2,913.5 L497.2,914.8 L495.1,916.2 L493.0,917.5 L490.9,918.8 L488.8,920.2 L486.7,921.5 L484.6,922.9 L482.4,924.3 L480.3,925.7 L478.1,927.1 L476.0,928.6 L473.8,930.0 L471.6,931.5 L469.4,933.0 L467.2,934.5 L465.0,936.0",
+  "f7_r": "M760.0,875.0 L761.7,875.7 L763.4,876.5 L765.0,877.3 L766.7,878.1 L768.5,878.9 L770.2,879.7 L771.9,880.5 L773.7,881.4 L775.4,882.2 L777.2,883.1 L779.0,884.0 L780.7,884.9 L782.5,885.8 L784.3,886.8 L786.2,887.7 L788.0,888.7 L789.8,889.7 L791.7,890.7 L793.5,891.7 L795.4,892.7 L797.3,893.7 L799.2,894.8 L801.1,895.8 L803.0,896.9 L804.9,898.0 L806.8,899.1 L808.8,900.2 L810.7,901.4 L812.7,902.5 L814.6,903.7 L816.6,904.9 L818.6,906.1 L820.6,907.3 L822.6,908.5 L824.6,909.7 L826.7,911.0 L828.7,912.3 L830.8,913.5 L832.8,914.8 L834.9,916.2 L837.0,917.5 L839.1,918.8 L841.2,920.2 L843.3,921.5 L845.4,922.9 L847.6,924.3 L849.7,925.7 L851.9,927.1 L854.0,928.6 L856.2,930.0 L858.4,931.5 L860.6,933.0 L862.8,934.5 L865.0,936.0"
 } as const;
 
 export const WING_SERVICES: WingServiceItem[] = [
-  // Left Wing (7 Services: Device, Media, Legal)
+  // Left Wing (7 Services spreading from top pinnacle to lowest bottom feather)
   {
     side: -1,
     path: WING_PATHS.f0,
     title: 'Mobile Device Extraction & Unlocking',
+    shortTitle: 'Mobile Device Extraction',
     code: 'SRV-01',
     category: 'Digital Forensics',
     query: 'Mobile Device Extraction & Unlocking',
@@ -43,6 +47,7 @@ export const WING_SERVICES: WingServiceItem[] = [
     side: -1,
     path: WING_PATHS.f1,
     title: 'Computer & Laptop Forensics',
+    shortTitle: 'Computer & Laptop',
     code: 'SRV-02',
     category: 'Digital Forensics',
     query: 'Computer & Laptop Forensics',
@@ -52,6 +57,7 @@ export const WING_SERVICES: WingServiceItem[] = [
     side: -1,
     path: WING_PATHS.f2,
     title: 'WhatsApp & Telegram Recovery',
+    shortTitle: 'WhatsApp & Telegram',
     code: 'SRV-04',
     category: 'Digital Forensics',
     query: 'Chat & Messaging Recovery',
@@ -59,8 +65,9 @@ export const WING_SERVICES: WingServiceItem[] = [
   },
   {
     side: -1,
-    path: WING_PATHS.f3,
+    path: WING_PATHS.f4,
     title: 'CCTV & Video Forensics',
+    shortTitle: 'CCTV & Video Forensics',
     code: 'SRV-05',
     category: 'Media Forensics',
     query: 'CCTV & Video Forensics',
@@ -68,8 +75,9 @@ export const WING_SERVICES: WingServiceItem[] = [
   },
   {
     side: -1,
-    path: WING_PATHS.f4,
+    path: WING_PATHS.f5,
     title: 'Voice Recording & Audio Forensics',
+    shortTitle: 'Voice & Audio Forensics',
     code: 'SRV-19',
     category: 'Media Forensics',
     query: 'Voice Recording Forensics & Transcription',
@@ -77,8 +85,9 @@ export const WING_SERVICES: WingServiceItem[] = [
   },
   {
     side: -1,
-    path: WING_PATHS.f5,
+    path: WING_PATHS.f6,
     title: 'Deepfake & AI Media Detection',
+    shortTitle: 'Deepfake & AI Media',
     code: 'SRV-18',
     category: 'AI Forensics',
     query: 'Deepfake & AI-Generated Media Detection',
@@ -86,19 +95,21 @@ export const WING_SERVICES: WingServiceItem[] = [
   },
   {
     side: -1,
-    path: WING_PATHS.f6,
+    path: WING_PATHS.f7,
     title: 'Section 65B / BSA 2023 Certification',
+    shortTitle: 'Section 65B Certification',
     code: 'SRV-21',
     category: 'Legal Support',
     query: 'Section 65B / BSA 2023 Certification',
     pairIndex: 6,
   },
 
-  // Right Wing (7 Services: Financial, Intelligence, Cyber, Corporate)
+  // Right Wing (7 Services spreading symmetrically from top pinnacle to lowest bottom feather)
   {
     side: 1,
     path: WING_PATHS.f0_r,
     title: 'Blockchain & Crypto Fraud Analysis',
+    shortTitle: 'Blockchain & Crypto Fraud',
     code: 'SRV-17',
     category: 'Financial Forensics',
     query: 'Blockchain & Cryptocurrency Fraud Analysis',
@@ -108,6 +119,7 @@ export const WING_SERVICES: WingServiceItem[] = [
     side: 1,
     path: WING_PATHS.f1_r,
     title: 'Open Source Intelligence (OSINT)',
+    shortTitle: 'OSINT Intelligence',
     code: 'SRV-06',
     category: 'Intelligence',
     query: 'Open Source Intelligence',
@@ -117,6 +129,7 @@ export const WING_SERVICES: WingServiceItem[] = [
     side: 1,
     path: WING_PATHS.f2_r,
     title: 'CDR / IPDR & Subscriber Analysis',
+    shortTitle: 'CDR & IPDR Analysis',
     code: 'SRV-10',
     category: 'Telecommunications',
     query: 'Phone Number & Subscriber Intelligence',
@@ -124,8 +137,9 @@ export const WING_SERVICES: WingServiceItem[] = [
   },
   {
     side: 1,
-    path: WING_PATHS.f3_r,
+    path: WING_PATHS.f4_r,
     title: 'Network Forensics & Incident Response',
+    shortTitle: 'Network Forensics',
     code: 'SRV-12',
     category: 'Cyber Forensics',
     query: 'Network Forensics & Traffic Analysis',
@@ -133,8 +147,9 @@ export const WING_SERVICES: WingServiceItem[] = [
   },
   {
     side: 1,
-    path: WING_PATHS.f4_r,
+    path: WING_PATHS.f5_r,
     title: 'Fund Flow Graphical Analysis',
+    shortTitle: 'Fund Flow Analysis',
     code: 'SRV-16',
     category: 'Financial Investigation',
     query: 'Fund Flow Graphical Analysis',
@@ -142,8 +157,9 @@ export const WING_SERVICES: WingServiceItem[] = [
   },
   {
     side: 1,
-    path: WING_PATHS.f5_r,
+    path: WING_PATHS.f6_r,
     title: 'Law Enforcement Training Programmes',
+    shortTitle: 'LEA Training Programmes',
     code: 'SRV-24',
     category: 'Capacity Building',
     query: 'Law Enforcement Training Programmes',
@@ -151,8 +167,9 @@ export const WING_SERVICES: WingServiceItem[] = [
   },
   {
     side: 1,
-    path: WING_PATHS.f6_r,
+    path: WING_PATHS.f7_r,
     title: 'Corporate Digital Forensics',
+    shortTitle: 'Corporate Forensics',
     code: 'SRV-26',
     category: 'Enterprise Security',
     query: 'Corporate Digital Forensics & Incident Response',

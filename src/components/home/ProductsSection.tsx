@@ -38,7 +38,7 @@ export function ProductsSection() {
           >
             <div className="max-w-2xl">
               <span className="section-eyebrow">
-                02 // PROPRIETARY INVESTIGATION PLATFORMS
+                PROPRIETARY INVESTIGATION PLATFORMS
               </span>
               <h2 className="section-heading">
                 Engineered for Lawful Cyber Intelligence.

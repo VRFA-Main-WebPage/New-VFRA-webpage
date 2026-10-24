@@ -31,7 +31,7 @@ export function GalleryPreviewSection() {
           >
             <div className="max-w-2xl">
               <span className="section-eyebrow">
-                07 // FORENSIC ARCHIVE &amp; LABORATORY GALLERY
+                FORENSIC ARCHIVE &amp; LABORATORY GALLERY
               </span>
               <h2 className="section-heading">
                 Inside VFRA Operations &amp; Field Archive.

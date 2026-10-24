@@ -22,7 +22,7 @@ export function CTASection() {
           <div className="grid lg:grid-cols-12 gap-10 items-center">
             <div className="lg:col-span-7">
               <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-neutral-400 mb-3 block">
-                09 // {content.badge}
+                {content.badge}
               </span>
               <h2 className="font-heading text-3xl md:text-4xl lg:text-[2.75rem] font-semibold tracking-[-0.03em] text-white leading-[1.12] mb-4">
                 {content.heading}

@@ -44,21 +44,6 @@ export function HeroSection() {
             animate="visible"
             className="lg:col-span-7 flex flex-col items-start text-left"
           >
-            {/* Clinical Index Pill */}
-            <motion.div
-              variants={fadeUp}
-              className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-md border border-[#E5E5E3] bg-white mb-6"
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-[#111111]" />
-              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#111111] font-medium">
-                {content.companyName || "VFRA"} · DIGITAL FORENSIC LABORATORY
-              </span>
-              <span className="text-[#D4D4D0]">|</span>
-              <span className="font-mono text-[11px] text-[#555555] hidden sm:inline">
-                {content.badge}
-              </span>
-            </motion.div>
-
             {/* Primary Apple-scale Headline */}
             <motion.h1
               variants={fadeUp}
@@ -151,7 +136,7 @@ export function HeroSection() {
                 <div className="flex items-center gap-2">
                   <Terminal className="h-3.5 w-3.5 text-[#111111]" />
                   <span className="font-mono text-[11px] uppercase tracking-[0.14em] font-semibold text-[#111111]">
-                    LAB SPECIFICATION // VFRA-HQ
+                    LAB SPECIFICATION
                   </span>
                 </div>
                 <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-white border border-[#E5E5E3] text-[#555555]">
@@ -166,14 +151,6 @@ export function HeroSection() {
                   alt="VFRA Digital Forensics Laboratory"
                   className="w-full h-full object-cover object-center transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.03]"
                 />
-                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between px-3 py-2 rounded bg-white/90 backdrop-blur-md border border-[#E5E5E3]">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#111111] font-medium">
-                    Write-Blocked Acquisition &amp; Analysis
-                  </span>
-                  <span className="font-mono text-[10px] text-[#555555]">
-                    SHA-256 VERIFIED
-                  </span>
-                </div>
               </div>
 
               {/* Structured Ingredient-Label Specifications */}

@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   Search,
   ArrowRight,
@@ -135,7 +135,7 @@ export function SubNavSearchBar() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onFocus={() => setIsFocused(true)}
-              placeholder="Search forensic services..."
+              placeholder="What service do you need? Search forensic capabilities, evidence..."
               className="h-11 sm:h-12 border-0 bg-transparent pl-4 pr-1 text-sm text-[#111111] placeholder:text-[#777777] focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none font-sans"
             />
 
@@ -167,27 +167,18 @@ export function SubNavSearchBar() {
             </div>
           </form>
 
-          {/* Quick Search Recommendation Pills: Only Core VFRA Services */}
-          <div className="flex items-center gap-1.5 flex-wrap shrink-0">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-[#888888] mr-1 hidden sm:inline flex items-center gap-1">
-              <Sparkles className="h-2.5 w-2.5 text-amber-500 fill-amber-500" />
-              Services:
+          {/* Services We Provide Direct Action */}
+          <div className="flex items-center gap-2.5 shrink-0">
+            <span className="font-mono text-[11px] uppercase tracking-wider text-[#777777] hidden md:inline">
+              Services We Provide
             </span>
-            {VFRA_CORE_SERVICE_TAGS.map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                onClick={() => handlePillClick(tag)}
-                className={cn(
-                  "px-2.5 py-1 rounded-md text-[11px] font-medium transition-all duration-200 border active:scale-[0.97]",
-                  query.toLowerCase() === tag.toLowerCase()
-                    ? "bg-[#111111] text-white border-[#111111]"
-                    : "bg-white hover:bg-[#111111] text-[#444444] hover:text-white border-[#DCDAD4] hover:border-[#111111] shadow-2xs"
-                )}
-              >
-                {tag}
-              </button>
-            ))}
+            <Link
+              to="/services"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#111111] text-white hover:bg-[#2A2A2A] text-xs font-mono uppercase tracking-[0.08em] transition-all shadow-xs shrink-0"
+            >
+              <span>Explore All Services</span>
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
         </div>
 

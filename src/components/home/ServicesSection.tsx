@@ -14,17 +14,17 @@ export function ServicesSection() {
   const rafRef = useRef<number | null>(null);
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
 
-  // SVG Dimension Constants
+  // SVG Dimension Constants (1920x580 coordinate system for desktop widescreen)
   const SVG_W = 1920;
-  const SVG_H = 560;
+  const SVG_H = 580;
   const NW = 1330;
   const NH = 998;
   const S = 0.52;
   const W = NW * S;
   const H = NH * S;
-  const OX = SVG_W / 2 - W / 2;
+  const OX = SVG_W / 2 - W / 2; // 614.2
   const OY = 30;
-  const GAP = 55;
+  const GAP = 40; // Clean standoff margin directly at feather tips
 
   // Coordinate scaling function from native image (1330x998) to SVG canvas
   const sc = useMemo(
@@ -39,7 +39,7 @@ export function ServicesSection() {
     [OX, OY, S]
   );
 
-  // Pre-calculate scaled paths and endpoints
+  // Pre-calculate scaled paths and endpoints for all 14 services (spread from top pinnacle to lowest feather)
   const scaledItems = useMemo(() => {
     return WING_SERVICES.map((srv, index) => {
       const scaledD = sc(srv.path);
@@ -61,12 +61,12 @@ export function ServicesSection() {
         isLeft,
         textX,
         textY,
-        startDelay: srv.pairIndex * 0.11,
       };
     });
   }, [sc]);
 
-  // Laser Pulse Animation Controller (Majestic Smooth Glide on View)
+  // Continuous Laser Pulse Animation Controller
+  // Graceful, stately, continuous loop — ZERO static thick line, perpetually active after revealing services
   const playPulse = () => {
     if (typeof window === "undefined") return;
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -86,143 +86,112 @@ export function ServicesSection() {
       paths.forEach((p, i) => {
         const len = p.getTotalLength();
         pathLengths[i] = len;
-        const seg = Math.min(160, len * 0.28);
-        p.style.strokeDasharray = `${seg} ${len + seg}`;
-        p.style.strokeDashoffset = "-20";
-      });
-
-      dots.forEach((dot) => {
-        dot.style.opacity = "0";
-      });
-
-      labels.forEach((g) => {
-        g.style.opacity = "0";
+        const seg = Math.min(150, len * 0.28);
+        p.style.strokeDasharray = `${seg} ${len + seg + 200}`;
+        p.style.strokeDashoffset = `${seg}`;
+        p.style.opacity = "0";
       });
 
       return { paths, dots, labels, pathLengths };
     });
 
     const t0 = performance.now();
-    const T = 1.15; // Smooth, graceful, majestic 1.15s laser flight
+    const T_FLIGHT = 1.6; // Majestic, slow, graceful laser flight
+    const T_CYCLE = 4.2;  // 4.2s smooth continuous looping rhythm
     const E = (t: number) => (t < 0 ? 0 : t > 1 ? 1 : 1 - Math.pow(1 - t, 3));
 
+    let revealed = false;
+
     const frame = (now: number) => {
-      const t = (now - t0) / 1000;
+      const totalElapsed = (now - t0) / 1000;
+      const cycleT = totalElapsed % T_CYCLE;
 
       svgData.forEach(({ paths, dots, labels, pathLengths }) => {
         scaledItems.forEach((item, i) => {
-          const u = t - item.startDelay;
-          const pGlow = paths[i * 2];
-          const pCore = paths[i * 2 + 1];
+          const delay = item.pairIndex * 0.16; // Cascading delay down the wing
+          const u = cycleT - delay;
+          const p = paths[i];
           const dot = dots[i];
           const g = labels[i];
 
+          const len = pathLengths[i] || 500;
+          const seg = Math.min(150, len * 0.28);
+
           if (u < 0) {
-            if (pGlow && pCore) {
-              pGlow.style.strokeDashoffset = "-20";
-              pCore.style.strokeDashoffset = "-20";
+            // Not started yet in current cycle
+            if (p) {
+              p.style.opacity = "0";
+              p.style.strokeDashoffset = `${seg}`;
             }
-            return;
-          }
-
-          const len = pathLengths[i * 2] || 600;
-          const seg = Math.min(160, len * 0.28);
-          const k = u;
-          const pos = E(k / T) * (len + seg);
-          const off = seg - pos;
-
-          if (pGlow && pCore) {
-            if (k < T) {
-              pGlow.style.strokeDashoffset = `${off}`;
-              pCore.style.strokeDashoffset = `${off}`;
-            } else {
-              pGlow.style.strokeDashoffset = "-20";
-              pCore.style.strokeDashoffset = "-20";
+          } else if (u < T_FLIGHT) {
+            // Laser beam actively traveling along feather spine
+            const pos = E(u / T_FLIGHT) * (len + seg);
+            const off = seg - pos;
+            if (p) {
+              p.style.opacity = "1";
+              p.style.strokeDashoffset = `${off}`;
             }
-          }
-
-          // Dot & label opacity illuminates smoothly as laser reaches the tip
-          if (u >= T * 0.7) {
-            const q = Math.min(1, (u - T * 0.7) / 0.35);
-            if (dot) {
-              dot.style.opacity = `${Math.min(1, q * 2)}`;
+            // Dot & label illuminate when laser reaches tip
+            if (u >= T_FLIGHT * 0.65 && dot) {
+              const q = Math.min(1, (u - T_FLIGHT * 0.65) / (T_FLIGHT * 0.35));
+              dot.style.opacity = `${Math.max(parseFloat(dot.style.opacity || "0"), q)}`;
             }
-            if (g) {
-              g.style.opacity = `${Math.min(1, q * 2)}`;
+            if (u >= T_FLIGHT * 0.75 && g) {
+              const q = Math.min(1, (u - T_FLIGHT * 0.75) / (T_FLIGHT * 0.25));
+              g.style.opacity = `${Math.max(parseFloat(g.style.opacity || "0"), q)}`;
             }
+          } else {
+            // Beam flight completed for this feather — hide laser beam cleanly so zero residual line is left
+            if (p) {
+              p.style.opacity = "0";
+              p.style.strokeDashoffset = `${seg}`;
+            }
+            if (dot) dot.style.opacity = "1";
+            if (g) g.style.opacity = "1";
           }
         });
 
-        const last = 6 * 0.11 + T + 0.5;
-        if (t > last) {
-          dots.forEach((dot) => {
-            dot.style.opacity = "1";
-          });
-          labels.forEach((g) => {
-            g.style.opacity = "1";
-          });
+        // Once the first wave has revealed all items, keep them permanently visible
+        if (totalElapsed > 2.5 && !revealed) {
+          revealed = true;
+          dots.forEach((dot) => { dot.style.opacity = "1"; });
+          labels.forEach((g) => { g.style.opacity = "1"; });
         }
       });
 
-      const last = 6 * 0.11 + T + 0.5;
-      if (t <= last) {
-        rafRef.current = requestAnimationFrame(frame);
-      }
+      // Keep animation continuously moving as requested
+      rafRef.current = requestAnimationFrame(frame);
     };
 
     rafRef.current = requestAnimationFrame(frame);
   };
 
-  // Trigger pulse on each view (scroll viewport entry)
+  // Trigger pulse on scroll into viewport
   useEffect(() => {
     const el = wingsContainerRef.current;
     if (!el) return;
-
-    const resetElements = () => {
-      const paths = el.querySelectorAll<SVGPathElement>(".wing-laser-path");
-      const dots = el.querySelectorAll<SVGCircleElement>(".wing-feather-dot");
-      const labels = el.querySelectorAll<SVGGElement>(".wing-service-label");
-      paths.forEach((p) => {
-        p.style.strokeDashoffset = "-20";
-      });
-      dots.forEach((dot) => {
-        dot.style.opacity = "0";
-      });
-      labels.forEach((g) => {
-        g.style.opacity = "0";
-      });
-    };
-
-    resetElements();
 
     if (typeof IntersectionObserver === "undefined") {
       playPulse();
       return;
     }
 
-    let hasEverIntersected = false;
-
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
         if (entry.isIntersecting) {
-          // Trigger the animation on each view rapidly
           playPulse();
-          hasEverIntersected = true;
         } else {
-          // Scrolled out of view: cancel RAF and reset so next view triggers cleanly
-          if (hasEverIntersected) {
-            if (rafRef.current) {
-              cancelAnimationFrame(rafRef.current);
-              rafRef.current = null;
-            }
-            resetElements();
+          // Cancel RAF when out of view to preserve device performance
+          if (rafRef.current) {
+            cancelAnimationFrame(rafRef.current);
+            rafRef.current = null;
           }
         }
       },
       {
-        threshold: 0.02,
-        rootMargin: "60px 0px 60px 0px",
+        threshold: 0.05,
+        rootMargin: "80px 0px 80px 0px",
       }
     );
 
@@ -260,7 +229,7 @@ export function ServicesSection() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 mb-8 md:mb-10 border-b border-[#E5E5E3] dark:border-white/10">
           <div>
             <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#825816] dark:text-[#D4AF37] font-semibold block mb-2">
-              03 // CLINICAL SERVICE INDEX • 14 CORE DIVISIONS
+              CLINICAL SERVICE INDEX • 14 CORE DIVISIONS
             </span>
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold text-[#111111] dark:text-white tracking-[-0.03em] leading-tight">
               Comprehensive Investigation Support.
@@ -289,24 +258,24 @@ export function ServicesSection() {
           </div>
         </div>
 
-        {/* Wings Container for Both Desktop & Mobile with Synchronized Viewport Trigger */}
+        {/* Wings Container: Fully Mobile Responsive & Desktop Widescreen */}
         <div ref={wingsContainerRef} className="relative w-full">
-          {/* DESKTOP VIEW (1024px+): Widescreen 1920px Canvas with Feather Tip Labels */}
+          {/* DESKTOP VIEW (1024px+): Widescreen 1920x580 Canvas with Full Clinical Titles */}
           <div className="hidden lg:flex justify-center w-full overflow-hidden">
             <div className="w-full max-w-[1920px]">
               <svg
                 viewBox={`0 0 ${SVG_W} ${SVG_H}`}
                 className="wings-anim-svg w-full h-auto block select-none"
                 role="img"
-                aria-label="Symmetrical wings illuminating fourteen forensic services at the flight feather tips"
+                aria-label="Symmetrical eagle wings illuminating fourteen forensic divisions"
               >
                 <defs>
-                  <filter id="wingLaserGlowDesktop" x="-30%" y="-30%" width="160%" height="160%">
-                    <feGaussianBlur stdDeviation="3.0" />
+                  <filter id="wingLaserGlowDesktop" x="-25%" y="-25%" width="150%" height="150%">
+                    <feGaussianBlur stdDeviation="2.0" />
                   </filter>
                 </defs>
 
-                {/* Central Symmetrical Mirrored Pair of Wings */}
+                {/* Symmetrical Wings Base Image */}
                 <image
                   href={isDark ? "/wings-pair-dark.png" : "/wings-pair-light.png"}
                   x={OX}
@@ -316,52 +285,35 @@ export function ServicesSection() {
                   preserveAspectRatio="xMidYMid meet"
                 />
 
-                {/* Dynamic Laser Feather Trailing Glow Paths & Nodes */}
+                {/* Laser Feather Trailing Beams (Zero Static Line - Opacity 0 when idle) */}
                 <g id="wingLaserFxDesktop">
                   {scaledItems.map((item, i) => {
                     const isHovered = activeIdx === i;
                     return (
                       <g key={`fx-desktop-${i}`}>
-                        {/* Thicker Ambient Glow Beam */}
                         <path
                           d={item.scaledD}
                           fill="none"
-                          stroke={isHovered ? "var(--wing-cyan, #0284c7)" : "var(--wing-beam, #d97706)"}
-                          strokeWidth={isHovered ? 7.5 : 6.5}
+                          stroke={isHovered ? "#0284c7" : "#d97706"}
+                          strokeWidth={isHovered ? 3.0 : 2.2}
                           strokeLinecap="round"
                           filter="url(#wingLaserGlowDesktop)"
-                          opacity={isHovered ? 0.85 : 0.65}
-                          className="wing-laser-path transition-all duration-200 pointer-events-none"
-                          style={
-                            isHovered
-                              ? { strokeDasharray: "none", strokeDashoffset: "0" }
-                              : undefined
-                          }
+                          className="wing-laser-path transition-opacity duration-150 pointer-events-none"
+                          style={{
+                            opacity: isHovered ? 1 : 0,
+                            strokeDasharray: isHovered ? "none" : undefined,
+                            strokeDashoffset: isHovered ? "0" : undefined,
+                          }}
                         />
 
-                        {/* Sharp High-Intensity Core Laser Spine */}
-                        <path
-                          d={item.scaledD}
-                          fill="none"
-                          stroke={isHovered ? "var(--wing-cyan, #0284c7)" : "var(--wing-beam, #d97706)"}
-                          strokeWidth={isHovered ? 2.6 : 2.2}
-                          strokeLinecap="round"
-                          opacity={isHovered ? 1.0 : 0.95}
-                          className="wing-laser-path transition-all duration-200 pointer-events-none"
-                          style={
-                            isHovered
-                              ? { strokeDasharray: "none", strokeDashoffset: "0" }
-                              : undefined
-                          }
-                        />
-
-                        {/* Feather Tip Glowing Pip / Node */}
+                        {/* Feather Tip Glowing Pip / Evidentiary Node */}
                         <circle
                           cx={item.endX}
                           cy={item.endY}
-                          r={isHovered ? 6 : 4.5}
+                          r={isHovered ? 6.5 : 4.5}
                           fill={isHovered ? "#0284c7" : "#d97706"}
                           className="wing-feather-dot cursor-pointer transition-all duration-200"
+                          style={{ opacity: 0 }}
                           onMouseEnter={() => setActiveIdx(i)}
                           onMouseLeave={() => setActiveIdx(null)}
                           onClick={() => handleServiceClick(item)}
@@ -371,7 +323,7 @@ export function ServicesSection() {
                   })}
                 </g>
 
-                {/* Interactive Service Titles (19px Bold, Single-Line, 55px Standoff Margin) */}
+                {/* Interactive Service Titles (22px Font-Black, High Legibility, 40px Standoff) */}
                 <g id="wingServiceLabelsDesktop">
                   {scaledItems.map((item, i) => {
                     const isHovered = activeIdx === i;
@@ -379,6 +331,7 @@ export function ServicesSection() {
                       <g
                         key={`label-desktop-${i}`}
                         className="wing-service-label cursor-pointer group transition-all duration-200"
+                        style={{ opacity: 0 }}
                         onMouseEnter={() => setActiveIdx(i)}
                         onMouseLeave={() => setActiveIdx(null)}
                         onClick={() => handleServiceClick(item)}
@@ -387,7 +340,7 @@ export function ServicesSection() {
                           x={item.textX}
                           y={item.textY}
                           textAnchor={item.isLeft ? "end" : "start"}
-                          className="text-[19px] font-extrabold tracking-[-0.015em] transition-colors duration-200"
+                          className="text-[22px] font-black tracking-[-0.018em] transition-colors duration-200 select-none"
                           fill={
                             isHovered
                               ? isDark
@@ -395,7 +348,7 @@ export function ServicesSection() {
                                 : "#0284C7"
                               : isDark
                               ? "#FFFFFF"
-                              : "#0F172A"
+                              : "#0A0E1A"
                           }
                         >
                           {item.title}
@@ -408,19 +361,19 @@ export function ServicesSection() {
             </div>
           </div>
 
-          {/* MOBILE & TABLET VIEW (< 1024px): Full Uncut Outstretched Wings + Laser Animation + 14 Core Divisions Grid */}
+          {/* MOBILE & TABLET VIEW (< 1024px): Services Visible at the Edge of Wings + 100% Mobile Responsive */}
           <div className="block lg:hidden w-full">
-            {/* Centered Symmetrical Wings Graphic: Perfectly Framed from Tip to Tip */}
-            <div className="w-full max-w-[480px] mx-auto px-1 sm:px-2">
+            {/* Symmetrical Wings with Services Visibly Positioned Directly at the Wing Feather Edges */}
+            <div className="w-full max-w-[640px] mx-auto px-0.5">
               <svg
-                viewBox="600 15 720 545"
+                viewBox="180 15 1560 565"
                 className="wings-anim-svg w-full h-auto block select-none drop-shadow-sm"
                 role="img"
-                aria-label="Symmetrical wings illuminating forensic divisions"
+                aria-label="Symmetrical wings illuminating forensic divisions at wing edges"
               >
                 <defs>
-                  <filter id="wingLaserGlowMobile" x="-30%" y="-30%" width="160%" height="160%">
-                    <feGaussianBlur stdDeviation="3.0" />
+                  <filter id="wingLaserGlowMobile" x="-25%" y="-25%" width="150%" height="150%">
+                    <feGaussianBlur stdDeviation="2.2" />
                   </filter>
                 </defs>
 
@@ -443,40 +396,59 @@ export function ServicesSection() {
                         <path
                           d={item.scaledD}
                           fill="none"
-                          stroke={isHovered ? "var(--wing-cyan, #0284c7)" : "var(--wing-beam, #d97706)"}
-                          strokeWidth={isHovered ? 7.5 : 6.5}
+                          stroke={isHovered ? "#0284c7" : "#d97706"}
+                          strokeWidth={isHovered ? 3.5 : 2.6}
                           strokeLinecap="round"
                           filter="url(#wingLaserGlowMobile)"
-                          opacity={isHovered ? 0.85 : 0.65}
-                          className="wing-laser-path transition-all duration-200 pointer-events-none"
-                          style={
-                            isHovered
-                              ? { strokeDasharray: "none", strokeDashoffset: "0" }
-                              : undefined
-                          }
-                        />
-                        <path
-                          d={item.scaledD}
-                          fill="none"
-                          stroke={isHovered ? "var(--wing-cyan, #0284c7)" : "var(--wing-beam, #d97706)"}
-                          strokeWidth={isHovered ? 2.6 : 2.2}
-                          strokeLinecap="round"
-                          opacity={isHovered ? 1.0 : 0.95}
-                          className="wing-laser-path transition-all duration-200 pointer-events-none"
-                          style={
-                            isHovered
-                              ? { strokeDasharray: "none", strokeDashoffset: "0" }
-                              : undefined
-                          }
+                          className="wing-laser-path transition-opacity duration-150 pointer-events-none"
+                          style={{
+                            opacity: isHovered ? 1 : 0,
+                            strokeDasharray: isHovered ? "none" : undefined,
+                            strokeDashoffset: isHovered ? "0" : undefined,
+                          }}
                         />
                         <circle
                           cx={item.endX}
                           cy={item.endY}
-                          r={isHovered ? 7 : 5}
+                          r={isHovered ? 8 : 6}
                           fill={isHovered ? "#0284c7" : "#d97706"}
                           className="wing-feather-dot cursor-pointer transition-all duration-200"
+                          style={{ opacity: 0 }}
                           onClick={() => handleServiceClick(item)}
                         />
+                      </g>
+                    );
+                  })}
+                </g>
+
+                {/* Services Visible Directly at the Edge of the Wings on Mobile */}
+                <g id="wingServiceLabelsMobile">
+                  {scaledItems.map((item, i) => {
+                    const isHovered = activeIdx === i;
+                    return (
+                      <g
+                        key={`label-mobile-${i}`}
+                        className="wing-service-label cursor-pointer group"
+                        style={{ opacity: 0 }}
+                        onClick={() => handleServiceClick(item)}
+                      >
+                        <text
+                          x={item.isLeft ? item.endX - 22 : item.endX + 22}
+                          y={item.endY + 8}
+                          textAnchor={item.isLeft ? "end" : "start"}
+                          className="text-[27px] font-black tracking-tight select-none"
+                          fill={
+                            isHovered
+                              ? isDark
+                                ? "#38BDF8"
+                                : "#0284C7"
+                              : isDark
+                              ? "#FFFFFF"
+                              : "#0F172A"
+                          }
+                        >
+                          {item.shortTitle}
+                        </text>
                       </g>
                     );
                   })}
@@ -484,7 +456,7 @@ export function ServicesSection() {
               </svg>
             </div>
 
-            {/* 14 Core Divisions Responsive Grid Directly Below Outstretched Wings */}
+            {/* 14 Core Divisions Quick Tap Grid Directly Below Wings for Touch Accessibility */}
             <div className="mt-6 sm:mt-8">
               <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-[#E5E5E3] dark:border-white/10">
                 <span className="font-mono text-[11px] uppercase tracking-wider text-[#825816] dark:text-[#D4AF37] font-semibold">

@@ -45,7 +45,7 @@ export function RecognitionStrip() {
           >
             <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#111111] font-semibold flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
-              01 // INSTITUTIONAL ACCREDITATION &amp; REGISTRATION
+              INSTITUTIONAL ACCREDITATION &amp; REGISTRATION
             </span>
             <span className="font-mono text-[11px] text-[#555555]">
               GOVERNMENT OF INDIA RECOGNIZED ENTITY
@@ -83,10 +83,6 @@ export function RecognitionStrip() {
                   <div className="flex items-center justify-between gap-2 mb-1">
                     <span className="font-mono text-[10px] text-[#71717A] tracking-[0.15em] font-bold">
                       {item.code}
-                    </span>
-                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-[#ECFDF5] border border-[#A7F3D0] text-[#047857]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
-                      VERIFIED
                     </span>
                   </div>
                   <h3 className="font-heading font-semibold text-[15px] text-[#111111] leading-tight mb-0.5 group-hover:text-[#D4AF37] transition-colors">

@@ -47,7 +47,7 @@ export function WhyVFRASection() {
           className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start"
         >
           <motion.div variants={fadeUp} className="lg:col-span-5">
-            <span className="section-eyebrow">04 // CLINICAL TRANSPARENCY</span>
+            <span className="section-eyebrow">CLINICAL TRANSPARENCY</span>
             <h2 className="section-heading mb-5">
               Uncompromising Forensic Discipline.
             </h2>

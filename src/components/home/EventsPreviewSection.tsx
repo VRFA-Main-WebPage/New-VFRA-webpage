@@ -72,7 +72,7 @@ export function EventsPreviewSection() {
           >
             <div>
               <span className="section-eyebrow">
-                06 // UPCOMING EVENTS &amp; TRAINING PROGRAMMES
+                UPCOMING EVENTS &amp; TRAINING PROGRAMMES
               </span>
               <h2 className="section-heading">
                 Workshops, Briefings &amp; Seminars.

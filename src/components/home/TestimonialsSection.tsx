@@ -116,7 +116,7 @@ export function TestimonialsSection() {
             transition={{ delay: 0.2 }}
           >
             <Terminal className="h-4 w-4" />
-            <span className="uppercase tracking-widest font-mono">// TESTIMONIALS</span>
+            <span className="uppercase tracking-widest font-mono">TESTIMONIALS</span>
           </motion.div>
           <h2 className="font-display text-[28px] md:text-4xl lg:text-5xl font-bold text-foreground mb-5">
             What Our <span className="text-primary text-glow">Clients</span> Say

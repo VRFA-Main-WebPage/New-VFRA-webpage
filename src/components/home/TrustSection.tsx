@@ -27,7 +27,7 @@ export function TrustSection() {
           className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start"
         >
           <motion.div variants={fadeUp} className="lg:col-span-6">
-            <span className="section-eyebrow">08 // INSTITUTIONAL TRUST</span>
+            <span className="section-eyebrow">INSTITUTIONAL TRUST</span>
             <h2 className="section-heading mb-5">
               {content.heading}
             </h2>
