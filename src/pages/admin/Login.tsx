@@ -20,7 +20,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth, setMasterAdminSession } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { mapAuthErrorToUserMessage } from "@/lib/errorHandler";
 import {
@@ -77,25 +77,6 @@ const AdminLogin = () => {
     const { error } = await signIn(email, password);
 
     if (error) {
-      // Check for Admin Master Security PIN fallback
-      const cleanPass = password.trim();
-      const adminPin = import.meta.env.VITE_ADMIN_2FA_PIN || "983433";
-
-      if (cleanPass === adminPin || cleanPass === "admin123") {
-        const targetEmail = email.trim() || "admin@vigilantforensic.com";
-        setMasterAdminSession(targetEmail);
-        set2FASessionVerified("admin-master-user");
-        try {
-          localStorage.removeItem("sb-xxwsrnebrcbpjnfodpaa-auth-token");
-        } catch (e) {}
-        toast({
-          title: "Admin Access Granted",
-          description: "Authenticated with Forensic Master Key. Loading console...",
-        });
-        window.location.href = "/admin/dashboard";
-        return;
-      }
-
       toast({
         title: "Access Denied",
         description: mapAuthErrorToUserMessage(error),
@@ -211,7 +192,7 @@ const AdminLogin = () => {
                 Administrator Sign In
               </h1>
               <p className="text-xs text-[#555555] mb-6">
-                Sign in with your administrator credentials or Security PIN to initiate 2FA verification.
+                Sign in with your verified administrator credentials to initiate 2FA verification.
               </p>
 
               <form onSubmit={handleCredentialsSubmit} className="space-y-4">
