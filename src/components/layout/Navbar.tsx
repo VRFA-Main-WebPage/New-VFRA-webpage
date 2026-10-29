@@ -14,6 +14,7 @@ const navLinks = [
   { title: "Products", href: "/products" },
   { title: "Gallery", href: "/gallery" },
   { title: "Upcoming Events", href: "/events" },
+  { title: "Careers", href: "/careers" },
   { title: "Blog", href: "/blog" },
   { title: "Contact", href: "/contact" },
 ];
@@ -63,7 +64,7 @@ export function Navbar() {
               end={link.href === "/"}
               className={({ isActive }) =>
                 cn(
-                  "relative px-4 py-2 text-[15px] font-medium tracking-[-0.01em] transition-colors duration-300 rounded-md",
+                  "relative px-3 xl:px-3.5 2xl:px-4 py-2 text-[14px] 2xl:text-[15px] font-medium tracking-[-0.01em] transition-colors duration-300 rounded-md",
                   isActive
                     ? "text-[#111111] bg-[#F7F7F5]"
                     : "text-[#555555] hover:text-[#111111] hover:bg-[#F7F7F5]/70"

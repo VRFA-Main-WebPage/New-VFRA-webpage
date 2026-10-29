@@ -25,6 +25,7 @@ import CaseStudies from "./pages/CaseStudies";
 import Events from "./pages/Events";
 import Gallery from "./pages/Gallery";
 import Contact from "./pages/Contact";
+import Careers from "./pages/Careers";
 import Verify from "./pages/Verify";
 import NotFound from "./pages/NotFound";
 import Blog from "./pages/Blog";
@@ -46,6 +47,7 @@ import TrackCase from "./pages/TrackCase";
 import SubmitCase from "./pages/SubmitCase";
 import ContentManagement from "./pages/admin/ContentManagement";
 import AdminBlogs from "./pages/admin/Blogs";
+import CareersAdmin from "./pages/admin/CareersAdmin";
 
 const queryClient = new QueryClient();
 
@@ -70,6 +72,7 @@ const App = () => (
                   <Route path="/case-studies" element={<CaseStudies />} />
                   <Route path="/gallery" element={<Gallery />} />
                   <Route path="/events" element={<Events />} />
+                  <Route path="/careers" element={<Careers />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/verify" element={<Verify />} />
                   <Route path="/track-case" element={<TrackCase />} />
@@ -184,6 +187,14 @@ const App = () => (
                     element={
                       <ProtectedRoute>
                         <AdminBlogs />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/careers"
+                    element={
+                      <ProtectedRoute>
+                        <CareersAdmin />
                       </ProtectedRoute>
                     }
                   />

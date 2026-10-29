@@ -20,6 +20,7 @@ import {
   Loader2,
   ArrowRight,
   Images,
+  UserPlus,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -133,6 +134,7 @@ const AdminDashboard = () => {
   ];
 
   const quickActions = [
+    { label: "Careers & JDs", icon: UserPlus, path: "/admin/careers" },
     { label: "Forensic Gallery", icon: Images, path: "/admin/gallery" },
     { label: "Upcoming Events", icon: Calendar, path: "/admin/events" },
     { label: "View Cases", icon: Briefcase, path: "/admin/cases" },
@@ -293,7 +295,7 @@ const AdminDashboard = () => {
         <CardHeader>
           <CardTitle className="text-lg">Quick Actions</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <CardContent className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
           {quickActions.map((action) => (
             <Button
               key={action.label}

@@ -25,6 +25,7 @@ const footerLinks = {
   ],
   institution: [
     { title: "About VFRA", href: "/about" },
+    { title: "Careers & Fellowships", href: "/careers" },
     { title: "Documented Case Studies", href: "/case-studies" },
     { title: "Research & Blog", href: "/blog" },
     { title: "Contact Laboratory", href: "/contact" },

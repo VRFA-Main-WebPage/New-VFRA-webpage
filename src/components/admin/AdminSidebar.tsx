@@ -25,6 +25,7 @@ import {
   Image as ImageIcon,
   Sliders,
   ExternalLink,
+  UserPlus,
 } from "lucide-react";
 import logo from "@/assets/vfra-logo.webp";
 import { Button } from "@/components/ui/button";
@@ -44,6 +45,7 @@ const navGroups = [
       { title: "Upcoming Events", url: "/admin/events", icon: Calendar },
       { title: "Forensic Gallery", url: "/admin/gallery", icon: ImageIcon },
       { title: "Blogs & Insights", url: "/admin/blogs", icon: FileText },
+      { title: "Careers & JDs", url: "/admin/careers", icon: UserPlus },
       { title: "Website CMS", url: "/admin/content", icon: Sliders },
     ],
   },
