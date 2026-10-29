@@ -30,35 +30,35 @@ export function RecognitionStrip() {
               </span>
             </motion.div>
 
-            {/* Logo Placement: AIM on the Left side, AIC-INFED on the Right side */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            {/* Logo Placement: AIM on the Left side, AIC-INFED on the Right side (Side-by-side on all screens including mobile) */}
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-4 md:gap-6">
               {/* Left Side: AIM Logo (Atal Innovation Mission / NITI Aayog) */}
               <motion.div
                 variants={fadeUp}
-                className="accreditation-nobg-card group p-5 sm:p-6 bg-[#FAF9F6] border border-[#E5E5E3] rounded-xl relative overflow-hidden flex flex-col sm:flex-row items-center sm:items-center gap-5 hover:border-[#111111] transition-all"
+                className="accreditation-nobg-card group p-3 sm:p-5 md:p-6 bg-[#FAF9F6] border border-[#E5E5E3] rounded-xl relative overflow-hidden flex flex-col items-center justify-between text-center gap-2.5 sm:gap-4 hover:border-[#111111] transition-all"
               >
                 <div className="accreditation-beam-mask" />
                 <div className="accreditation-card-outline" />
 
                 {/* Left Side AIM Logo */}
-                <div className="w-full sm:w-56 h-20 sm:h-20 shrink-0 flex items-center justify-center p-1">
+                <div className="w-full h-14 sm:h-18 md:h-20 shrink-0 flex items-center justify-center p-1">
                   <img
                     src="/aim-logo.webp"
                     alt="Atal Innovation Mission (AIM), NITI Aayog Logo"
-                    className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                    className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
                     loading="lazy"
                   />
                 </div>
 
                 {/* Information */}
-                <div className="min-w-0 flex-1 relative z-10 text-center sm:text-left">
-                  <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-[#825816] font-bold bg-[#FBF5E8] border border-[#ECD9A8] px-2 py-0.5 rounded inline-block mb-1.5">
+                <div className="min-w-0 w-full relative z-10 text-center space-y-1">
+                  <span className="font-mono text-[8px] sm:text-[9.5px] uppercase tracking-[0.1em] text-[#825816] font-bold bg-[#FBF5E8] border border-[#ECD9A8] px-1.5 sm:px-2 py-0.5 rounded inline-block">
                     FLAGSHIP INITIATIVE
                   </span>
-                  <h3 className="font-heading font-semibold text-sm sm:text-base text-[#111111] leading-tight group-hover:text-[#825816] transition-colors">
+                  <h3 className="font-heading font-semibold text-xs sm:text-sm md:text-base text-[#111111] leading-tight group-hover:text-[#825816] transition-colors">
                     Atal Innovation Mission (AIM)
                   </h3>
-                  <p className="font-mono text-[11px] text-[#555555] mt-1">
+                  <p className="font-mono text-[9px] sm:text-[11px] text-[#555555]">
                     NITI Aayog, Government of India
                   </p>
                 </div>
@@ -67,32 +67,29 @@ export function RecognitionStrip() {
               {/* Right Side: AIC-INFED Logo (AIC-IIM Nagpur Foundation for Entrepreneurship Development) */}
               <motion.div
                 variants={fadeUp}
-                className="accreditation-nobg-card group p-5 sm:p-6 bg-[#FAF9F6] border border-[#E5E5E3] rounded-xl relative overflow-hidden flex flex-col sm:flex-row items-center sm:items-center gap-5 hover:border-[#111111] transition-all"
+                className="accreditation-nobg-card group p-3 sm:p-5 md:p-6 bg-[#FAF9F6] border border-[#E5E5E3] rounded-xl relative overflow-hidden flex flex-col items-center justify-between text-center gap-2.5 sm:gap-4 hover:border-[#111111] transition-all"
               >
                 <div className="accreditation-beam-mask" style={{ animationDelay: "1.2s" }} />
                 <div className="accreditation-card-outline" />
 
                 {/* Right Side AIC-INFED Logo */}
-                <div className="w-full sm:w-56 h-20 sm:h-20 shrink-0 flex items-center justify-center p-1">
+                <div className="w-full h-14 sm:h-18 md:h-20 shrink-0 flex items-center justify-center p-1">
                   <img
                     src="/aic-infed-logo.webp"
-                    alt="AIC-IIM Nagpur Foundation for Entrepreneurship Development (AIC-INFED) Logo"
-                    className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                    alt="AIC-IIM Nagpur Foundation for Entrepreneurship Development Logo"
+                    className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
                     loading="lazy"
                   />
                 </div>
 
                 {/* Information */}
-                <div className="min-w-0 flex-1 relative z-10 text-center sm:text-left">
-                  <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-[#825816] font-bold bg-[#FBF5E8] border border-[#ECD9A8] px-2 py-0.5 rounded inline-block mb-1.5">
+                <div className="min-w-0 w-full relative z-10 text-center space-y-1">
+                  <span className="font-mono text-[8px] sm:text-[9.5px] uppercase tracking-[0.1em] text-[#825816] font-bold bg-[#FBF5E8] border border-[#ECD9A8] px-1.5 sm:px-2 py-0.5 rounded inline-block">
                     INCUBATION PARTNER
                   </span>
-                  <h3 className="font-heading font-semibold text-sm sm:text-base text-[#111111] leading-tight group-hover:text-[#825816] transition-colors">
+                  <h3 className="font-heading font-semibold text-xs sm:text-sm md:text-base text-[#111111] leading-tight group-hover:text-[#825816] transition-colors">
                     AIC-IIM Nagpur Foundation for Entrepreneurship Development
                   </h3>
-                  <p className="font-mono text-[11px] text-[#555555] mt-1">
-                    Short Name: AIC-INFED (IIM Nagpur)
-                  </p>
                 </div>
               </motion.div>
             </div>
