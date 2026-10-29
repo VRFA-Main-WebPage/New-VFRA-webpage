@@ -8,6 +8,18 @@ const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
+// Clean up any stale mock tokens from localStorage so Supabase requests use pure anon credentials
+if (typeof window !== "undefined") {
+  try {
+    const raw = localStorage.getItem("sb-xxwsrnebrcbpjnfodpaa-auth-token");
+    if (raw && (raw.includes("admin-test-uuid") || raw.includes("mock-refresh") || raw.includes(".sig\""))) {
+      localStorage.removeItem("sb-xxwsrnebrcbpjnfodpaa-auth-token");
+    }
+  } catch (e) {
+    // ignore
+  }
+}
+
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
     storage: localStorage,

@@ -45,6 +45,21 @@ const SubmitCase = () => {
     setIsSubmitting(true);
 
     try {
+      // Ensure any corrupt or mock session token in localStorage is purged before public case intake
+      try {
+        const rawToken = localStorage.getItem("sb-xxwsrnebrcbpjnfodpaa-auth-token");
+        if (
+          rawToken &&
+          (rawToken.includes("admin-test-uuid") ||
+            rawToken.includes(".sig\"") ||
+            rawToken.includes("mock-refresh"))
+        ) {
+          localStorage.removeItem("sb-xxwsrnebrcbpjnfodpaa-auth-token");
+        }
+      } catch (e) {
+        // ignore
+      }
+
       const { data, error } = await supabase
         .from("cases")
         .insert({
@@ -59,7 +74,38 @@ const SubmitCase = () => {
         .select("case_id")
         .single();
 
-      if (error) throw error;
+      if (error) {
+        // If rejected due to an invalid JWT from a previous test session, purge token and retry with pure anon credentials
+        if ((error as any)?.code === "PGRST301") {
+          try {
+            localStorage.removeItem("sb-xxwsrnebrcbpjnfodpaa-auth-token");
+          } catch (e) {}
+
+          const retry = await supabase
+            .from("cases")
+            .insert({
+              title: formData.title,
+              description: formData.description,
+              client_name: formData.client_name,
+              client_email: formData.client_email,
+              client_phone: formData.client_phone,
+              category: formData.category,
+              status: "submitted",
+            })
+            .select("case_id")
+            .single();
+
+          if (!retry.error && retry.data) {
+            setSubmittedCaseId(retry.data.case_id);
+            toast({
+              title: "Enquiry submitted successfully",
+              description: "Our team will review your submission and contact you shortly.",
+            });
+            return;
+          }
+        }
+        throw error;
+      }
 
       setSubmittedCaseId(data.case_id);
       toast({
@@ -67,7 +113,11 @@ const SubmitCase = () => {
         description: "Our team will review your submission and contact you shortly.",
       });
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Submission failed";
+      console.error("Case submission error:", err);
+      const postgrestErr = err as { message?: string; details?: string; hint?: string };
+      const message =
+        postgrestErr?.message ||
+        (err instanceof Error ? err.message : "Submission failed");
       toast({
         title: "Error submitting case",
         description: message,

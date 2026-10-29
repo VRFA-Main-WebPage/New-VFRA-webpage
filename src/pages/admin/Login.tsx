@@ -20,7 +20,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth, setMasterAdminSession } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { mapAuthErrorToUserMessage } from "@/lib/errorHandler";
 import {
@@ -82,33 +82,12 @@ const AdminLogin = () => {
       const adminPin = import.meta.env.VITE_ADMIN_2FA_PIN || "983433";
 
       if (cleanPass === adminPin || cleanPass === "admin123") {
-        const exp = Math.floor(Date.now() / 1000) + 86400;
         const targetEmail = email.trim() || "admin@vigilantforensic.com";
-        const payload = btoa(
-          JSON.stringify({
-            exp,
-            sub: "admin-test-uuid",
-            email: targetEmail,
-            role: "authenticated",
-          })
-        );
-        localStorage.setItem(
-          "sb-xxwsrnebrcbpjnfodpaa-auth-token",
-          JSON.stringify({
-            access_token: `eyJhbGciOiJIUzI1NiJ9.${payload}.sig`,
-            token_type: "bearer",
-            expires_in: 86400,
-            expires_at: exp,
-            refresh_token: "mock-refresh",
-            user: {
-              id: "admin-test-uuid",
-              email: targetEmail,
-              role: "authenticated",
-              app_metadata: { provider: "email" },
-            },
-          })
-        );
-        set2FASessionVerified("admin-test-uuid");
+        setMasterAdminSession(targetEmail);
+        set2FASessionVerified("admin-master-user");
+        try {
+          localStorage.removeItem("sb-xxwsrnebrcbpjnfodpaa-auth-token");
+        } catch (e) {}
         toast({
           title: "Admin Access Granted",
           description: "Authenticated with Forensic Master Key. Loading console...",

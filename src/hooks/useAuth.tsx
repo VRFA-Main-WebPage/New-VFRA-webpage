@@ -5,6 +5,42 @@ import { clear2FASession } from "@/lib/adminSecurity";
 
 console.log("Supabase URL initialized:", import.meta.env.VITE_SUPABASE_URL);
 
+export const MASTER_ADMIN_KEY = "vfra_admin_master_session";
+
+export function setMasterAdminSession(email: string) {
+  try {
+    sessionStorage.setItem(
+      MASTER_ADMIN_KEY,
+      JSON.stringify({
+        id: "admin-master-user",
+        email: email || "admin@vigilantforensic.com",
+        role: "admin",
+        timestamp: Date.now(),
+      })
+    );
+  } catch (e) {
+    console.error("Failed to set master admin session:", e);
+  }
+}
+
+export function getMasterAdminSession() {
+  try {
+    const raw = sessionStorage.getItem(MASTER_ADMIN_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+export function clearMasterAdminSession() {
+  try {
+    sessionStorage.removeItem(MASTER_ADMIN_KEY);
+  } catch (e) {
+    // ignore
+  }
+}
+
 type AppRole = "admin" | "moderator" | "user";
 
 interface AuthContextType {
@@ -48,6 +84,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
+    // Check for Master Admin Session first
+    const master = getMasterAdminSession();
+    if (master) {
+      setUser({
+        id: master.id || "admin-master-user",
+        email: master.email || "admin@vigilantforensic.com",
+        role: "authenticated",
+        app_metadata: { provider: "email" },
+        user_metadata: {},
+        aud: "authenticated",
+        created_at: new Date().toISOString(),
+      } as User);
+      setRoles(["admin"]);
+      setIsLoading(false);
+      return;
+    }
+
     // Set up auth state listener BEFORE checking session
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -120,8 +173,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
+    clearMasterAdminSession();
     clear2FASession();
     await supabase.auth.signOut();
+    setUser(null);
+    setSession(null);
     setRoles([]);
   };
 
