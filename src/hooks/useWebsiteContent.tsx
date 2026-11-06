@@ -379,7 +379,7 @@ export type SectionKey =
 
 export function useWebsiteContent<T>(sectionKey: SectionKey, defaultContent: T) {
   const [content, setContent] = useState<T>(defaultContent);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -388,7 +388,6 @@ export function useWebsiteContent<T>(sectionKey: SectionKey, defaultContent: T) 
 
   const fetchContent = async () => {
     try {
-      setLoading(true);
       const { data, error } = await supabase
         .from("website_content")
         .select("content")

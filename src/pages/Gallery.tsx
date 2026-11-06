@@ -43,7 +43,10 @@ export default function Gallery() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  const items = content.items || defaultGalleryContent.items;
+  const items =
+    content.items && content.items.length > 0
+      ? content.items
+      : defaultGalleryContent.items;
 
   const filteredItems = useMemo(() => {
     return items.filter((item) => {
@@ -154,16 +157,7 @@ export default function Gallery() {
         {/* Bento / Editorial Gallery Grid */}
         <section className="py-16 md:py-24">
           <div className="container">
-            {loading ? (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="aspect-[4/3] rounded-lg bg-[#F7F7F5] border border-[#E5E5E3] animate-pulse"
-                  />
-                ))}
-              </div>
-            ) : filteredItems.length === 0 ? (
+            {filteredItems.length === 0 ? (
               <div className="text-center py-20 bg-[#F7F7F5] border border-[#E5E5E3] rounded-lg">
                 <p className="text-sm text-[#555555] mb-4">
                   No gallery records match the selected filter.

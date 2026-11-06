@@ -13,8 +13,12 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(() => {
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("vfra-theme") as Theme;
-      return stored === "cyber" ? "cyber" : "vigilant";
+      try {
+        const stored = localStorage.getItem("vfra-theme") as Theme;
+        return stored === "cyber" ? "cyber" : "vigilant";
+      } catch (e) {
+        return "vigilant";
+      }
     }
     return "vigilant";
   });
@@ -28,8 +32,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     // Add new theme class
     root.classList.add(`theme-${theme}`);
     
-    // Store in localStorage
-    localStorage.setItem("vfra-theme", theme);
+    // Store in localStorage safely
+    try {
+      localStorage.setItem("vfra-theme", theme);
+    } catch (e) {}
   }, [theme]);
 
   const setTheme = (newTheme: Theme) => {

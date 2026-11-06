@@ -5,13 +5,11 @@ import { SEO } from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { ArrowRight, BookOpen } from "lucide-react";
-import { Database } from "@/integrations/supabase/types";
-
-type Blog = Database["public"]["Tables"]["blogs"]["Row"];
+import { DEFAULT_BLOGS, Blog } from "@/data/defaultBlogs";
 
 export default function Blog() {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [blogs, setBlogs] = useState<Blog[]>(DEFAULT_BLOGS);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function fetchBlogs() {
@@ -22,10 +20,11 @@ export default function Blog() {
           .eq("status", "published")
           .order("published_at", { ascending: false });
 
-        if (error) throw error;
-        setBlogs(data || []);
+        if (!error && data && data.length > 0) {
+          setBlogs(data);
+        }
       } catch (error) {
-        console.error("Error fetching blogs:", error);
+        console.warn("Using default blog articles:", error);
       } finally {
         setLoading(false);
       }

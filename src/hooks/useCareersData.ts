@@ -276,7 +276,7 @@ export function useCareersData() {
     };
   });
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   // Fetch from Supabase on mount
   useEffect(() => {

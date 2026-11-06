@@ -54,7 +54,7 @@ export function Navbar() {
 
         {/* Desktop Navigation */}
         <nav
-          className="hidden xl:flex items-center gap-1.5"
+          className="hidden lg:flex items-center gap-1 xl:gap-1.5"
           aria-label="Primary Navigation"
         >
           {navLinks.map((link) => (
@@ -64,7 +64,7 @@ export function Navbar() {
               end={link.href === "/"}
               className={({ isActive }) =>
                 cn(
-                  "relative px-3 xl:px-3.5 2xl:px-4 py-2 text-[14px] 2xl:text-[15px] font-medium tracking-[-0.01em] transition-colors duration-300 rounded-md",
+                  "relative px-2.5 xl:px-3.5 2xl:px-4 py-2 text-[13px] xl:text-[14px] 2xl:text-[15px] font-medium tracking-[-0.01em] transition-colors duration-200 rounded-md",
                   isActive
                     ? "text-[#111111] bg-[#F7F7F5]"
                     : "text-[#555555] hover:text-[#111111] hover:bg-[#F7F7F5]/70"
@@ -80,10 +80,10 @@ export function Navbar() {
         <div className="hidden lg:flex items-center gap-3 shrink-0">
           <Link to="/submit-case">
             <Button
-              className="h-11 px-5 bg-[#111111] text-white hover:bg-[#2A2A2A] text-sm font-medium tracking-[-0.01em] rounded-md gap-2 transition-all duration-300 shadow-sm"
+              className="h-10 xl:h-11 px-4 xl:px-5 bg-[#111111] text-white hover:bg-[#2A2A2A] text-xs xl:text-sm font-medium tracking-[-0.01em] rounded-md gap-1.5 xl:gap-2 transition-all duration-300 shadow-sm"
             >
               Register Case
-              <ArrowUpRight className="h-4 w-4" />
+              <ArrowUpRight className="h-3.5 w-3.5 xl:h-4 xl:w-4" />
             </Button>
           </Link>
         </div>
@@ -91,7 +91,7 @@ export function Navbar() {
         {/* Mobile Menu Trigger */}
         <button
           type="button"
-          className="xl:hidden p-2.5 text-[#111111] hover:bg-[#F7F7F5] rounded-md transition-colors ml-auto lg:ml-0"
+          className="lg:hidden p-2 text-[#111111] hover:bg-[#F7F7F5] rounded-md transition-colors ml-auto"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle navigation menu"
         >
@@ -106,8 +106,8 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.35, ease: APPLE_EASE }}
-            className="xl:hidden border-t border-[#E5E5E3] bg-white/95 backdrop-blur-xl overflow-hidden"
+            transition={{ duration: 0.25, ease: APPLE_EASE }}
+            className="lg:hidden border-t border-[#E5E5E3] bg-white/95 backdrop-blur-xl overflow-hidden"
           >
             <nav className="container py-5 flex flex-col gap-1">
               {navLinks.map((link, idx) => (

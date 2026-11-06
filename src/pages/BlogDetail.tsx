@@ -8,13 +8,14 @@ import { format } from "date-fns";
 import { ArrowLeft } from "lucide-react";
 import { Database } from "@/integrations/supabase/types";
 
-type Blog = Database["public"]["Tables"]["blogs"]["Row"];
+import { DEFAULT_BLOGS, Blog } from "@/data/defaultBlogs";
 
 export default function BlogDetail() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const [blog, setBlog] = useState<Blog | null>(null);
-  const [loading, setLoading] = useState(true);
+  const defaultArticle = DEFAULT_BLOGS.find((b) => b.slug === slug) || null;
+  const [blog, setBlog] = useState<Blog | null>(defaultArticle);
+  const [loading, setLoading] = useState(defaultArticle ? false : true);
 
   useEffect(() => {
     async function fetchBlog() {
@@ -25,24 +26,25 @@ export default function BlogDetail() {
           .select("*")
           .eq("slug", slug)
           .eq("status", "published")
-          .single();
+          .maybeSingle();
 
-        if (error || !data) {
+        if (data) {
+          setBlog(data);
+        } else if (!defaultArticle) {
           navigate("/404");
           return;
         }
-
-        setBlog(data);
       } catch (error) {
-        console.error("Error fetching blog:", error);
-        navigate("/404");
+        if (!defaultArticle) {
+          navigate("/404");
+        }
       } finally {
         setLoading(false);
       }
     }
 
     fetchBlog();
-  }, [slug, navigate]);
+  }, [slug, navigate, defaultArticle]);
 
   if (loading) {
     return (
