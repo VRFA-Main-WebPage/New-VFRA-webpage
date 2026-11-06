@@ -48,7 +48,7 @@ export interface CareersModuleData {
 }
 
 export const DEFAULT_CAREERS_SETTINGS: CareersSettings = {
-  recipientEmail: "contact@vigilantforensic.com",
+  recipientEmail: "hiring@vigilantforensic.com",
   ccEmail: "careers@vigilantforensic.com",
   enableDirectEmail: true,
 };

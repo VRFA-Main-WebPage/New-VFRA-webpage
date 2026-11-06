@@ -731,7 +731,7 @@ export default function CareersAdmin() {
                     required
                     value={recipientEmail}
                     onChange={(e) => setRecipientEmail(e.target.value)}
-                    placeholder="careers@vigilantforensic.com"
+                    placeholder="hiring@vigilantforensic.com"
                     className="text-xs h-9"
                   />
                   <p className="text-[11px] text-[#71717A]">
@@ -745,7 +745,7 @@ export default function CareersAdmin() {
                     type="email"
                     value={ccEmail}
                     onChange={(e) => setCcEmail(e.target.value)}
-                    placeholder="contact@vigilantforensic.com"
+                    placeholder="careers@vigilantforensic.com"
                     className="text-xs h-9"
                   />
                   <p className="text-[11px] text-[#71717A]">

@@ -212,7 +212,7 @@ Resume: ${resumeFileName || "Sent via direct email attachment"}
       setIsSubmitting(false);
       toast({
         title: "Submission Error",
-        description: "An error occurred while saving your application. Please email careers@vigilantforensic.com directly.",
+        description: "An error occurred while saving your application. Please email hiring@vigilantforensic.com directly.",
         variant: "destructive",
       });
     }
@@ -515,19 +515,14 @@ Resume: ${resumeFileName || "Sent via direct email attachment"}
                         )}
 
                         {/* Hiring Contact Info */}
-                        <div className="pt-3 border-t border-[#EAE9E4] space-y-1 text-xs">
-                          <div className="flex items-center justify-between font-mono text-[11px] text-[#111111] font-semibold">
-                            <span>Hiring Desk: Ameya Gadhikar</span>
-                            <a
-                              href="tel:+919370712004"
-                              className="text-[#825816] hover:underline flex items-center gap-1 font-mono"
-                            >
-                              <Phone className="h-3 w-3" /> +91 93707 12004
-                            </a>
-                          </div>
-                          <p className="text-[10.5px] text-[#71717A] font-mono">
-                            Head of Technical Operations &amp; Growth · VFRA
-                          </p>
+                        <div className="pt-3 border-t border-[#EAE9E4] flex items-center justify-between font-mono text-[11px] text-[#111111]">
+                          <span className="text-[#555555]">Hiring Desk:</span>
+                          <a
+                            href="mailto:hiring@vigilantforensic.com"
+                            className="text-[#825816] hover:underline flex items-center gap-1.5 font-mono font-semibold"
+                          >
+                            <Mail className="h-3 w-3" /> hiring@vigilantforensic.com
+                          </a>
                         </div>
                       </div>
 
@@ -788,9 +783,12 @@ Resume: ${resumeFileName || "Sent via direct email attachment"}
             </div>
 
             <div className="p-3 rounded-lg bg-[#FAF9F6] border border-[#E5E5E3] text-[11px] text-[#555555] font-mono flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-              <span>Hiring Desk: Ameya Gadhikar</span>
-              <a href="tel:+919370712004" className="text-[#825816] font-semibold hover:underline flex items-center gap-1">
-                <Phone className="h-3 w-3" /> +91 93707 12004
+              <span>Direct Applications Desk:</span>
+              <a
+                href="mailto:hiring@vigilantforensic.com"
+                className="text-[#825816] font-semibold hover:underline flex items-center gap-1.5"
+              >
+                <Mail className="h-3 w-3" /> hiring@vigilantforensic.com
               </a>
             </div>
 
