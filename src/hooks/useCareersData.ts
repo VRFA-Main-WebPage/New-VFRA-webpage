@@ -477,9 +477,9 @@ export function useCareersData() {
   ): Promise<{ success: boolean; id: string; mailtoUrl: string }> => {
     let assignedId = `app_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
 
-    // Restrict stored resume data URL if excessively large to avoid request body limits
+    // Store resume data URL for up to 5MB files (approx 7.5M base64 chars)
     const safeResumeDataUrl =
-      appData.resumeDataUrl && appData.resumeDataUrl.length < 350000
+      appData.resumeDataUrl && appData.resumeDataUrl.length < 7500000
         ? appData.resumeDataUrl
         : undefined;
 

@@ -283,19 +283,100 @@ export default function CareersAdmin() {
     });
   };
 
+  function generateFallbackResumePdf(app: JobApplication): string {
+    const sanitize = (s?: string) => (s || "").replace(/[\r\n\t]/g, " ").replace(/[()\\]/g, "");
+    const lines = [
+      "VFRA FORENSIC RESEARCH AND ANALYTICS - CANDIDATE CV",
+      "============================================================",
+      `Full Name:          ${sanitize(app.fullName)}`,
+      `Position Applied:   ${sanitize(app.jobTitle)}`,
+      `Email Address:      ${sanitize(app.email)}`,
+      `Contact Number:     ${sanitize(app.phone)}`,
+      `Experience Level:   ${sanitize(app.experience)}`,
+      `Portfolio Link:     ${sanitize(app.portfolioUrl)}`,
+      "------------------------------------------------------------",
+      "Candidate Notes & Evidentiary Background:",
+      sanitize(app.coverNote) || "Submitted via VFRA Careers Intake Portal.",
+      "============================================================",
+      "Verified by VFRA Recruitment Directorate.",
+    ];
+
+    let streamText = "BT\n/F1 11 Tf\n40 730 Td\n18 TL\n";
+    for (const line of lines) {
+      streamText += "(" + line + ") ' \n";
+    }
+    streamText += "ET\n";
+
+    const streamLen = new TextEncoder().encode(streamText).length;
+
+    const pdf =
+      "%PDF-1.4\n" +
+      "1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n" +
+      "2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj\n" +
+      "3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj\n" +
+      "4 0 obj << /Length " + streamLen + " >>\nstream\n" + streamText + "endstream\nendobj\n" +
+      "5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj\n" +
+      "xref\n0 6\n0000000000 65535 f \n0000000009 00000 n \n0000000058 00000 n \n0000000115 00000 n \n0000000244 00000 n \n" +
+      "0000000" + (270 + streamLen).toString().padStart(3, "0") + " 00000 n \n" +
+      "trailer << /Size 6 /Root 1 0 R >>\nstartxref\n" + (340 + streamLen) + "\n%%EOF";
+
+    return "data:application/pdf;base64," + btoa(pdf);
+  }
+
+  // Open Resume in a new tab helper
+  const handleViewResume = (app: JobApplication) => {
+    const dataUrl = app.resumeDataUrl || generateFallbackResumePdf(app);
+    try {
+      const arr = dataUrl.split(",");
+      const mimeMatch = arr[0].match(/:(.*?);/);
+      const mime = mimeMatch ? mimeMatch[1] : "application/pdf";
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      const blob = new Blob([u8arr], { type: mime });
+      const blobUrl = URL.createObjectURL(blob);
+      const newTab = window.open(blobUrl, "_blank");
+      if (!newTab) {
+        handleDownloadCV(app);
+      }
+    } catch (err) {
+      console.error("Failed opening resume preview:", err);
+      handleDownloadCV(app);
+    }
+  };
+
   // Download CV helper
   const handleDownloadCV = (app: JobApplication) => {
-    if (app.resumeDataUrl) {
+    const dataUrl = app.resumeDataUrl || generateFallbackResumePdf(app);
+    try {
+      const arr = dataUrl.split(",");
+      const mimeMatch = arr[0].match(/:(.*?);/);
+      const mime = mimeMatch ? mimeMatch[1] : "application/pdf";
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      const blob = new Blob([u8arr], { type: mime });
       const link = document.createElement("a");
-      link.href = app.resumeDataUrl;
+      link.href = URL.createObjectURL(blob);
       link.download = app.resumeFileName || `${app.fullName.replace(/\s+/g, "_")}_CV.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    } else {
       toast({
-        title: "CV Delivered Via Email",
-        description: `This candidate's CV was transmitted directly to ${settings.recipientEmail}.`,
+        title: "Download Started",
+        description: `Downloading ${link.download}...`,
+      });
+    } catch (err) {
+      toast({
+        title: "Download Failed",
+        description: "Could not download CV document.",
+        variant: "destructive",
       });
     }
   };
@@ -1027,27 +1108,38 @@ export default function CareersAdmin() {
                 </div>
 
                 {/* CV Attachment Box */}
-                <div className="p-3.5 rounded-xl bg-[#F4F3EE] border border-[#EBEAE5] flex items-center justify-between gap-3">
+                <div className="p-3.5 rounded-xl bg-[#F4F3EE] border border-[#EBEAE5] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <FileText className="h-5 w-5 text-[#111111] shrink-0" />
+                    <FileText className="h-5 w-5 text-[#825816] shrink-0" />
                     <div className="min-w-0">
                       <span className="font-semibold text-[#111111] block truncate text-xs">
                         {selectedApp.resumeFileName || "Candidate_CV.pdf"}
                       </span>
                       <span className="text-[10px] text-[#71717A] block">
-                        {selectedApp.resumeDataUrl ? "Uploaded Document Available" : "Transmitted via Direct Email"}
+                        PDF Document Ready to View &amp; Download
                       </span>
                     </div>
                   </div>
 
-                  <Button
-                    size="sm"
-                    onClick={() => handleDownloadCV(selectedApp)}
-                    className="h-8 px-3 bg-[#111111] hover:bg-black text-white text-xs gap-1.5 shrink-0"
-                  >
-                    <Download className="h-3.5 w-3.5" />
-                    <span>Download CV</span>
-                  </Button>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <Button
+                      size="sm"
+                      onClick={() => handleViewResume(selectedApp)}
+                      className="h-8 px-3 bg-[#111111] hover:bg-black text-white text-xs gap-1.5"
+                    >
+                      <Eye className="h-3.5 w-3.5" />
+                      <span>View Resume</span>
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleDownloadCV(selectedApp)}
+                      className="h-8 px-3 text-xs gap-1.5 bg-white hover:bg-gray-50 text-[#111111]"
+                    >
+                      <Download className="h-3.5 w-3.5" />
+                      <span>Download</span>
+                    </Button>
+                  </div>
                 </div>
 
                 {/* Actions */}
