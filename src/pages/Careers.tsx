@@ -23,6 +23,12 @@ import {
   FileText,
   AlertCircle,
   ExternalLink,
+  ChevronDown,
+  ChevronUp,
+  Code2,
+  TrendingUp,
+  Palette,
+  Phone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -61,9 +67,28 @@ export default function Careers() {
   const { activeJobs, submitApplication, settings, loading } = useCareersData();
 
   const [selectedJob, setSelectedJob] = useState<JobPosting | null>(null);
+  const [expandedJobId, setExpandedJobId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const toggleExpandJob = (jobId: string) => {
+    setExpandedJobId((prev) => (prev === jobId ? null : jobId));
+  };
+
+  const getJobIcon = (title: string) => {
+    const lower = title.toLowerCase();
+    if (lower.includes("developer") || lower.includes("stack") || lower.includes("engineer")) {
+      return Code2;
+    }
+    if (lower.includes("business") || lower.includes("development") || lower.includes("executive")) {
+      return TrendingUp;
+    }
+    if (lower.includes("social") || lower.includes("visual") || lower.includes("intern")) {
+      return Palette;
+    }
+    return Briefcase;
+  };
 
   // Form State
   const [fullName, setFullName] = useState("");
@@ -387,94 +412,160 @@ Resume: ${resumeFileName || "Sent via direct email attachment"}
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {activeJobs.map((job) => (
-                  <div
-                    key={job.id}
-                    className="p-6 sm:p-7 rounded-2xl bg-[#FAF9F6] border border-[#E5E5E3] hover:border-[#111111] transition-all flex flex-col justify-between group shadow-2xs hover:shadow-xs"
-                  >
-                    <div className="space-y-4">
-                      {/* Top Badges */}
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="h-11 w-11 rounded-xl bg-white border border-[#E5E5E3] group-hover:bg-[#111111] group-hover:text-white group-hover:border-[#111111] flex items-center justify-center shrink-0 transition-colors shadow-2xs">
-                          <Briefcase className="h-5 w-5 text-[#111111] group-hover:text-white transition-colors" />
-                        </div>
-                        <div className="flex flex-wrap items-center gap-2 justify-end text-[11px] font-mono">
-                          <span className="px-2 py-0.5 rounded bg-white border border-[#E5E5E3] text-[#555555]">
-                            {job.type}
-                          </span>
-                          <span className="px-2 py-0.5 rounded bg-[#111111] text-white">
-                            {job.experience}
-                          </span>
-                        </div>
-                      </div>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {activeJobs.map((job) => {
+                  const JobIcon = getJobIcon(job.title);
+                  const isExpanded = expandedJobId === job.id;
 
-                      {/* Title & Dept */}
-                      <div>
-                        <span className="font-mono text-[10px] text-[#825816] uppercase tracking-wider font-semibold">
-                          {job.department}
-                        </span>
-                        <h3 className="font-heading font-semibold text-lg text-[#111111] group-hover:text-[#825816] transition-colors mt-0.5">
-                          {job.title}
-                        </h3>
-                        <p className="text-xs text-[#555555] mt-1 flex items-center gap-1.5 font-mono">
-                          <MapPin className="h-3 w-3 text-[#71717A]" />
-                          {job.location}
-                        </p>
-                      </div>
-
-                      <p className="text-xs sm:text-sm text-[#555555] leading-relaxed">
-                        {job.summary}
-                      </p>
-
-                      {/* Responsibilities */}
-                      {job.responsibilities && job.responsibilities.length > 0 && (
-                        <div className="pt-2 border-t border-[#EAE9E4]">
-                          <h4 className="font-mono text-[10.5px] uppercase tracking-wider text-[#111111] font-semibold mb-2">
-                            Core Responsibilities:
-                          </h4>
-                          <ul className="space-y-1.5 text-xs text-[#555555]">
-                            {job.responsibilities.slice(0, 3).map((resp, i) => (
-                              <li key={i} className="flex items-start gap-2">
-                                <CheckCircle2 className="h-3.5 w-3.5 text-[#047857] shrink-0 mt-0.5" />
-                                <span>{resp}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      {/* Skills tags */}
-                      {job.skills && job.skills.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 pt-1">
-                          {job.skills.map((skill) => (
-                            <span
-                              key={skill}
-                              className="font-mono text-[10px] px-2 py-0.5 rounded bg-white border border-[#E5E5E3] text-[#444444]"
-                            >
-                              {skill}
+                  return (
+                    <div
+                      key={job.id}
+                      className="p-6 sm:p-7 rounded-2xl bg-[#FAF9F6] border border-[#E5E5E3] hover:border-[#111111] transition-all flex flex-col justify-between group shadow-2xs hover:shadow-xs"
+                    >
+                      <div className="space-y-4">
+                        {/* Top Badges */}
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="h-11 w-11 rounded-xl bg-white border border-[#E5E5E3] group-hover:bg-[#111111] group-hover:text-white group-hover:border-[#111111] flex items-center justify-center shrink-0 transition-colors shadow-2xs">
+                            <JobIcon className="h-5 w-5 text-[#111111] group-hover:text-white transition-colors" />
+                          </div>
+                          <div className="flex flex-wrap items-center gap-2 justify-end text-[11px] font-mono">
+                            <span className="px-2 py-0.5 rounded bg-white border border-[#E5E5E3] text-[#555555]">
+                              {job.type}
                             </span>
-                          ))}
+                            <span className="px-2 py-0.5 rounded bg-[#111111] text-white">
+                              {job.experience}
+                            </span>
+                          </div>
                         </div>
-                      )}
-                    </div>
 
-                    {/* Bottom CTA */}
-                    <div className="pt-6 mt-6 border-t border-[#EAE9E4] flex items-center justify-between gap-4">
-                      <span className="text-[11px] font-mono text-[#71717A]">
-                        Ref: VFRA-{job.id.substring(0, 10).toUpperCase()}
-                      </span>
-                      <Button
-                        type="button"
-                        onClick={() => handleOpenApply(job)}
-                        className="h-9 px-4 bg-[#111111] hover:bg-black text-white text-xs font-mono uppercase tracking-[0.08em] rounded-lg flex items-center gap-2 group-hover:scale-[1.02] transition-transform"
-                      >
-                        <span>Apply For Role</span>
-                        <ArrowRight className="h-3.5 w-3.5" />
-                      </Button>
+                        {/* Title & Dept */}
+                        <div>
+                          <span className="font-mono text-[10px] text-[#825816] uppercase tracking-wider font-semibold">
+                            {job.department}
+                          </span>
+                          <h3 className="font-heading font-semibold text-lg text-[#111111] group-hover:text-[#825816] transition-colors mt-0.5">
+                            {job.title}
+                          </h3>
+                          <p className="text-xs text-[#555555] mt-1 flex items-center gap-1.5 font-mono">
+                            <MapPin className="h-3 w-3 text-[#71717A]" />
+                            {job.location}
+                          </p>
+                        </div>
+
+                        {/* Performance & Opportunity Badge */}
+                        {job.salary && (
+                          <div className="p-2.5 rounded-lg bg-[#FBF5E8] border border-[#ECD9A8] text-[11px] font-mono text-[#825816] flex items-start gap-1.5 font-medium leading-relaxed">
+                            <Sparkles className="h-3.5 w-3.5 shrink-0 mt-0.5 text-[#825816]" />
+                            <span>{job.salary}</span>
+                          </div>
+                        )}
+
+                        <p className="text-xs sm:text-sm text-[#555555] leading-relaxed">
+                          {job.summary}
+                        </p>
+
+                        {/* Responsibilities */}
+                        {job.responsibilities && job.responsibilities.length > 0 && (
+                          <div className="pt-2 border-t border-[#EAE9E4] space-y-2">
+                            <h4 className="font-mono text-[10.5px] uppercase tracking-wider text-[#111111] font-semibold">
+                              Key Responsibilities:
+                            </h4>
+                            <ul className="space-y-1.5 text-xs text-[#555555]">
+                              {(isExpanded ? job.responsibilities : job.responsibilities.slice(0, 3)).map(
+                                (resp, i) => (
+                                  <li key={i} className="flex items-start gap-2">
+                                    <CheckCircle2 className="h-3.5 w-3.5 text-[#047857] shrink-0 mt-0.5" />
+                                    <span>{resp}</span>
+                                  </li>
+                                )
+                              )}
+                            </ul>
+                          </div>
+                        )}
+
+                        {/* Expandable Qualifications & Hiring Info */}
+                        {isExpanded && job.qualifications && job.qualifications.length > 0 && (
+                          <div className="pt-3 border-t border-[#EAE9E4] space-y-2">
+                            <h4 className="font-mono text-[10.5px] uppercase tracking-wider text-[#111111] font-semibold">
+                              Required Skills &amp; Qualifications:
+                            </h4>
+                            <ul className="space-y-1.5 text-xs text-[#555555]">
+                              {job.qualifications.map((qual, i) => (
+                                <li key={i} className="flex items-start gap-2">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-[#825816] shrink-0 mt-1.5" />
+                                  <span>{qual}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {/* Skills tags */}
+                        {job.skills && job.skills.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 pt-1">
+                            {job.skills.map((skill) => (
+                              <span
+                                key={skill}
+                                className="font-mono text-[10px] px-2 py-0.5 rounded bg-white border border-[#E5E5E3] text-[#444444]"
+                              >
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Hiring Contact Info */}
+                        <div className="pt-3 border-t border-[#EAE9E4] space-y-1 text-xs">
+                          <div className="flex items-center justify-between font-mono text-[11px] text-[#111111] font-semibold">
+                            <span>Hiring Desk: Ameya Gadhikar</span>
+                            <a
+                              href="tel:+919370712004"
+                              className="text-[#825816] hover:underline flex items-center gap-1 font-mono"
+                            >
+                              <Phone className="h-3 w-3" /> +91 93707 12004
+                            </a>
+                          </div>
+                          <p className="text-[10.5px] text-[#71717A] font-mono">
+                            Head of Technical Operations &amp; Growth · VFRA
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Bottom CTA & Expand Toggle */}
+                      <div className="pt-5 mt-5 border-t border-[#EAE9E4] space-y-3">
+                        <div className="flex items-center justify-between gap-2">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => toggleExpandJob(job.id)}
+                            className="h-8 px-2 text-[11px] font-mono text-[#555555] hover:text-[#111111] flex items-center gap-1 -ml-2"
+                          >
+                            <span>{isExpanded ? "Collapse Details" : "View Full JD Details"}</span>
+                            {isExpanded ? (
+                              <ChevronUp className="h-3.5 w-3.5" />
+                            ) : (
+                              <ChevronDown className="h-3.5 w-3.5" />
+                            )}
+                          </Button>
+
+                          <span className="text-[10px] font-mono text-[#71717A]">
+                            Ref: VFRA-{job.id.substring(9, 17).toUpperCase()}
+                          </span>
+                        </div>
+
+                        <Button
+                          type="button"
+                          onClick={() => handleOpenApply(job)}
+                          className="w-full h-10 bg-[#111111] hover:bg-black text-white text-xs font-mono uppercase tracking-[0.08em] rounded-lg flex items-center justify-center gap-2 group-hover:scale-[1.01] transition-transform"
+                        >
+                          <span>Apply For Role</span>
+                          <ArrowRight className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -685,15 +776,22 @@ Resume: ${resumeFileName || "Sent via direct email attachment"}
 
             <div>
               <label className="block text-xs font-mono text-[#111111] mb-1 font-medium">
-                Cover Note / Key Casework Experience
+                Cover Note / Key Experience &amp; Projects
               </label>
               <Textarea
                 rows={3}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="Briefly highlight your forensic suite experience, past investigations, or certifications..."
+                placeholder="Briefly highlight your technical projects, experience, or what makes you a great fit..."
                 className="text-xs bg-[#FAF9F6] border-[#E5E5E3] focus-visible:ring-black/10 resize-none"
               />
+            </div>
+
+            <div className="p-3 rounded-lg bg-[#FAF9F6] border border-[#E5E5E3] text-[11px] text-[#555555] font-mono flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+              <span>Hiring Desk: Ameya Gadhikar</span>
+              <a href="tel:+919370712004" className="text-[#825816] font-semibold hover:underline flex items-center gap-1">
+                <Phone className="h-3 w-3" /> +91 93707 12004
+              </a>
             </div>
 
             <div className="flex items-center justify-end gap-3 pt-2">

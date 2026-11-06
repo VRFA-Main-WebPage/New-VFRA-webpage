@@ -48,14 +48,152 @@ export interface CareersModuleData {
 }
 
 export const DEFAULT_CAREERS_SETTINGS: CareersSettings = {
-  recipientEmail: "careers@vigilantforensic.com",
-  ccEmail: "contact@vigilantforensic.com",
+  recipientEmail: "contact@vigilantforensic.com",
+  ccEmail: "careers@vigilantforensic.com",
   enableDirectEmail: true,
 };
 
-export const DEFAULT_JOB_POSTINGS: JobPosting[] = [];
+export const DEFAULT_JOB_POSTINGS: JobPosting[] = [
+  {
+    id: "vfra-job-full-stack-developer",
+    title: "Full Stack Developer",
+    department: "Software & Technology Engineering",
+    location: "Nagpur, Maharashtra (On-site / Hybrid)",
+    type: "Full-Time",
+    experience: "Freshers & candidates with relevant experience",
+    salary: "Performance-based incentives & long-term opportunities",
+    summary:
+      "Contribute to both frontend and backend development of modern web applications—supporting data-heavy dashboards, investigation workflows, case or evidence-related records, analytics, and internal or client-facing digital security platforms.",
+    responsibilities: [
+      "Develop and maintain responsive frontend interfaces using suitable web technologies and frameworks (React, Angular, Vue).",
+      "Build reusable UI components, pages, forms, tables, dashboards, and application layouts.",
+      "Develop backend functionality, server-side business logic, and RESTful APIs (Node.js/Express, Java/Spring Boot, Python).",
+      "Integrate frontend applications with backend services and handle API requests, responses, loading states, and error handling.",
+      "Design, implement, and maintain database schemas, models, relationships, and data operations (MySQL, PostgreSQL, MongoDB).",
+      "Implement authentication, role-based authorisation, input validation, and secure application practices.",
+      "Debug frontend, backend, and database issues; identify root causes and implement fixes.",
+      "Write readable, maintainable, and well-structured code following project development conventions.",
+      "Use Git for version control and collaborate through branches, code reviews, and pull requests.",
+      "Coordinate with technical and management teams to understand requirements, estimate tasks, and communicate progress.",
+    ],
+    qualifications: [
+      "Strong foundation in at least one web programming language: JavaScript, TypeScript, Java, or Python.",
+      "Understanding of frontend fundamentals: HTML5, CSS3, JavaScript, responsive design, and browser debugging.",
+      "Practical knowledge of at least one modern frontend framework (React, Angular, Vue) or equivalent development experience.",
+      "Understanding of backend development: server-side programming, routing, request/response handling, and REST API concepts.",
+      "Practical knowledge of backend technologies (Node.js/Express, Java/Spring Boot, Python/Django or Flask).",
+      "Ability to work with relational (MySQL, PostgreSQL) or NoSQL (MongoDB) databases and perform CRUD operations.",
+      "Understanding of HTTP methods, status codes, JSON, API integration, and API testing using Postman or similar tools.",
+      "Basic Git and GitHub knowledge, debugging skills, problem-solving ability, and willingness to learn.",
+      "Suitable for CS, IT, engineering graduates, final-year students, and early-career developers with personal or academic projects.",
+    ],
+    skills: [
+      "React",
+      "TypeScript",
+      "Node.js",
+      "Express.js",
+      "PostgreSQL",
+      "MongoDB",
+      "REST APIs",
+      "Git & GitHub",
+      "Application Security",
+    ],
+    isActive: true,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "vfra-job-business-development-executive",
+    title: "Business Development Executive",
+    department: "Business Development & Client Relations",
+    location: "Nagpur, Maharashtra (On-site / Hybrid)",
+    type: "Full-Time",
+    experience: "Freshers & candidates with relevant experience",
+    salary: "Performance-based incentives & Pre-Placement / long-term opportunity",
+    summary:
+      "Support VFRA's business growth across corporate organisations, law firms, fintech companies, and public-sector ecosystems by identifying potential clients, understanding operational and investigation requirements, presenting forensic capabilities, and qualifying business opportunities.",
+    responsibilities: [
+      "Research industries, organisations, decision-makers, and potential clients relevant to VFRA's service areas.",
+      "Generate leads through professional networking, referrals, email outreach, calls, LinkedIn, events, and other appropriate channels.",
+      "Identify client requirements and qualify opportunities based on need, relevance, urgency, and potential scope.",
+      "Introduce VFRA's services—including digital forensics, cybercrime investigation, OSINT, blockchain analysis, and investigation solutions—in clear, non-technical business language.",
+      "Schedule meetings and coordinate discussions between prospective clients, management, and technical teams.",
+      "Prepare and support proposals, capability presentations, quotations, company profiles, and follow-up communication.",
+      "Maintain an organised record of leads, meetings, conversations, follow-ups, and opportunity status in a CRM or tracking sheet.",
+      "Build and maintain professional relationships with clients, institutional contacts, and industry stakeholders.",
+      "Track market developments, competitor positioning, client pain points, and relevant industry opportunities.",
+      "Work with the core team to improve outreach strategies, business pipelines, and conversion processes.",
+    ],
+    qualifications: [
+      "Strong verbal and written communication, presentation, and interpersonal skills.",
+      "Confidence in speaking with professionals, institutions, and business decision-makers.",
+      "Research skills and the ability to identify relevant organisations and qualified potential opportunities.",
+      "Persuasive but professional consultative communication, active listening, and relationship-building ability.",
+      "Basic understanding of lead generation, sales processes, and business development fundamentals.",
+      "Good organisation, follow-up discipline, and ability to maintain accurate records.",
+      "Willingness to learn technical service offerings and explain them accurately to non-technical audiences.",
+      "Professional conduct, discretion, and respect for confidentiality.",
+      "Suitable for graduates, final-year students, and early-career candidates from business, management, commerce, engineering, or related backgrounds.",
+    ],
+    skills: [
+      "Lead Generation",
+      "Client Outreach",
+      "B2B Sales",
+      "CRM & Pipeline",
+      "Proposals & Pitches",
+      "Market Research",
+      "Consultative Engagement",
+      "Professional Networking",
+    ],
+    isActive: true,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "vfra-job-social-media-intern",
+    title: "Social Media & Visual Communications Intern",
+    department: "Marketing & Brand Communications",
+    location: "Nagpur, Maharashtra (On-site / Hybrid)",
+    type: "Internship (3 Months)",
+    experience: "Freshers & students welcome",
+    salary: "Performance-based Pre-Placement Offer (PPO) & Internship Certificate",
+    summary:
+      "Help build and elevate VFRA's digital brand by combining social media management, graphic design, content creation, branding, and digital communications across LinkedIn, Instagram, and web platforms in a specialised cyber intelligence environment.",
+    responsibilities: [
+      "Create graphics, carousels, posters, banners, and other social media creatives.",
+      "Create and manage content for LinkedIn, Instagram, and other digital platforms.",
+      "Develop visual content around cybersecurity, cybercrime, digital forensics, and VFRA's work.",
+      "Assist with reels, short-form videos, and promotional content.",
+      "Research industry trends and convert them into engaging digital content.",
+      "Help maintain and execute the social media content calendar.",
+      "Support branding, marketing campaigns, events, announcements, and product launches.",
+      "Maintain consistency across VFRA's visual identity, typography, and communication.",
+      "Work directly with the founding team on creative and marketing initiatives.",
+    ],
+    qualifications: [
+      "Strong creative and visual sense with an eye for clean digital layouts and typography.",
+      "Basic knowledge of Canva, Figma, Photoshop, Illustrator, or similar design tools.",
+      "Understanding of social media platforms and content formats (carousels, reels, posts).",
+      "Good written and verbal communication skills.",
+      "Ability to create professional, engaging visual content.",
+      "Willingness to learn and take ownership of assigned creative work.",
+      "Video editing and reel creation skills are preferred (Premiere Pro, CapCut, etc.).",
+      "Suitable for students and freshers interested in social media, graphic design, digital marketing, and content creation.",
+    ],
+    skills: [
+      "Figma",
+      "Canva",
+      "Graphic Design",
+      "Social Media Management",
+      "Content Creation",
+      "Video & Reel Editing",
+      "LinkedIn Growth",
+      "Brand Identity",
+    ],
+    isActive: true,
+    createdAt: new Date().toISOString(),
+  },
+];
 
-const LOCAL_STORAGE_KEY = "vfra_careers_module_data_v2";
+const LOCAL_STORAGE_KEY = "vfra_careers_module_data_v3";
 const SECTION_KEY = "careers_module";
 
 export function useCareersData() {
@@ -66,13 +204,13 @@ export function useCareersData() {
         const local = localStorage.getItem(LOCAL_STORAGE_KEY);
         if (local) {
           const parsed = JSON.parse(local);
-          if (parsed && Array.isArray(parsed.jobs)) {
+          if (parsed && Array.isArray(parsed.jobs) && parsed.jobs.length > 0) {
             const sanitizedJobs = parsed.jobs.filter(
               (j: any) => !j.id?.startsWith("vfra-job-0")
             );
             return {
               ...parsed,
-              jobs: sanitizedJobs,
+              jobs: sanitizedJobs.length > 0 ? sanitizedJobs : DEFAULT_JOB_POSTINGS,
             };
           }
         }
@@ -82,7 +220,7 @@ export function useCareersData() {
     }
 
     return {
-      jobs: [],
+      jobs: DEFAULT_JOB_POSTINGS,
       applications: [],
       settings: DEFAULT_CAREERS_SETTINGS,
     };
@@ -111,18 +249,32 @@ export function useCareersData() {
 
       if (row?.content) {
         const remote = row.content as unknown as CareersModuleData;
-        if (remote && Array.isArray(remote.jobs)) {
+        if (remote && Array.isArray(remote.jobs) && remote.jobs.length > 0) {
           const sanitizedJobs = remote.jobs.filter(
             (j: any) => !j.id?.startsWith("vfra-job-0")
           );
+          const finalJobs = sanitizedJobs.length > 0 ? sanitizedJobs : DEFAULT_JOB_POSTINGS;
           const merged: CareersModuleData = {
-            jobs: sanitizedJobs,
+            jobs: finalJobs,
             applications: Array.isArray(remote.applications) ? remote.applications : [],
             settings: remote.settings || DEFAULT_CAREERS_SETTINGS,
           };
           setData(merged);
           localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(merged));
         }
+      } else {
+        // If not stored in Supabase yet, use DEFAULT_JOB_POSTINGS
+        setData((prev) => {
+          const nextJobs = prev.jobs.length > 0 ? prev.jobs : DEFAULT_JOB_POSTINGS;
+          const updated = {
+            ...prev,
+            jobs: nextJobs,
+          };
+          try {
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
+          } catch (e) {}
+          return updated;
+        });
       }
     } catch (err) {
       console.warn("Error fetching careers data from Supabase:", err);

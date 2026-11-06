@@ -27,9 +27,9 @@ const fallbackTeamMembers: TeamMember[] = [
   {
     id: "1",
     name: "Mr. Tanish Chouhan",
-    role: "Founder & Director – Vigilant Forensic",
+    role: "Founder & Director (Leadership & Strategy)",
     credentials:
-      "Digital Forensics & Cybercrime Investigation Leader | Specialized in EnCase, Cellebrite, X-Ways, FTK & Autopsy | Incident Response & Advanced Evidence Analysis | Legally Defensible Forensic Reporting",
+      "Leads VFRA's overall direction and the development of its investigative technology and services, regulatory affairs. Digital Forensics & Cybercrime Investigation Leader specialized in EnCase, Cellebrite, X-Ways, FTK & Autopsy, Incident Response & Advanced Evidence Analysis, and Legally Defensible Forensic Reporting.",
     photo_url: tanishPhoto,
     linkedin_url: "https://linkedin.com/in/tanishchouhan",
     sort_order: 0,
@@ -39,7 +39,7 @@ const fallbackTeamMembers: TeamMember[] = [
     name: "Mr. Om Gatlewar",
     role: "Chief of Operations",
     credentials:
-      "Operations Lead & Mobile Forensics Specialist | Cellebrite & Advanced Mobile Extraction Workflows | Cybercrime Investigation & Digital Evidence Handling",
+      "Coordinates operational delivery and supports digital forensic activities. Operations Lead & Mobile Forensics Specialist, skilled in Cellebrite & Advanced Mobile Extraction Workflows, Cybercrime Investigation & Digital Evidence Handling.",
     photo_url: omPhoto,
     linkedin_url: "https://linkedin.com/in/omgatlewar",
     sort_order: 1,
@@ -49,7 +49,7 @@ const fallbackTeamMembers: TeamMember[] = [
     name: "Mr. Ameya Gadhikar",
     role: "Head of Tech & Strategic Growth",
     credentials:
-      "Cybersecurity Specialist | Linux, Python & Bash | AWS & Cloud Infrastructure | Network Security & Monitoring | Technical Problem-Solving & Team Collaboration",
+      "Oversees all business affairs, steering key strategic alignments and operational growth. Leads product coordination and development, seamlessly bridging technical execution with business objectives .Directs critical digital forensic analysis and cybercrime investigation operations.",
     photo_url: ameyaPhoto,
     linkedin_url: "https://linkedin.com/in/ameya-gadhikar-8b9540275",
     sort_order: 2,
@@ -59,7 +59,7 @@ const fallbackTeamMembers: TeamMember[] = [
     name: "Mr. Jafar Naqvi",
     role: "Cybercrime Investigation & Incident Response",
     credentials:
-      "Cybercrime Investigation & Incident Analysis | Digital Evidence Collection & Case Documentation | Advanced Threat Intelligence & Legal Evidence Handling",
+      "Supports Cybercrime investigations and analysis with involvement in incident response.",
     photo_url: jafarPhoto,
     linkedin_url: "https://www.linkedin.com/company/vigilant-forensic-research-and-analytics-pvt-ltd/",
     sort_order: 3,
