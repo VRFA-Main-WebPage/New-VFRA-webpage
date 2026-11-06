@@ -65,6 +65,7 @@ const AdminCases = () => {
       const { data, error } = await supabase
         .from("cases")
         .select("*")
+        .not("category", "in", "(job_application,careers_settings)")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data;

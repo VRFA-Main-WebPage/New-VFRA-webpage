@@ -196,6 +196,46 @@ export const DEFAULT_JOB_POSTINGS: JobPosting[] = [
 const LOCAL_STORAGE_KEY = "vfra_careers_module_data_v3";
 const SECTION_KEY = "careers_module";
 
+function mapCaseRowToApplication(row: any): JobApplication {
+  let meta: any = {};
+  if (row.description) {
+    try {
+      meta = JSON.parse(row.description);
+    } catch {
+      meta = { coverNote: row.description };
+    }
+  }
+
+  let status: JobApplication["status"] = "New";
+  if (row.status === "Reviewing" || row.status === "under_review" || row.status === "in_progress") {
+    status = "Reviewing";
+  } else if (row.status === "Shortlisted" || row.status === "resolved") {
+    status = "Shortlisted";
+  } else if (row.status === "Rejected" || row.status === "closed") {
+    status = "Rejected";
+  } else {
+    status = "New";
+  }
+
+  return {
+    id: row.id,
+    jobId: meta.jobId || "vfra-job-general",
+    jobTitle:
+      meta.jobTitle ||
+      (row.title ? row.title.replace(/^\[Job Application\]\s*/i, "") : "Position"),
+    fullName: row.client_name || meta.fullName || "Candidate",
+    email: row.client_email || meta.email || "",
+    phone: row.client_phone || meta.phone || "",
+    experience: meta.experience || "",
+    portfolioUrl: meta.portfolioUrl || undefined,
+    coverNote: meta.coverNote || row.notes || "",
+    resumeFileName: meta.resumeFileName || undefined,
+    resumeDataUrl: meta.resumeDataUrl || undefined,
+    status,
+    appliedAt: row.created_at || new Date().toISOString(),
+  };
+}
+
 export function useCareersData() {
   const [data, setData] = useState<CareersModuleData>(() => {
     // Try reading cached data from localStorage first
@@ -211,6 +251,8 @@ export function useCareersData() {
             return {
               ...parsed,
               jobs: sanitizedJobs.length > 0 ? sanitizedJobs : DEFAULT_JOB_POSTINGS,
+              settings: parsed.settings || DEFAULT_CAREERS_SETTINGS,
+              applications: Array.isArray(parsed.applications) ? parsed.applications : [],
             };
           }
         }
@@ -236,79 +278,159 @@ export function useCareersData() {
   const fetchCareersData = async () => {
     try {
       setLoading(true);
-      const { data: row, error } = await supabase
-        .from("website_content")
-        .select("content")
-        .eq("section_key", SECTION_KEY)
-        .maybeSingle();
 
-      if (error) {
-        console.warn("Supabase careers_module read warning (using local fallback):", error);
-        return;
-      }
+      // 1. Fetch Job Postings from website_content (or fallback to defaults)
+      let fetchedJobs: JobPosting[] = DEFAULT_JOB_POSTINGS;
+      let fetchedSettings: CareersSettings = DEFAULT_CAREERS_SETTINGS;
 
-      if (row?.content) {
-        const remote = row.content as unknown as CareersModuleData;
-        if (remote && Array.isArray(remote.jobs) && remote.jobs.length > 0) {
-          const sanitizedJobs = remote.jobs.filter(
-            (j: any) => !j.id?.startsWith("vfra-job-0")
-          );
-          const finalJobs = sanitizedJobs.length > 0 ? sanitizedJobs : DEFAULT_JOB_POSTINGS;
-          const merged: CareersModuleData = {
-            jobs: finalJobs,
-            applications: Array.isArray(remote.applications) ? remote.applications : [],
-            settings: remote.settings || DEFAULT_CAREERS_SETTINGS,
-          };
-          setData(merged);
-          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(merged));
+      try {
+        const { data: row, error: wcError } = await supabase
+          .from("website_content")
+          .select("content")
+          .eq("section_key", SECTION_KEY)
+          .maybeSingle();
+
+        if (!wcError && row?.content) {
+          const remote = row.content as any;
+          if (remote && Array.isArray(remote.jobs) && remote.jobs.length > 0) {
+            const sanitizedJobs = remote.jobs.filter(
+              (j: any) => !j.id?.startsWith("vfra-job-0")
+            );
+            if (sanitizedJobs.length > 0) {
+              fetchedJobs = sanitizedJobs;
+            }
+          }
+          if (remote?.settings?.recipientEmail) {
+            fetchedSettings = {
+              recipientEmail: remote.settings.recipientEmail,
+              ccEmail: remote.settings.ccEmail || DEFAULT_CAREERS_SETTINGS.ccEmail,
+              enableDirectEmail: remote.settings.enableDirectEmail ?? true,
+            };
+          }
         }
-      } else {
-        // If not stored in Supabase yet, use DEFAULT_JOB_POSTINGS
-        setData((prev) => {
-          const nextJobs = prev.jobs.length > 0 ? prev.jobs : DEFAULT_JOB_POSTINGS;
-          const updated = {
-            ...prev,
-            jobs: nextJobs,
-          };
-          try {
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
-          } catch (e) {}
-          return updated;
-        });
+      } catch (err) {
+        console.warn("Supabase careers_module read warning (using fallback):", err);
       }
+
+      // 2. Fetch Settings from cases table (real-time settings storage)
+      try {
+        const { data: settingCase } = await supabase
+          .from("cases")
+          .select("description, client_email, client_phone")
+          .eq("category", "careers_settings")
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (settingCase?.description) {
+          try {
+            const parsed = JSON.parse(settingCase.description);
+            if (parsed?.recipientEmail) {
+              fetchedSettings = {
+                recipientEmail: parsed.recipientEmail,
+                ccEmail: parsed.ccEmail || fetchedSettings.ccEmail,
+                enableDirectEmail: parsed.enableDirectEmail ?? true,
+              };
+            }
+          } catch (e) {
+            if (settingCase.client_email) {
+              fetchedSettings.recipientEmail = settingCase.client_email;
+            }
+            if (settingCase.client_phone) {
+              fetchedSettings.ccEmail = settingCase.client_phone;
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("Could not read careers_settings from cases table:", err);
+      }
+
+      // 3. Fetch Applications from cases table (category = 'job_application')
+      let fetchedApps: JobApplication[] = [];
+      try {
+        const { data: caseRows, error: appsError } = await supabase
+          .from("cases")
+          .select("*")
+          .eq("category", "job_application")
+          .order("created_at", { ascending: false });
+
+        if (!appsError && caseRows) {
+          fetchedApps = caseRows.map(mapCaseRowToApplication);
+        }
+      } catch (err) {
+        console.warn("Could not read job applications from cases table:", err);
+      }
+
+      // Merge any local applications cached offline if not already present
+      let finalApps = fetchedApps;
+      if (typeof window !== "undefined") {
+        try {
+          const localStr = localStorage.getItem(LOCAL_STORAGE_KEY);
+          if (localStr) {
+            const localObj = JSON.parse(localStr);
+            if (Array.isArray(localObj.applications) && localObj.applications.length > 0) {
+              const existingIds = new Set(fetchedApps.map((a) => a.id));
+              const missingLocal = localObj.applications.filter(
+                (a: JobApplication) => !existingIds.has(a.id)
+              );
+              finalApps = [...fetchedApps, ...missingLocal];
+            }
+          }
+        } catch (e) {}
+      }
+
+      const mergedData: CareersModuleData = {
+        jobs: fetchedJobs,
+        applications: finalApps,
+        settings: fetchedSettings,
+      };
+
+      setData(mergedData);
+      try {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(mergedData));
+      } catch (e) {}
     } catch (err) {
-      console.warn("Error fetching careers data from Supabase:", err);
+      console.warn("Error fetching careers data:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  // Helper to persist data to Supabase and localStorage
-  const persistData = async (newData: CareersModuleData): Promise<boolean> => {
-    setData(newData);
+  // Helper to persist jobs data to Supabase website_content and localStorage
+  const persistJobsData = async (newJobs: JobPosting[]): Promise<boolean> => {
+    const updatedData: CareersModuleData = { ...data, jobs: newJobs };
+    setData(updatedData);
+
     try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newData));
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedData));
 
       const { data: existing } = await supabase
         .from("website_content")
-        .select("id")
+        .select("id, content")
         .eq("section_key", SECTION_KEY)
         .maybeSingle();
+
+      const existingContent = (existing?.content as any) || {};
+      const newContent = {
+        ...existingContent,
+        jobs: newJobs,
+        settings: data.settings,
+      };
 
       if (existing) {
         await supabase
           .from("website_content")
-          .update({ content: newData as unknown as Json, updated_at: new Date().toISOString() })
+          .update({ content: newContent as unknown as Json, updated_at: new Date().toISOString() })
           .eq("section_key", SECTION_KEY);
       } else {
         await supabase
           .from("website_content")
-          .insert({ section_key: SECTION_KEY, content: newData as unknown as Json });
+          .insert({ section_key: SECTION_KEY, content: newContent as unknown as Json });
       }
 
       return true;
     } catch (err) {
-      console.error("Error saving careers data:", err);
+      console.error("Error saving careers jobs data:", err);
       return false;
     }
   };
@@ -332,13 +454,13 @@ export function useCareersData() {
       ];
     }
 
-    return persistData({ ...data, jobs: updatedJobs });
+    return persistJobsData(updatedJobs);
   };
 
   // Delete a job posting
   const deleteJob = async (jobId: string): Promise<boolean> => {
     const updatedJobs = data.jobs.filter((j) => j.id !== jobId);
-    return persistData({ ...data, jobs: updatedJobs });
+    return persistJobsData(updatedJobs);
   };
 
   // Toggle active status
@@ -346,26 +468,75 @@ export function useCareersData() {
     const updatedJobs = data.jobs.map((j) =>
       j.id === jobId ? { ...j, isActive: !j.isActive, updatedAt: new Date().toISOString() } : j
     );
-    return persistData({ ...data, jobs: updatedJobs });
+    return persistJobsData(updatedJobs);
   };
 
   // Submit an application
   const submitApplication = async (
     appData: Omit<JobApplication, "id" | "appliedAt" | "status">
   ): Promise<{ success: boolean; id: string; mailtoUrl: string }> => {
+    let assignedId = `app_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+
+    // Restrict stored resume data URL if excessively large to avoid request body limits
+    const safeResumeDataUrl =
+      appData.resumeDataUrl && appData.resumeDataUrl.length < 350000
+        ? appData.resumeDataUrl
+        : undefined;
+
+    const descriptionPayload = JSON.stringify({
+      jobId: appData.jobId,
+      jobTitle: appData.jobTitle,
+      experience: appData.experience,
+      portfolioUrl: appData.portfolioUrl,
+      coverNote: appData.coverNote,
+      resumeFileName: appData.resumeFileName,
+      resumeDataUrl: safeResumeDataUrl,
+    });
+
+    try {
+      const { data: inserted, error: insertError } = await supabase
+        .from("cases")
+        .insert({
+          title: `[Job Application] ${appData.jobTitle} - ${appData.fullName}`,
+          client_name: appData.fullName,
+          client_email: appData.email,
+          client_phone: appData.phone,
+          category: "job_application",
+          status: "New",
+          priority: "medium",
+          description: descriptionPayload,
+        })
+        .select("id")
+        .single();
+
+      if (!insertError && inserted?.id) {
+        assignedId = inserted.id;
+      } else if (insertError) {
+        console.warn("Application saved locally, Supabase case insert note:", insertError);
+      }
+    } catch (err) {
+      console.warn("Exception writing to cases table:", err);
+    }
+
     const newApp: JobApplication = {
       ...appData,
-      id: `app_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+      id: assignedId,
       status: "New",
       appliedAt: new Date().toISOString(),
     };
 
-    const updatedApps = [newApp, ...(data.applications || [])];
-    const success = await persistData({ ...data, applications: updatedApps });
+    setData((prev) => {
+      const updatedApps = [newApp, ...(prev.applications || [])];
+      const updated = { ...prev, applications: updatedApps };
+      try {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
 
     // Build the formatted mailto URL so it can be directly transmitted to email
-    const recipient = data.settings?.recipientEmail || "careers@vigilantforensic.com";
-    const cc = data.settings?.ccEmail || "contact@vigilantforensic.com";
+    const recipient = data.settings?.recipientEmail || DEFAULT_CAREERS_SETTINGS.recipientEmail;
+    const cc = data.settings?.ccEmail || DEFAULT_CAREERS_SETTINGS.ccEmail;
     const subject = encodeURIComponent(
       `[VFRA Job Application] ${appData.jobTitle} - ${appData.fullName}`
     );
@@ -396,7 +567,7 @@ Candidate applied via VFRA Careers Portal.
     const mailtoUrl = `mailto:${recipient}?cc=${cc}&subject=${subject}&body=${encodeURIComponent(bodyText)}`;
 
     return {
-      success,
+      success: true,
       id: newApp.id,
       mailtoUrl,
     };
@@ -407,21 +578,93 @@ Candidate applied via VFRA Careers Portal.
     appId: string,
     status: JobApplication["status"]
   ): Promise<boolean> => {
-    const updatedApps = data.applications.map((a) =>
-      a.id === appId ? { ...a, status } : a
-    );
-    return persistData({ ...data, applications: updatedApps });
+    try {
+      await supabase.from("cases").update({ status }).eq("id", appId);
+    } catch (e) {
+      console.warn("Could not update application status in cases:", e);
+    }
+
+    setData((prev) => {
+      const updatedApps = (prev.applications || []).map((a) =>
+        a.id === appId ? { ...a, status } : a
+      );
+      const next = { ...prev, applications: updatedApps };
+      try {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(next));
+      } catch (e) {}
+      return next;
+    });
+
+    return true;
   };
 
   // Delete an application
   const deleteApplication = async (appId: string): Promise<boolean> => {
-    const updatedApps = data.applications.filter((a) => a.id !== appId);
-    return persistData({ ...data, applications: updatedApps });
+    try {
+      await supabase.from("cases").delete().eq("id", appId);
+    } catch (e) {
+      console.warn("Could not delete application from cases:", e);
+    }
+
+    setData((prev) => {
+      const updatedApps = (prev.applications || []).filter((a) => a.id !== appId);
+      const next = { ...prev, applications: updatedApps };
+      try {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(next));
+      } catch (e) {}
+      return next;
+    });
+
+    return true;
   };
 
   // Save settings
   const saveSettings = async (settings: CareersSettings): Promise<boolean> => {
-    return persistData({ ...data, settings });
+    try {
+      await supabase.from("cases").insert({
+        title: "[System Config] Careers Email Routing",
+        client_name: "VFRA System",
+        client_email: settings.recipientEmail,
+        client_phone: settings.ccEmail,
+        category: "careers_settings",
+        status: "closed",
+        priority: "medium",
+        description: JSON.stringify(settings),
+      });
+    } catch (e) {
+      console.warn("Failed saving settings to cases:", e);
+    }
+
+    try {
+      const { data: existing } = await supabase
+        .from("website_content")
+        .select("id, content")
+        .eq("section_key", SECTION_KEY)
+        .maybeSingle();
+
+      if (existing) {
+        const existingContent = (existing.content as any) || {};
+        await supabase
+          .from("website_content")
+          .update({
+            content: { ...existingContent, settings } as unknown as Json,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("section_key", SECTION_KEY);
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    setData((prev) => {
+      const next = { ...prev, settings };
+      try {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(next));
+      } catch (e) {}
+      return next;
+    });
+
+    return true;
   };
 
   return {

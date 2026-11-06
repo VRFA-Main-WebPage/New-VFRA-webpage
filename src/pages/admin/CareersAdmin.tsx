@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Briefcase,
@@ -103,6 +103,14 @@ export default function CareersAdmin() {
   // Email Settings Form
   const [recipientEmail, setRecipientEmail] = useState(settings.recipientEmail);
   const [ccEmail, setCcEmail] = useState(settings.ccEmail);
+
+  // Sync state whenever settings are fetched from Supabase
+  useEffect(() => {
+    if (settings) {
+      if (settings.recipientEmail) setRecipientEmail(settings.recipientEmail);
+      if (settings.ccEmail) setCcEmail(settings.ccEmail);
+    }
+  }, [settings.recipientEmail, settings.ccEmail]);
 
   // Open Create Job Dialog
   const handleOpenCreateJob = () => {
@@ -707,6 +715,12 @@ export default function CareersAdmin() {
               <CardDescription className="text-xs text-[#555555]">
                 Candidate applications and CV links submitted on the website will be dispatched to these emails.
               </CardDescription>
+              <div className="flex items-center gap-2 text-[11px] font-mono text-[#825816] bg-amber-50 border border-amber-200/60 px-3 py-1.5 rounded-lg mt-2">
+                <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-amber-600" />
+                <span>
+                  Live In-Use Routing: <strong>{settings.recipientEmail}</strong> (CC: {settings.ccEmail})
+                </span>
+              </div>
             </CardHeader>
             <CardContent className="p-6">
               <form onSubmit={handleSaveSettings} className="space-y-4">

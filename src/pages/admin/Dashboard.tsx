@@ -42,19 +42,22 @@ const AdminDashboard = () => {
         certificates,
         eventRegistrations,
       ] = await Promise.all([
-        supabase.from("cases").select("id", { count: "exact", head: true }),
+        supabase.from("cases").select("id", { count: "exact", head: true }).not("category", "in", "(job_application,careers_settings)"),
         supabase
           .from("cases")
           .select("id", { count: "exact", head: true })
-          .eq("status", "submitted"),
+          .eq("status", "submitted")
+          .not("category", "in", "(job_application,careers_settings)"),
         supabase
           .from("cases")
           .select("id", { count: "exact", head: true })
-          .in("status", ["in_progress", "under_review"]),
+          .in("status", ["in_progress", "under_review"])
+          .not("category", "in", "(job_application,careers_settings)"),
         supabase
           .from("cases")
           .select("id", { count: "exact", head: true })
-          .in("status", ["closed", "resolved"]),
+          .in("status", ["closed", "resolved"])
+          .not("category", "in", "(job_application,careers_settings)"),
         supabase
           .from("events")
           .select("id", { count: "exact", head: true })
@@ -70,6 +73,7 @@ const AdminDashboard = () => {
       const { data: recentCases } = await supabase
         .from("cases")
         .select("id, case_id, title, status, created_at")
+        .not("category", "in", "(job_application,careers_settings)")
         .order("created_at", { ascending: false })
         .limit(5);
 
