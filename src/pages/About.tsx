@@ -61,7 +61,7 @@ const fallbackTeamMembers: TeamMember[] = [
     credentials:
       "Supports Cybercrime investigations and analysis with involvement in incident response.",
     photo_url: jafarPhoto,
-    linkedin_url: "https://www.linkedin.com/company/vigilant-forensic-research-and-analytics-pvt-ltd/",
+    linkedin_url: "https://www.linkedin.com/in/sayed-jafar-hussain-naqvi-aa6296294/",
     sort_order: 3,
   },
 ];

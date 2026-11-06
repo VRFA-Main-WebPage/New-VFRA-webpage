@@ -153,6 +153,21 @@ export default function Careers() {
     setIsSubmitting(true);
 
     try {
+      // Ensure file data URL is fully read into memory before submitting
+      let finalResumeDataUrl = resumeDataUrl;
+      if (resumeFile && !finalResumeDataUrl) {
+        try {
+          finalResumeDataUrl = await new Promise<string>((resolve, reject) => {
+            const r = new FileReader();
+            r.onload = () => resolve(r.result as string);
+            r.onerror = reject;
+            r.readAsDataURL(resumeFile);
+          });
+        } catch (fileErr) {
+          console.warn("Could not read attached resume file:", fileErr);
+        }
+      }
+
       const { success, mailtoUrl } = await submitApplication({
         jobId: selectedJob.id,
         jobTitle: selectedJob.title,
@@ -163,7 +178,7 @@ export default function Careers() {
         portfolioUrl: portfolio.trim(),
         coverNote: notes.trim(),
         resumeFileName: resumeFileName || undefined,
-        resumeDataUrl: resumeDataUrl || undefined,
+        resumeDataUrl: finalResumeDataUrl || undefined,
       });
 
       const summaryText = `

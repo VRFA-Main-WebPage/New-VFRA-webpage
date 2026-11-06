@@ -94,6 +94,7 @@ export default function CareersAdmin() {
   // Application Preview Modal State
   const [selectedApp, setSelectedApp] = useState<JobApplication | null>(null);
   const [isAppModalOpen, setIsAppModalOpen] = useState(false);
+  const [showInlineViewer, setShowInlineViewer] = useState(false);
 
   // Filter States for Applications
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -283,99 +284,117 @@ export default function CareersAdmin() {
     });
   };
 
-  function generateFallbackResumePdf(app: JobApplication): string {
-    const sanitize = (s?: string) => (s || "").replace(/[\r\n\t]/g, " ").replace(/[()\\]/g, "");
-    const lines = [
-      "VFRA FORENSIC RESEARCH AND ANALYTICS - CANDIDATE CV",
-      "============================================================",
-      `Full Name:          ${sanitize(app.fullName)}`,
-      `Position Applied:   ${sanitize(app.jobTitle)}`,
-      `Email Address:      ${sanitize(app.email)}`,
-      `Contact Number:     ${sanitize(app.phone)}`,
-      `Experience Level:   ${sanitize(app.experience)}`,
-      `Portfolio Link:     ${sanitize(app.portfolioUrl)}`,
-      "------------------------------------------------------------",
-      "Candidate Notes & Evidentiary Background:",
-      sanitize(app.coverNote) || "Submitted via VFRA Careers Intake Portal.",
-      "============================================================",
-      "Verified by VFRA Recruitment Directorate.",
-    ];
+  // Helper to decode Base64 data URL to Blob with accurate MIME detection
+  const parseDataUrlToBlob = (dataUrl: string, fallbackFileName?: string) => {
+    let mime = "application/pdf";
+    let base64Data = dataUrl;
 
-    let streamText = "BT\n/F1 11 Tf\n40 730 Td\n18 TL\n";
-    for (const line of lines) {
-      streamText += "(" + line + ") ' \n";
-    }
-    streamText += "ET\n";
-
-    const streamLen = new TextEncoder().encode(streamText).length;
-
-    const pdf =
-      "%PDF-1.4\n" +
-      "1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n" +
-      "2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj\n" +
-      "3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj\n" +
-      "4 0 obj << /Length " + streamLen + " >>\nstream\n" + streamText + "endstream\nendobj\n" +
-      "5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj\n" +
-      "xref\n0 6\n0000000000 65535 f \n0000000009 00000 n \n0000000058 00000 n \n0000000115 00000 n \n0000000244 00000 n \n" +
-      "0000000" + (270 + streamLen).toString().padStart(3, "0") + " 00000 n \n" +
-      "trailer << /Size 6 /Root 1 0 R >>\nstartxref\n" + (340 + streamLen) + "\n%%EOF";
-
-    return "data:application/pdf;base64," + btoa(pdf);
-  }
-
-  // Open Resume in a new tab helper
-  const handleViewResume = (app: JobApplication) => {
-    const dataUrl = app.resumeDataUrl || generateFallbackResumePdf(app);
-    try {
-      const arr = dataUrl.split(",");
-      const mimeMatch = arr[0].match(/:(.*?);/);
-      const mime = mimeMatch ? mimeMatch[1] : "application/pdf";
-      const bstr = atob(arr[1]);
-      let n = bstr.length;
-      const u8arr = new Uint8Array(n);
-      while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
+    if (dataUrl.includes(",")) {
+      const parts = dataUrl.split(",");
+      const meta = parts[0];
+      base64Data = parts[1];
+      const match = meta.match(/data:([^;]+)/);
+      if (match && match[1]) {
+        mime = match[1];
       }
-      const blob = new Blob([u8arr], { type: mime });
-      const blobUrl = URL.createObjectURL(blob);
-      const newTab = window.open(blobUrl, "_blank");
-      if (!newTab) {
+    }
+
+    if (!mime || mime === "application/octet-stream") {
+      if (fallbackFileName?.toLowerCase().endsWith(".pdf")) mime = "application/pdf";
+      else if (fallbackFileName?.toLowerCase().endsWith(".docx"))
+        mime = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+      else if (fallbackFileName?.toLowerCase().endsWith(".doc"))
+        mime = "application/msword";
+      else if (fallbackFileName?.toLowerCase().endsWith(".png")) mime = "image/png";
+      else if (fallbackFileName?.toLowerCase().endsWith(".jpg") || fallbackFileName?.toLowerCase().endsWith(".jpeg"))
+        mime = "image/jpeg";
+    }
+
+    const cleanBase64 = base64Data.replace(/[\r\n\s]/g, "");
+    const byteCharacters = atob(cleanBase64);
+    const byteNumbers = new Uint8Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const blob = new Blob([byteNumbers], { type: mime });
+    const blobUrl = URL.createObjectURL(blob);
+    return { blob, blobUrl, mime };
+  };
+
+  // Open candidate's authentic uploaded resume in a new browser tab
+  const handleViewResume = (app: JobApplication) => {
+    if (!app.resumeDataUrl) {
+      toast({
+        title: "No Resume File Attached",
+        description: "This applicant submitted without attaching an original resume document.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { blobUrl, mime } = parseDataUrlToBlob(app.resumeDataUrl, app.resumeFileName);
+
+      if (mime.includes("pdf") || mime.includes("image")) {
+        const newTab = window.open(blobUrl, "_blank");
+        if (!newTab) {
+          // In case pop-up blocker intervened, trigger direct download
+          handleDownloadCV(app);
+        }
+      } else {
+        // Word DOC/DOCX cannot be rendered natively in browser PDF engines; trigger direct download
         handleDownloadCV(app);
       }
     } catch (err) {
-      console.error("Failed opening resume preview:", err);
+      console.error("Failed opening original resume preview:", err);
+      toast({
+        title: "Preview Error",
+        description: "Could not open resume viewer. Attempting direct file download...",
+      });
       handleDownloadCV(app);
     }
   };
 
-  // Download CV helper
+  // Download candidate's authentic uploaded resume file
   const handleDownloadCV = (app: JobApplication) => {
-    const dataUrl = app.resumeDataUrl || generateFallbackResumePdf(app);
+    if (!app.resumeDataUrl) {
+      toast({
+        title: "No Resume File Attached",
+        description: "This applicant submitted without attaching an original resume document.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
-      const arr = dataUrl.split(",");
-      const mimeMatch = arr[0].match(/:(.*?);/);
-      const mime = mimeMatch ? mimeMatch[1] : "application/pdf";
-      const bstr = atob(arr[1]);
-      let n = bstr.length;
-      const u8arr = new Uint8Array(n);
-      while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
+      const { blobUrl, mime } = parseDataUrlToBlob(app.resumeDataUrl, app.resumeFileName);
+      let filename = app.resumeFileName;
+      if (!filename) {
+        const ext = mime.includes("pdf")
+          ? ".pdf"
+          : mime.includes("word") || mime.includes("officedocument")
+          ? ".docx"
+          : ".pdf";
+        filename = `${app.fullName.replace(/\s+/g, "_")}_Resume${ext}`;
       }
-      const blob = new Blob([u8arr], { type: mime });
+
       const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = app.resumeFileName || `${app.fullName.replace(/\s+/g, "_")}_CV.pdf`;
+      link.href = blobUrl;
+      link.download = filename;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+
       toast({
         title: "Download Started",
-        description: `Downloading ${link.download}...`,
+        description: `Downloading original resume: ${filename}`,
       });
     } catch (err) {
+      console.error("Failed downloading original resume file:", err);
       toast({
         title: "Download Failed",
-        description: "Could not download CV document.",
+        description: "Could not download original resume file.",
         variant: "destructive",
       });
     }
@@ -749,18 +768,46 @@ export default function CareersAdmin() {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-1.5">
+                            {app.resumeDataUrl ? (
+                              <>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleViewResume(app)}
+                                  className="h-7 px-2 text-[11px] gap-1 bg-white hover:bg-[#FAF9F6] text-[#111111] border-[#E5E5E3]"
+                                  title="Open Original Resume in New Tab"
+                                >
+                                  <Eye className="h-3 w-3 text-[#825816]" />
+                                  <span className="hidden sm:inline">Resume</span>
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleDownloadCV(app)}
+                                  className="h-7 w-7 p-0 text-[#111111] hover:bg-gray-100"
+                                  title="Download Original Resume File"
+                                >
+                                  <Download className="h-3.5 w-3.5" />
+                                </Button>
+                              </>
+                            ) : (
+                              <span className="text-[10px] font-mono text-[#A1A1AA] mr-1 hidden sm:inline">
+                                No file
+                              </span>
+                            )}
                             <Button
                               variant="outline"
                               size="sm"
                               onClick={() => {
                                 setSelectedApp(app);
+                                setShowInlineViewer(false);
                                 setIsAppModalOpen(true);
                               }}
                               className="h-7 px-2.5 text-xs gap-1"
-                              title="View Candidate Application"
+                              title="Review Candidate Dossier"
                             >
-                              <Eye className="h-3.5 w-3.5" />
-                              <span>View CV</span>
+                              <FileText className="h-3.5 w-3.5" />
+                              <span>Dossier</span>
                             </Button>
                             <Button
                               variant="ghost"
@@ -1108,39 +1155,74 @@ export default function CareersAdmin() {
                 </div>
 
                 {/* CV Attachment Box */}
-                <div className="p-3.5 rounded-xl bg-[#F4F3EE] border border-[#EBEAE5] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <FileText className="h-5 w-5 text-[#825816] shrink-0" />
-                    <div className="min-w-0">
-                      <span className="font-semibold text-[#111111] block truncate text-xs">
-                        {selectedApp.resumeFileName || "Candidate_CV.pdf"}
-                      </span>
-                      <span className="text-[10px] text-[#71717A] block">
-                        PDF Document Ready to View &amp; Download
-                      </span>
-                    </div>
-                  </div>
+                {selectedApp.resumeDataUrl ? (
+                  <div className="p-4 rounded-xl bg-[#FAF9F6] border border-[#E5E5E3] space-y-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="h-10 w-10 rounded-lg bg-amber-50 border border-amber-200 text-[#825816] flex items-center justify-center shrink-0">
+                          <FileText className="h-5 w-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <span className="font-semibold text-[#111111] block truncate text-xs font-mono">
+                            {selectedApp.resumeFileName || "Candidate_Resume.pdf"}
+                          </span>
+                          <span className="text-[10px] text-emerald-700 font-medium flex items-center gap-1">
+                            <CheckCircle2 className="h-3 w-3" />
+                            Original Candidate Document Available
+                          </span>
+                        </div>
+                      </div>
 
-                  <div className="flex items-center gap-2 shrink-0">
-                    <Button
-                      size="sm"
-                      onClick={() => handleViewResume(selectedApp)}
-                      className="h-8 px-3 bg-[#111111] hover:bg-black text-white text-xs gap-1.5"
-                    >
-                      <Eye className="h-3.5 w-3.5" />
-                      <span>View Resume</span>
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleDownloadCV(selectedApp)}
-                      className="h-8 px-3 text-xs gap-1.5 bg-white hover:bg-gray-50 text-[#111111]"
-                    >
-                      <Download className="h-3.5 w-3.5" />
-                      <span>Download</span>
-                    </Button>
+                      <div className="flex flex-wrap items-center gap-2 shrink-0">
+                        <Button
+                          size="sm"
+                          onClick={() => handleViewResume(selectedApp)}
+                          className="h-8 px-3 bg-[#111111] hover:bg-black text-white text-xs gap-1.5"
+                          title="Open Original Resume in New Tab"
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                          <span>View Resume</span>
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDownloadCV(selectedApp)}
+                          className="h-8 px-3 text-xs gap-1.5 bg-white hover:bg-gray-50 text-[#111111] border-[#E5E5E3]"
+                          title="Download Original Resume File"
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          <span>Download</span>
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setShowInlineViewer(!showInlineViewer)}
+                          className="h-8 px-2.5 text-xs gap-1 text-[#555555] hover:text-[#111111]"
+                        >
+                          <span>{showInlineViewer ? "Hide Preview" : "Inline Preview"}</span>
+                        </Button>
+                      </div>
+                    </div>
+
+                    {showInlineViewer && (
+                      <div className="pt-2 border-t border-[#E5E5E3]">
+                        <iframe
+                          src={parseDataUrlToBlob(selectedApp.resumeDataUrl, selectedApp.resumeFileName).blobUrl}
+                          className="w-full h-[520px] rounded-lg border border-[#E5E5E3] bg-white shadow-2xs"
+                          title={`${selectedApp.fullName} Original Resume`}
+                        />
+                      </div>
+                    )}
                   </div>
-                </div>
+                ) : (
+                  <div className="p-3.5 rounded-xl bg-[#FAF9F6] border border-[#E5E5E3] flex items-center justify-between gap-3 text-xs text-[#71717A]">
+                    <div className="flex items-center gap-2.5">
+                      <FileText className="h-4 w-4 text-[#A1A1AA]" />
+                      <span>No resume file was attached by this candidate during submission.</span>
+                    </div>
+                    <span className="text-[10px] font-mono text-[#A1A1AA]">No File Attached</span>
+                  </div>
+                )}
 
                 {/* Actions */}
                 <div className="flex items-center justify-between pt-3 border-t border-[#E5E5E3]">
