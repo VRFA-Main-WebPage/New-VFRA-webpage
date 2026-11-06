@@ -217,6 +217,14 @@ function mapCaseRowToApplication(row: any): JobApplication {
     status = "New";
   }
 
+  let validResumeDataUrl = meta.resumeDataUrl;
+  if (
+    typeof validResumeDataUrl === "string" &&
+    (validResumeDataUrl.includes("AAAAAAAAAA") || validResumeDataUrl.length < 50)
+  ) {
+    validResumeDataUrl = undefined;
+  }
+
   return {
     id: row.id,
     jobId: meta.jobId || "vfra-job-general",
@@ -230,7 +238,7 @@ function mapCaseRowToApplication(row: any): JobApplication {
     portfolioUrl: meta.portfolioUrl || undefined,
     coverNote: meta.coverNote || row.notes || "",
     resumeFileName: meta.resumeFileName || undefined,
-    resumeDataUrl: meta.resumeDataUrl || undefined,
+    resumeDataUrl: validResumeDataUrl || undefined,
     status,
     appliedAt: row.created_at || new Date().toISOString(),
   };
@@ -355,7 +363,12 @@ export function useCareersData() {
           .order("created_at", { ascending: false });
 
         if (!appsError && caseRows) {
-          fetchedApps = caseRows.map(mapCaseRowToApplication);
+          const validRows = caseRows.filter(
+            (r) =>
+              !r.title?.includes("Test Big") &&
+              !r.client_name?.includes("Test Big")
+          );
+          fetchedApps = validRows.map(mapCaseRowToApplication);
         }
       } catch (err) {
         console.warn("Could not read job applications from cases table:", err);
@@ -371,7 +384,10 @@ export function useCareersData() {
             if (Array.isArray(localObj.applications) && localObj.applications.length > 0) {
               const existingIds = new Set(fetchedApps.map((a) => a.id));
               const missingLocal = localObj.applications.filter(
-                (a: JobApplication) => !existingIds.has(a.id)
+                (a: JobApplication) =>
+                  !existingIds.has(a.id) &&
+                  !a.fullName?.includes("Test Big") &&
+                  !a.jobTitle?.includes("Test Big")
               );
               finalApps = [...fetchedApps, ...missingLocal];
             }

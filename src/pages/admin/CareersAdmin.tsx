@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
   Briefcase,
@@ -54,6 +54,44 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { useCareersData, JobPosting, JobApplication } from "@/hooks/useCareersData";
 
+// Helper to decode Base64 data URL to Blob with accurate MIME detection
+function parseDataUrlToBlob(dataUrl: string, fallbackFileName?: string) {
+  let mime = "application/pdf";
+  let base64Data = dataUrl;
+
+  if (dataUrl.includes(",")) {
+    const parts = dataUrl.split(",");
+    const meta = parts[0];
+    base64Data = parts[1];
+    const match = meta.match(/data:([^;]+)/);
+    if (match && match[1]) {
+      mime = match[1];
+    }
+  }
+
+  if (!mime || mime === "application/octet-stream") {
+    if (fallbackFileName?.toLowerCase().endsWith(".pdf")) mime = "application/pdf";
+    else if (fallbackFileName?.toLowerCase().endsWith(".docx"))
+      mime = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    else if (fallbackFileName?.toLowerCase().endsWith(".doc"))
+      mime = "application/msword";
+    else if (fallbackFileName?.toLowerCase().endsWith(".png")) mime = "image/png";
+    else if (fallbackFileName?.toLowerCase().endsWith(".jpg") || fallbackFileName?.toLowerCase().endsWith(".jpeg"))
+      mime = "image/jpeg";
+  }
+
+  const cleanBase64 = base64Data.replace(/[\r\n\s]/g, "");
+  const byteCharacters = atob(cleanBase64);
+  const byteNumbers = new Uint8Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+
+  const blob = new Blob([byteNumbers], { type: mime });
+  const blobUrl = URL.createObjectURL(blob);
+  return { blob, blobUrl, mime };
+}
+
 export default function CareersAdmin() {
   const { toast } = useToast();
   const {
@@ -95,6 +133,11 @@ export default function CareersAdmin() {
   const [selectedApp, setSelectedApp] = useState<JobApplication | null>(null);
   const [isAppModalOpen, setIsAppModalOpen] = useState(false);
   const [showInlineViewer, setShowInlineViewer] = useState(false);
+
+  const selectedAppBlob = useMemo(() => {
+    if (!selectedApp?.resumeDataUrl) return null;
+    return parseDataUrlToBlob(selectedApp.resumeDataUrl, selectedApp.resumeFileName);
+  }, [selectedApp?.resumeDataUrl, selectedApp?.resumeFileName]);
 
   // Filter States for Applications
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -284,44 +327,6 @@ export default function CareersAdmin() {
     });
   };
 
-  // Helper to decode Base64 data URL to Blob with accurate MIME detection
-  const parseDataUrlToBlob = (dataUrl: string, fallbackFileName?: string) => {
-    let mime = "application/pdf";
-    let base64Data = dataUrl;
-
-    if (dataUrl.includes(",")) {
-      const parts = dataUrl.split(",");
-      const meta = parts[0];
-      base64Data = parts[1];
-      const match = meta.match(/data:([^;]+)/);
-      if (match && match[1]) {
-        mime = match[1];
-      }
-    }
-
-    if (!mime || mime === "application/octet-stream") {
-      if (fallbackFileName?.toLowerCase().endsWith(".pdf")) mime = "application/pdf";
-      else if (fallbackFileName?.toLowerCase().endsWith(".docx"))
-        mime = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-      else if (fallbackFileName?.toLowerCase().endsWith(".doc"))
-        mime = "application/msword";
-      else if (fallbackFileName?.toLowerCase().endsWith(".png")) mime = "image/png";
-      else if (fallbackFileName?.toLowerCase().endsWith(".jpg") || fallbackFileName?.toLowerCase().endsWith(".jpeg"))
-        mime = "image/jpeg";
-    }
-
-    const cleanBase64 = base64Data.replace(/[\r\n\s]/g, "");
-    const byteCharacters = atob(cleanBase64);
-    const byteNumbers = new Uint8Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-
-    const blob = new Blob([byteNumbers], { type: mime });
-    const blobUrl = URL.createObjectURL(blob);
-    return { blob, blobUrl, mime };
-  };
-
   // Open candidate's authentic uploaded resume in a new browser tab
   const handleViewResume = (app: JobApplication) => {
     if (!app.resumeDataUrl) {
@@ -335,10 +340,30 @@ export default function CareersAdmin() {
 
     try {
       const { blobUrl, mime } = parseDataUrlToBlob(app.resumeDataUrl, app.resumeFileName);
+      const filename = app.resumeFileName || `${app.fullName.replace(/\s+/g, "_")}_Resume.pdf`;
 
       if (mime.includes("pdf") || mime.includes("image")) {
-        const newTab = window.open(blobUrl, "_blank");
-        if (!newTab) {
+        // Open a blank tab and embed the blob in an HTML document to prevent Edge/Chrome OOPIF blob sandbox failure
+        const newTab = window.open("", "_blank");
+        if (newTab) {
+          newTab.document.write(`<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${filename} - VFRA Candidate Document</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 100%; height: 100%; overflow: hidden; background-color: #2b2b2b; }
+      iframe { width: 100%; height: 100%; border: none; display: block; }
+    </style>
+  </head>
+  <body>
+    <iframe src="${blobUrl}" type="${mime}" title="${filename}"></iframe>
+  </body>
+</html>`);
+          newTab.document.close();
+        } else {
           // In case pop-up blocker intervened, trigger direct download
           handleDownloadCV(app);
         }
@@ -1204,11 +1229,11 @@ export default function CareersAdmin() {
                       </div>
                     </div>
 
-                    {showInlineViewer && (
+                    {showInlineViewer && selectedAppBlob?.blobUrl && (
                       <div className="pt-2 border-t border-[#E5E5E3]">
                         <iframe
-                          src={parseDataUrlToBlob(selectedApp.resumeDataUrl, selectedApp.resumeFileName).blobUrl}
-                          className="w-full h-[520px] rounded-lg border border-[#E5E5E3] bg-white shadow-2xs"
+                          src={selectedAppBlob.blobUrl}
+                          className="w-full h-[540px] rounded-lg border border-[#E5E5E3] bg-white shadow-2xs"
                           title={`${selectedApp.fullName} Original Resume`}
                         />
                       </div>
